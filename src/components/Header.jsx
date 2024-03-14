@@ -1,8 +1,17 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-const Header = () => {
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+const Header = ({ setMode, mode }) => {
+  function handleDarkMode() {
+    setMode((prev) => {
+      if (prev == "light") {
+        return "dark";
+      } else return "light";
+    });
+  }
   return (
     <Box>
       <AppBar
@@ -11,7 +20,6 @@ const Header = () => {
           height: "60px",
           display: "flex",
           justifyContent: "center",
-          // color: "black",
         }}
       >
         <Toolbar>
@@ -27,7 +35,22 @@ const Header = () => {
             <ListAltIcon sx={{ fontSize: "2rem" }} />
             <Typography variant="body1">Todo</Typography>
           </Box>
-          <AccountCircleIcon sx={{ fontSize: "2rem" }} />
+          <Box sx={{ gap: "1rem", display: "flex" }}>
+            <IconButton onClick={handleDarkMode}>
+              {mode == "light" ? (
+                <LightModeIcon
+                  sx={{
+                    fontSize: "2rem",
+                  }}
+                />
+              ) : (
+                <DarkModeIcon sx={{ fontSize: "2rem" }} />
+              )}
+            </IconButton>
+            <IconButton>
+              <AccountCircleIcon sx={{ fontSize: "2rem" }} />
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>

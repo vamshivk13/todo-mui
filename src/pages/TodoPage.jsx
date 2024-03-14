@@ -3,10 +3,10 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Header from "../components/Header";
+import Card from "../components/ui/todo/TodoCard";
 import TextField from "@mui/material/TextField";
 import {
   Button,
-  Card,
   CardContent,
   CardHeader,
   FormGroup,
@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import Modal from "../components/Modal";
 
-const TodoPage = () => {
+const TodoPage = ({ setMode, mode }) => {
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +23,9 @@ const TodoPage = () => {
   const selectedTask = tasks.find((task) => task.id == selectedId);
   function addTask(e) {
     e.preventDefault();
+    if (value == "" || value == null || value == undefined) {
+      return;
+    }
     setTasks((tasks) => [
       ...tasks,
       { task: value, isDone: false, id: Math.random() * 10 },
@@ -77,7 +80,7 @@ const TodoPage = () => {
         height: "100%",
       }}
     >
-      <Header />
+      <Header setMode={setMode} mode={mode} />
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -138,29 +141,11 @@ const TodoPage = () => {
             .filter((task) => task.isDone == false)
             .map((task) => {
               return (
-                <Paper elevation={1}>
-                  <Card
-                    key={task.id}
-                    onClick={() => handleSelectedTask(task.id)}
-                    sx={{
-                      fontSize: "1.2rem",
-                    }}
-                  >
-                    {/* <CardHeader title="title" /> */}
-                    <CardContent
-                      sx={{
-                        overflow: "hidden",
-                        padding: "13px !important",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="body1" noWrap>
-                        {task.task}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Paper>
+                <Card
+                  key={task.id}
+                  task={task}
+                  handleSelectedTask={handleSelectedTask}
+                />
               );
             })}
         </Box>
@@ -195,19 +180,11 @@ const TodoPage = () => {
             .filter((task) => task.isDone == true)
             .map((task) => {
               return (
-                <Paper elevation={2}>
-                  <Card
-                    key={task.id}
-                    onClick={() => handleSelectedTask(task.id)}
-                    sx={{
-                      fontSize: "1.2rem",
-                    }}
-                  >
-                    <CardContent sx={{ wordBreak: "break-all" }}>
-                      {task.task}
-                    </CardContent>
-                  </Card>
-                </Paper>
+                <Card
+                  key={task.id}
+                  task={task}
+                  handleSelectedTask={handleSelectedTask}
+                />
               );
             })}
         </Box>

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -34,11 +35,16 @@ const Modal = ({
           type="text"
           maxRows={10}
           value={value}
+          onKeyDown={(e) => {
+            if (e.key == "Enter") {
+              handleEditTask(value);
+            }
+          }}
           onChange={(e) => setValue(e.target.value)}
           multiline
           fullWidth
           sx={{
-            padding: "1rem",
+            padding: "6px 0rem",
             border: "none",
             outline: "none",
           }}
@@ -60,7 +66,12 @@ const Modal = ({
         >
           {content?.isDone ? "Mark as Todo" : "Mark As Done"}
         </Button>
-        <Button variant="outlined" onClick={() => handleEditTask(value)}>
+
+        <Button
+          type="submit"
+          variant="outlined"
+          onClick={() => handleEditTask(value)}
+        >
           Done
         </Button>
       </DialogActions>
