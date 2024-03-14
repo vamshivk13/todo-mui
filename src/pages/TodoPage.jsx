@@ -34,6 +34,7 @@ const TodoPage = ({ setMode, mode }) => {
   }
   function onClose() {
     setIsOpen(false);
+    setSelectedId(null);
   }
   function handleSelectedTask(id) {
     setIsOpen(true);
@@ -44,10 +45,14 @@ const TodoPage = ({ setMode, mode }) => {
     setTasks((tasks) => tasks.filter((task) => task.id !== selectedId));
     setIsOpen(false);
   }
-  function handleMarkAsDone() {
+  console.log(selectedId);
+  function handleMarkAsDone(id = null) {
+    const idToBeMarked =
+      selectedId == null || selectedId == undefined ? id : selectedId;
+    console.log("ID---", idToBeMarked);
     setTasks((tasks) =>
       tasks.map((task) => {
-        if (task.id == selectedId) {
+        if (task.id == idToBeMarked) {
           return {
             ...task,
             isDone: !task.isDone,
@@ -76,7 +81,7 @@ const TodoPage = ({ setMode, mode }) => {
     <Box
       component={"div"}
       sx={{
-        overflow: "scroll",
+        overflow: "auto",
         height: "100%",
       }}
     >
@@ -131,7 +136,7 @@ const TodoPage = ({ setMode, mode }) => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "2rem",
+            gap: "5px",
             pt: 3,
             px: "1rem",
             marginBottom: "10px",
@@ -145,6 +150,7 @@ const TodoPage = ({ setMode, mode }) => {
                   key={task.id}
                   task={task}
                   handleSelectedTask={handleSelectedTask}
+                  handleMarkAsDone={handleMarkAsDone}
                 />
               );
             })}
@@ -153,7 +159,7 @@ const TodoPage = ({ setMode, mode }) => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "2rem",
+            gap: "5px",
             pt: 3,
             marginBottom: "10px",
             px: "1rem",
@@ -165,9 +171,7 @@ const TodoPage = ({ setMode, mode }) => {
               sx={{
                 fontSize: "13px",
                 bgcolor: "rgba(240,242,237,0.79)",
-                // backdropFilter: "blur(10px)",
                 color: "#4666FF",
-
                 marginRight: "auto",
                 padding: "3px 10px",
                 borderRadius: "5px",
@@ -183,6 +187,7 @@ const TodoPage = ({ setMode, mode }) => {
                 <Card
                   key={task.id}
                   task={task}
+                  handleMarkAsDone={handleMarkAsDone}
                   handleSelectedTask={handleSelectedTask}
                 />
               );
