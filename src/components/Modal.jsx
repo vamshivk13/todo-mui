@@ -12,6 +12,8 @@ import {
 import React, { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
+import SaveIcon from "@mui/icons-material/Save";
+import UndoIcon from "@mui/icons-material/Undo";
 
 const Modal = ({
   title,
@@ -30,7 +32,7 @@ const Modal = ({
   return (
     <Dialog onClose={onClose} open={isOpen} maxWidth={"sm"} fullWidth>
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent sx={{ pY: "1rem" }}>
+      <DialogContent sx={{ py: "1rem" }}>
         <InputBase
           type="text"
           maxRows={10}
@@ -52,28 +54,20 @@ const Modal = ({
         ></InputBase>
       </DialogContent>
       <DialogActions sx={{ padding: "1rem" }}>
-        <Button
-          onClick={handleDeleteTask}
-          startIcon={<DeleteIcon />}
-          variant="outlined"
-        >
-          Delete
-        </Button>
-        <Button
-          onClick={handleMarkAsDone}
-          startIcon={<DoneIcon />}
-          variant="outlined"
-        >
-          {content?.isDone ? "Mark as Todo" : "Mark As Done"}
-        </Button>
+        <IconButton onClick={handleDeleteTask} variant="outlined">
+          <DeleteIcon />
+        </IconButton>
+        <IconButton onClick={handleMarkAsDone} variant="outlined">
+          {content?.isDone ? <UndoIcon /> : <DoneIcon />}
+        </IconButton>
 
-        <Button
+        <IconButton
           type="submit"
           variant="outlined"
           onClick={() => handleEditTask(value)}
         >
-          Done
-        </Button>
+          <SaveIcon />
+        </IconButton>
       </DialogActions>
     </Dialog>
   );

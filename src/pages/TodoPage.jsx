@@ -5,14 +5,7 @@ import Box from "@mui/material/Box";
 import Header from "../components/Header";
 import Card from "../components/ui/todo/TodoCard";
 import TextField from "@mui/material/TextField";
-import {
-  Button,
-  CardContent,
-  CardHeader,
-  FormGroup,
-  Hidden,
-  Paper,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import Modal from "../components/Modal";
 
 const TodoPage = ({ setMode, mode }) => {
@@ -95,7 +88,7 @@ const TodoPage = ({ setMode, mode }) => {
         handleMarkAsDone={handleMarkAsDone}
         handleEditTask={handleEditTask}
       />
-      <Container maxWidth="md" sx={{ marginTop: "100px" }}>
+      <Container maxWidth="md" sx={{ marginTop: "100px", padding: 0 }}>
         <Box>
           <Box
             component={"form"}
@@ -171,8 +164,9 @@ const TodoPage = ({ setMode, mode }) => {
               sx={{
                 fontSize: "13px",
                 bgcolor: "rgba(240,242,237,0.79)",
-                color: "#4666FF",
+                fontWeight: "600",
                 marginRight: "auto",
+                marginBottom: "5px",
                 padding: "3px 10px",
                 borderRadius: "5px",
               }}
