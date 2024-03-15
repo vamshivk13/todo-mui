@@ -4,7 +4,7 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
   return (
-    <Paper elevation={0} onClick={() => handleSelectedTask(task.id)}>
+    <Paper elevation={0} onClick={() => handleSelectedTask(task?.id)}>
       <Card
         sx={{
           fontSize: "1.2rem",
@@ -20,7 +20,7 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
             alignItems: "center",
           }}
         >
-          {task.isDone ? (
+          {task?.isDone ? (
             <CheckCircleIcon
               sx={{
                 opacity: "0.5",
@@ -47,8 +47,8 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
               }}
             />
           )}
-          <Typography variant="body1" noWrap>
-            {task.task}
+          <Typography variant="body1" sx={{ wordBreak: "break-all" }}>
+            {task?.task}
           </Typography>
         </CardContent>
       </Card>

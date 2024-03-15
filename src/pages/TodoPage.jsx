@@ -5,8 +5,9 @@ import Box from "@mui/material/Box";
 import Header from "../components/Header";
 import Card from "../components/ui/todo/TodoCard";
 import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
+import { Button, CardContent, Card as CardMui } from "@mui/material";
 import Modal from "../components/Modal";
+import Sidebar from "../components/ui/sidebar/Sidebar";
 
 const TodoPage = ({ setMode, mode }) => {
   const [value, setValue] = useState("");
@@ -88,8 +89,23 @@ const TodoPage = ({ setMode, mode }) => {
         handleMarkAsDone={handleMarkAsDone}
         handleEditTask={handleEditTask}
       />
-      <Container maxWidth="md" sx={{ marginTop: "100px", padding: 0 }}>
-        <Box>
+      <Box
+        component={"div"}
+        sx={{
+          marginTop: "60px",
+          padding: 0,
+          display: "flex",
+          height: "calc(100% - 60px)",
+        }}
+      >
+        <Sidebar />
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <Box
             component={"form"}
             sx={{
@@ -97,6 +113,7 @@ const TodoPage = ({ setMode, mode }) => {
               flexDirection: "row",
               px: "1rem",
               gap: "1rem",
+              paddingTop: "10px",
             }}
             onSubmit={addTask}
           >
@@ -123,72 +140,76 @@ const TodoPage = ({ setMode, mode }) => {
               Add
             </Button>
           </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+              pt: 3,
+              px: "1rem",
+              marginBottom: "10px",
+            }}
+          >
+            {tasks
+              .filter((task) => task.isDone == false)
+              .map((task) => {
+                return (
+                  <Card
+                    key={task.id}
+                    task={task}
+                    handleSelectedTask={handleSelectedTask}
+                    handleMarkAsDone={handleMarkAsDone}
+                  />
+                );
+              })}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+              pt: 3,
+              marginBottom: "10px",
+              px: "1rem",
+            }}
+          >
+            {tasks.filter((task) => task.isDone == true).length > 0 && (
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontSize: "13px",
+                  bgcolor: "rgba(240,242,237,0.79)",
+                  fontWeight: "600",
+                  marginRight: "auto",
+                  marginBottom: "5px",
+                  padding: "3px 10px",
+                  borderRadius: "5px",
+                }}
+              >
+                Completed
+              </Typography>
+            )}
+            {tasks
+              .filter((task) => task.isDone == true)
+              .map((task) => {
+                return (
+                  <Card
+                    key={task.id}
+                    task={task}
+                    handleMarkAsDone={handleMarkAsDone}
+                    handleSelectedTask={handleSelectedTask}
+                  />
+                );
+              })}
+          </Box>
         </Box>
-        {/* <Container> */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "5px",
-            pt: 3,
-            px: "1rem",
-            marginBottom: "10px",
-          }}
-        >
-          {tasks
-            .filter((task) => task.isDone == false)
-            .map((task) => {
-              return (
-                <Card
-                  key={task.id}
-                  task={task}
-                  handleSelectedTask={handleSelectedTask}
-                  handleMarkAsDone={handleMarkAsDone}
-                />
-              );
-            })}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "5px",
-            pt: 3,
-            marginBottom: "10px",
-            px: "1rem",
-          }}
-        >
-          {tasks.filter((task) => task.isDone == true).length > 0 && (
-            <Typography
-              variant="subtitle1"
-              sx={{
-                fontSize: "13px",
-                bgcolor: "rgba(240,242,237,0.79)",
-                fontWeight: "600",
-                marginRight: "auto",
-                marginBottom: "5px",
-                padding: "3px 10px",
-                borderRadius: "5px",
-              }}
-            >
-              Completed
-            </Typography>
-          )}
-          {tasks
-            .filter((task) => task.isDone == true)
-            .map((task) => {
-              return (
-                <Card
-                  key={task.id}
-                  task={task}
-                  handleMarkAsDone={handleMarkAsDone}
-                  handleSelectedTask={handleSelectedTask}
-                />
-              );
-            })}
-        </Box>
-        {/* </Container> */}
-      </Container>
+        {/* <Box>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur
+          reprehenderit error molestias, cupiditate explicabo harum laborum in
+          culpa impedit ab. Omnis, facere. Consequatur odit nostrum voluptates
+          rerum quasi possimus necessitatibus!
+        </Box> */}
+      </Box>
     </Box>
   );
 };
