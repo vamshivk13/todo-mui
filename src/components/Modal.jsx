@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Drawer,
   IconButton,
   InputBase,
   TextField,
@@ -30,9 +31,16 @@ const Modal = ({
     setValue(content?.task);
   }, [content?.task]);
   return (
-    <Dialog onClose={onClose} open={isOpen} maxWidth={"sm"} fullWidth>
+    <Drawer
+      anchor="right"
+      onClose={onClose}
+      sx={{ position: "relative" }}
+      open={isOpen}
+      variant="temporary"
+      // maxWidth={"md"}
+    >
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent sx={{ py: "1rem" }}>
+      {/* <DialogContent sx={{ py: "1rem", width: "400px" }}>
         <InputBase
           type="text"
           maxRows={10}
@@ -68,8 +76,9 @@ const Modal = ({
         >
           <SaveIcon />
         </IconButton>
-      </DialogActions>
-    </Dialog>
+      </DialogActions> */}
+      This is a drawer component
+    </Drawer>
   );
 };
 

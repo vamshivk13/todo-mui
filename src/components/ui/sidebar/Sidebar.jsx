@@ -12,7 +12,8 @@ const Sidebar = () => {
       component={"div"}
       sx={{
         display: "flex",
-        flex: "0.25",
+        flex: 0.25,
+        flexShrink: 0,
         flexDirection: "column",
         height: "100%",
         // gap: "1rem",

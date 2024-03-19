@@ -4,7 +4,13 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
   return (
-    <Paper elevation={0} onClick={() => handleSelectedTask(task?.id)}>
+    <Paper
+      elevation={0}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleSelectedTask(task?.id);
+      }}
+    >
       <Card
         sx={{
           fontSize: "1.2rem",

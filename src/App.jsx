@@ -1,8 +1,6 @@
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import TodoPage from "./pages/TodoPage";
-import { light } from "@mui/material/styles/createPalette";
 import { useState } from "react";
-import { grey } from "@mui/material/colors";
 
 function App() {
   const [mode, setMode] = useState("light");

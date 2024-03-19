@@ -5,9 +5,23 @@ import Box from "@mui/material/Box";
 import Header from "../components/Header";
 import Card from "../components/ui/todo/TodoCard";
 import TextField from "@mui/material/TextField";
-import { Button, CardContent, Card as CardMui } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import {
+  Button,
+  CardContent,
+  Card as CardMui,
+  FilledInput,
+  IconButton,
+  Input,
+  InputBase,
+  OutlinedInput,
+  Paper,
+} from "@mui/material";
 import Modal from "../components/Modal";
 import Sidebar from "../components/ui/sidebar/Sidebar";
+import TodoView from "../components/ui/todo/TodoView";
+import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
 
 const TodoPage = ({ setMode, mode }) => {
   const [value, setValue] = useState("");
@@ -80,15 +94,7 @@ const TodoPage = ({ setMode, mode }) => {
       }}
     >
       <Header setMode={setMode} mode={mode} />
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        content={selectedTask}
-        title={"Todo Details"}
-        handleDeleteTask={handleDeleteTask}
-        handleMarkAsDone={handleMarkAsDone}
-        handleEditTask={handleEditTask}
-      />
+
       <Box
         component={"div"}
         sx={{
@@ -99,116 +105,109 @@ const TodoPage = ({ setMode, mode }) => {
         }}
       >
         <Sidebar />
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <Box display={{ flex: 1, display: "flex" }}>
           <Box
-            component={"form"}
             sx={{
+              flex: 1,
+              flexShrink: 1,
               display: "flex",
-              flexDirection: "row",
-              px: "1rem",
-              gap: "1rem",
-              paddingTop: "10px",
+              flexDirection: "column",
             }}
-            onSubmit={addTask}
+            onClick={() => {
+              setIsOpen(false);
+            }}
           >
-            <TextField
-              id="todo"
-              label="Note your Todo.."
-              size="medium"
+            <NewTodoTextField
               value={value}
-              onChange={(e) => setValue(e.target.value)}
-              sx={{ flex: 1, borderWidth: "2px" }}
+              setValue={setValue}
+              addTask={addTask}
             />
-            <Button
-              variant="outlined"
+
+            <Box
               sx={{
-                paddingX: 5,
-                fontSize: "14px",
-                borderWidth: "2px",
-                "&:hover": {
-                  borderWidth: "2px",
-                },
+                display: "flex",
+                flexDirection: "column",
+                gap: "5px",
+                pt: 3,
+                px: "1rem",
+                marginBottom: "10px",
               }}
-              type="submit"
             >
-              Add
-            </Button>
+              {tasks
+                .filter((task) => task.isDone == false)
+                .map((task) => {
+                  return (
+                    <Card
+                      key={task.id}
+                      task={task}
+                      handleSelectedTask={handleSelectedTask}
+                      handleMarkAsDone={handleMarkAsDone}
+                    />
+                  );
+                })}
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "5px",
+                pt: 3,
+                marginBottom: "10px",
+                px: "1rem",
+              }}
+            >
+              {tasks.filter((task) => task.isDone == true).length > 0 && (
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontSize: "13px",
+                    bgcolor: "rgba(240,242,237,0.79)",
+                    fontWeight: "600",
+                    marginRight: "auto",
+                    marginBottom: "5px",
+                    padding: "3px 10px",
+                    borderRadius: "5px",
+                  }}
+                >
+                  Completed
+                </Typography>
+              )}
+              {tasks
+                .filter((task) => task.isDone == true)
+                .map((task) => {
+                  return (
+                    <Card
+                      key={task.id}
+                      task={task}
+                      handleMarkAsDone={handleMarkAsDone}
+                      handleSelectedTask={handleSelectedTask}
+                    />
+                  );
+                })}
+            </Box>
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "5px",
-              pt: 3,
-              px: "1rem",
-              marginBottom: "10px",
-            }}
-          >
-            {tasks
-              .filter((task) => task.isDone == false)
-              .map((task) => {
-                return (
-                  <Card
-                    key={task.id}
-                    task={task}
-                    handleSelectedTask={handleSelectedTask}
-                    handleMarkAsDone={handleMarkAsDone}
-                  />
-                );
-              })}
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "5px",
-              pt: 3,
-              marginBottom: "10px",
-              px: "1rem",
-            }}
-          >
-            {tasks.filter((task) => task.isDone == true).length > 0 && (
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontSize: "13px",
-                  bgcolor: "rgba(240,242,237,0.79)",
-                  fontWeight: "600",
-                  marginRight: "auto",
-                  marginBottom: "5px",
-                  padding: "3px 10px",
-                  borderRadius: "5px",
-                }}
-              >
-                Completed
-              </Typography>
-            )}
-            {tasks
-              .filter((task) => task.isDone == true)
-              .map((task) => {
-                return (
-                  <Card
-                    key={task.id}
-                    task={task}
-                    handleMarkAsDone={handleMarkAsDone}
-                    handleSelectedTask={handleSelectedTask}
-                  />
-                );
-              })}
-          </Box>
+          {isOpen && (
+            <TodoView
+              isOpen={isOpen}
+              onClose={onClose}
+              content={selectedTask}
+              title={"Todo Details"}
+              handleDeleteTask={handleDeleteTask}
+              handleMarkAsDone={handleMarkAsDone}
+              handleEditTask={handleEditTask}
+            />
+          )}
         </Box>
-        {/* <Box>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur
-          reprehenderit error molestias, cupiditate explicabo harum laborum in
-          culpa impedit ab. Omnis, facere. Consequatur odit nostrum voluptates
-          rerum quasi possimus necessitatibus!
-        </Box> */}
+
+        {/* <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          content={selectedTask}
+          title={"Todo Details"}
+          handleDeleteTask={handleDeleteTask}
+          handleMarkAsDone={handleMarkAsDone}
+          handleEditTask={handleEditTask}
+        /> */}
       </Box>
     </Box>
   );
