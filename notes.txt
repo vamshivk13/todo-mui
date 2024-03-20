@@ -2,5 +2,5 @@
 1. ADD localStorage custom Hook --
 2. Integrate application to add todos to localStorage --
 3. Integrate dark mode with localStorage --
-4. Fix Sidebar card components 
+4. Fix Sidebar card components  --
 5. Add Responsiveness 
