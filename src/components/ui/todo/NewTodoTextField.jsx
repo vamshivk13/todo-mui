@@ -15,7 +15,15 @@ const NewTodoTextField = ({ value, setValue, addTask }) => {
       }}
       onSubmit={addTask}
     >
-      <Paper sx={{ flex: 1, display: "flex", padding: "3px 10px" }}>
+      <Paper
+        sx={{
+          flex: 1,
+          display: "flex",
+          padding: "3px 10px",
+          boxShadow:
+            "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <InputBase
           id="todo"
           placeholder="Add Todo"

@@ -7,6 +7,7 @@ import Sidebar from "../components/ui/sidebar/Sidebar";
 import TodoView from "../components/ui/todo/TodoView";
 import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { Paper } from "@mui/material";
 
 const TodoPage = ({ setMode, mode }) => {
   const [value, setValue] = useState("");
@@ -124,7 +125,7 @@ const TodoPage = ({ setMode, mode }) => {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "5px",
+                gap: "7px",
                 pt: 3,
                 px: "1rem",
                 marginBottom: "10px",
@@ -147,27 +148,32 @@ const TodoPage = ({ setMode, mode }) => {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "5px",
+                gap: "7px",
                 pt: 3,
                 marginBottom: "10px",
                 px: "1rem",
               }}
             >
               {tasks.filter((task) => task.isDone == true).length > 0 && (
-                <Typography
-                  variant="subtitle1"
+                <Paper
                   sx={{
-                    fontSize: "13px",
-                    bgcolor: "rgba(240,242,237,0.79)",
-                    fontWeight: "600",
                     marginRight: "auto",
-                    marginBottom: "5px",
                     padding: "3px 10px",
-                    borderRadius: "5px",
                   }}
                 >
-                  Completed
-                </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontSize: "13px",
+                      fontWeight: "600",
+                      // marginBottom: "5px",
+                      // padding: "3px 10px",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    Completed
+                  </Typography>
+                </Paper>
               )}
               {tasks
                 .filter((task) => task.isDone == true)

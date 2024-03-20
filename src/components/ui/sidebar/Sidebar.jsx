@@ -5,11 +5,11 @@ import {
   Typography,
   Box,
   Paper,
+  colors,
 } from "@mui/material";
 const Sidebar = () => {
   return (
-    <Box
-      component={"div"}
+    <Paper
       sx={{
         display: "flex",
         flex: 0.25,
@@ -18,40 +18,50 @@ const Sidebar = () => {
         height: "100%",
         // gap: "1rem",
         overflow: "auto",
+        boxShadow:
+          "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
       }}
     >
-      {[
-        1, 2, 3, 4, 5, 5, 6, 6, 6, 3, 2, 2, 3, 2, 3, 1, 1, 1, 1, 1, 1, 12, 4,
-        11,
-      ].map((item, index) => {
+      {[1, 2, 3, 4, 5, 5, 6].map((item, index) => {
         return (
-          <Paper
-            sx={{ borderRadius: "none", border: "none", boxShadow: "none" }}
+          // <Paper
+          //   sx={{
+          //     borderRadius: "none",
+          //     border: "none",
+          //     boxShadow: "none",
+          //   }}
+          // >
+          <CardMui
+            sx={{
+              boxShadow: "none",
+              "&:hover": {
+                bgcolor: "rgba(0, 0, 0, 0.1)",
+              },
+            }}
           >
-            <CardMui>
-              <CardContent
-                sx={{
-                  overflow: "hidden",
-                  padding: "13px 1rem !important",
-                  display: "flex",
-                  border: "none !important",
-                  gap: "1rem",
-                  alignItems: "center",
-                }}
+            <CardContent
+              sx={{
+                overflow: "hidden",
+                padding: "13px 1rem !important",
+                display: "flex",
+                border: "none !important",
+                gap: "1rem",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                noWrap
+                variant="body1"
+                sx={{ wordBreak: "break-all", height: "100%" }}
               >
-                <Typography
-                  noWrap
-                  variant="body1"
-                  sx={{ wordBreak: "break-all", height: "100%" }}
-                >
-                  Task {index}
-                </Typography>
-              </CardContent>
-            </CardMui>
-          </Paper>
+                Task {index}
+              </Typography>
+            </CardContent>
+          </CardMui>
+          // </Paper>
         );
       })}
-    </Box>
+    </Paper>
   );
 };
 
