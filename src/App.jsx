@@ -32,6 +32,9 @@ function App() {
         defaultProps: {
           color: "customHeader",
         },
+        styleOverrides: {
+          root: {},
+        },
       },
     },
   });
