@@ -1,34 +1,27 @@
-import React, { useState } from "react";
-import Container from "@mui/material/Container";
+import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Header from "../components/Header";
 import Card from "../components/ui/todo/TodoCard";
-import TextField from "@mui/material/TextField";
-import AddIcon from "@mui/icons-material/Add";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import {
-  Button,
-  CardContent,
-  Card as CardMui,
-  FilledInput,
-  IconButton,
-  Input,
-  InputBase,
-  OutlinedInput,
-  Paper,
-} from "@mui/material";
-import Modal from "../components/Modal";
 import Sidebar from "../components/ui/sidebar/Sidebar";
 import TodoView from "../components/ui/todo/TodoView";
 import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const TodoPage = ({ setMode, mode }) => {
   const [value, setValue] = useState("");
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const selectedTask = tasks.find((task) => task.id == selectedId);
+  useEffect(() => {
+    const tasks = localStorage.getItem("tasks");
+    setTasks(JSON.parse(tasks));
+  }, []);
+  useEffect(() => {
+    if (tasks.length !== 0)
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
   function addTask(e) {
     e.preventDefault();
     if (value == "" || value == null || value == undefined) {
@@ -38,6 +31,10 @@ const TodoPage = ({ setMode, mode }) => {
       ...tasks,
       { task: value, isDone: false, id: Math.random() * 10 },
     ]);
+    // setTasks1((tasks) => [
+    //   ...tasks,
+    //   { task: value, isDone: false, id: Math.random() * 10 },
+    // ]);
     setValue("");
   }
   function onClose() {

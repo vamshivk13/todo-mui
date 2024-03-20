@@ -1,9 +1,11 @@
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import TodoPage from "./pages/TodoPage";
 import { useState } from "react";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
-  const [mode, setMode] = useState("light");
+  // const [mode, setMode] = useState("light");
+  const [mode, setMode] = useLocalStorage("mode", "dark");
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
