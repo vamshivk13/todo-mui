@@ -15,14 +15,7 @@ const TodoPage = ({ setMode, mode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const selectedTask = tasks.find((task) => task.id == selectedId);
-  useEffect(() => {
-    const tasks = localStorage.getItem("tasks");
-    setTasks(JSON.parse(tasks));
-  }, []);
-  useEffect(() => {
-    if (tasks.length !== 0)
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+
   function addTask(e) {
     e.preventDefault();
     if (value == "" || value == null || value == undefined) {
@@ -32,10 +25,6 @@ const TodoPage = ({ setMode, mode }) => {
       ...tasks,
       { task: value, isDone: false, id: Math.random() * 10 },
     ]);
-    // setTasks1((tasks) => [
-    //   ...tasks,
-    //   { task: value, isDone: false, id: Math.random() * 10 },
-    // ]);
     setValue("");
   }
   function onClose() {
