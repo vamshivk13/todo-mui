@@ -57,7 +57,7 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
             />
           )}
           <Typography variant="body1" sx={{ wordBreak: "break-all" }}>
-            {task?.task} -- {task?.id}
+            {task?.task}
           </Typography>
         </CardContent>
       </Card>
