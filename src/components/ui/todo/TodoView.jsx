@@ -38,7 +38,7 @@ const TodoView = ({
     >
       <Card
         sx={{
-          height: "calc(100% - 60px)",
+          height: "calc(100% - 50px)",
           display: "flex",
           flexDirection: "column",
           borderRadius: "0 !important",
@@ -82,7 +82,7 @@ const TodoView = ({
           position: "absolute",
           bottom: 0,
           right: 0,
-          height: "60px",
+          height: "50px",
           left: 0,
         }}
       >
