@@ -13,16 +13,15 @@ import AddIcon from "@mui/icons-material/Add";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 const Sidebar = () => {
   return (
-    <Box sx={{ flex: 0.25 }}>
+    <Box sx={{ flex: 0.25, height: "100%", position: "relative" }}>
       <Paper
         sx={{
           display: "flex",
-
+          height: "calc(100% - 50px)",
           flexShrink: 0,
           flexDirection: "column",
           height: "100%",
           // gap: "1rem",
-          position: "relative",
           overflowY: "auto",
           boxShadow:
             "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
@@ -80,7 +79,7 @@ const Sidebar = () => {
       </Paper>
       <Box
         sx={{
-          position: "sticky",
+          position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
