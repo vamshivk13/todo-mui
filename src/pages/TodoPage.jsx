@@ -40,14 +40,11 @@ const TodoPage = ({ setMode, mode }) => {
     setTasks((tasks) => tasks.filter((task) => task.id !== selectedId));
     setIsOpen(false);
   }
-  console.log(selectedId);
-  function handleMarkAsDone(id = null) {
-    const idToBeMarked =
-      selectedId == null || selectedId == undefined ? id : selectedId;
-    console.log("ID---", idToBeMarked);
+
+  function handleMarkAsDone(id) {
     setTasks((tasks) =>
       tasks.map((task) => {
-        if (task.id == idToBeMarked) {
+        if (task.id == id) {
           return {
             ...task,
             isDone: !task.isDone,
@@ -155,8 +152,6 @@ const TodoPage = ({ setMode, mode }) => {
                     sx={{
                       fontSize: "13px",
                       fontWeight: "600",
-                      // marginBottom: "5px",
-                      // padding: "3px 10px",
                       borderRadius: "5px",
                     }}
                   >

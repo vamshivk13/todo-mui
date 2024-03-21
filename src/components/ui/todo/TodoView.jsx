@@ -100,7 +100,10 @@ const TodoView = ({
           <IconButton onClick={handleDeleteTask} variant="outlined">
             <DeleteIcon />
           </IconButton>
-          <IconButton onClick={handleMarkAsDone} variant="outlined">
+          <IconButton
+            onClick={() => handleMarkAsDone(content?.id)}
+            variant="outlined"
+          >
             {content?.isDone ? <UndoIcon /> : <DoneIcon />}
           </IconButton>
           <IconButton
