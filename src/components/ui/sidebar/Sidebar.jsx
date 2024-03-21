@@ -1,12 +1,14 @@
 import React from "react";
 import {
   CardContent,
-  Card as CardMui,
+  Card,
   Typography,
   Box,
   Paper,
   colors,
+  Badge,
 } from "@mui/material";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 const Sidebar = () => {
   return (
     <Paper
@@ -31,7 +33,7 @@ const Sidebar = () => {
           //     boxShadow: "none",
           //   }}
           // >
-          <CardMui
+          <Card
             sx={{
               boxShadow: "none",
               "&:hover": {
@@ -42,22 +44,30 @@ const Sidebar = () => {
             <CardContent
               sx={{
                 overflow: "hidden",
-                padding: "13px 1rem !important",
+                padding: "13px 1.5rem !important",
                 display: "flex",
                 border: "none !important",
                 gap: "1rem",
                 alignItems: "center",
               }}
             >
+              <FormatListBulletedIcon sx={{ fontSize: "1rem" }} />
               <Typography
                 noWrap
                 variant="body1"
-                sx={{ wordBreak: "break-all", height: "100%" }}
+                sx={{
+                  wordBreak: "break-all",
+                  height: "100%",
+                  marginRight: "auto",
+                  // opacity: "0.7",
+                }}
+                color={"textSecondary"}
               >
                 Task {index}
               </Typography>
+              <Badge sx={{ opacity: 0.8 }}>{item}</Badge>
             </CardContent>
-          </CardMui>
+          </Card>
           // </Paper>
         );
       })}
