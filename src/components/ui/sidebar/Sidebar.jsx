@@ -1,17 +1,10 @@
 import React from "react";
-import {
-  CardContent,
-  Card,
-  Typography,
-  Box,
-  Paper,
-  colors,
-  Badge,
-  IconButton,
-} from "@mui/material";
+import { Typography, Box, Paper, IconButton, Divider } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import SidebarItem from "./SidebarItem";
+
 const Sidebar = () => {
+  const sidebarItems = ["My Day", "Important", "My Tasks"];
   return (
     <Box sx={{ flex: 0.25, height: "100%", position: "relative" }}>
       <Paper
@@ -20,62 +13,32 @@ const Sidebar = () => {
           height: "calc(100% - 50px)",
           flexShrink: 0,
           flexDirection: "column",
-          // gap: "1rem",
           overflowY: "auto",
           scrollbarWidth: "thin",
           boxShadow:
             "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
         }}
       >
-        {[1, 2, 3, 4, 5, 5, 6, 1, 2, 3, 4, 5, 5, 6, 1, 2, 3, 4, 5, 5, 6].map(
-          (item, index) => {
+        <Box sx={{ marginTop: "20px" }}>
+          {sidebarItems.map((item) => {
             return (
-              <Paper
-                sx={{
-                  borderRadius: "none",
-                  border: "none",
-                  boxShadow: "none",
-                }}
-              >
-                <Card
-                  sx={{
-                    boxShadow: "none",
-                    "&:hover": {
-                      bgcolor: "rgba(0, 0, 0, 0.1)",
-                    },
-                  }}
-                >
-                  <CardContent
-                    sx={{
-                      overflow: "hidden",
-                      padding: "13px 1.5rem !important",
-                      display: "flex",
-                      border: "none !important",
-                      gap: "1rem",
-                      alignItems: "center",
-                    }}
-                  >
-                    <FormatListBulletedIcon sx={{ fontSize: "1rem" }} />
-                    <Typography
-                      noWrap
-                      variant="body1"
-                      sx={{
-                        wordBreak: "break-all",
-                        height: "100%",
-                        marginRight: "auto",
-                        // opacity: "0.7",
-                      }}
-                      color={"textSecondary"}
-                    >
-                      Task {index}
-                    </Typography>
-                    <Badge sx={{ opacity: 0.8 }}>{item}</Badge>
-                  </CardContent>
-                </Card>
-              </Paper>
+              <SidebarItem
+                item={item}
+                count={2}
+                itemIcon={item}
+                isActive={item == "My Day" ? true : false}
+              />
             );
-          }
-        )}
+          })}
+        </Box>
+        <Divider sx={{ my: 1, width: "90%", marginX: "auto" }} />
+        <Box>
+          {[1, 2, 3, 4, 5, 5, 6, 1, 2, 3, 4, 5, 5, 6, 1, 2, 3, 4, 5, 5, 6].map(
+            (item) => {
+              return <SidebarItem item={item} count={item} />;
+            }
+          )}
+        </Box>
       </Paper>
       <Box
         sx={{
