@@ -120,7 +120,6 @@ const TodoPage = ({ setMode, mode }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "7px",
-
                 px: "1rem",
                 marginBottom: "10px",
               }}
@@ -152,6 +151,8 @@ const TodoPage = ({ setMode, mode }) => {
                 <Paper
                   sx={{
                     marginRight: "auto",
+                    mt: 2,
+                    mb: 1,
                     padding: "3px 10px",
                   }}
                 >
