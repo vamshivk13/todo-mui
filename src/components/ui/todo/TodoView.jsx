@@ -44,7 +44,14 @@ const TodoView = ({
           borderRadius: "0 !important",
         }}
       >
-        <Box sx={{ overflowY: "auto" }}>
+        <Paper
+          sx={{
+            overflowY: "auto",
+            scrollbarWidth: "thin",
+            height: "100%",
+            borderRadius: "0 !important",
+          }}
+        >
           <CardHeader title="Todo Details"></CardHeader>
           <CardContent sx={{ py: "1rem", flex: 1 }}>
             <InputBase
@@ -74,7 +81,7 @@ const TodoView = ({
               // variant="outlined"
             ></InputBase>
           </CardContent>
-        </Box>
+        </Paper>
       </Card>
       <Box
         sx={{

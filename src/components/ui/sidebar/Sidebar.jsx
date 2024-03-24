@@ -20,9 +20,9 @@ const Sidebar = () => {
           height: "calc(100% - 50px)",
           flexShrink: 0,
           flexDirection: "column",
-          height: "100%",
           // gap: "1rem",
           overflowY: "auto",
+          scrollbarWidth: "thin",
           boxShadow:
             "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
         }}

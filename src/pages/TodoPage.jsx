@@ -89,13 +89,21 @@ const TodoPage = ({ setMode, mode }) => {
         }}
       >
         <Sidebar />
-        <Box display={{ flex: 1, display: "flex" }}>
+        <Box
+          component={"div"}
+          display={{
+            flex: 1,
+            display: "flex",
+          }}
+        >
           <Box
             sx={{
               flex: 1,
               flexShrink: 1,
               display: "flex",
               flexDirection: "column",
+              overflowY: "auto",
+              scrollbarWidth: "thin",
             }}
             onClick={() => {
               setIsOpen(false);
@@ -112,7 +120,7 @@ const TodoPage = ({ setMode, mode }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "7px",
-                pt: 3,
+
                 px: "1rem",
                 marginBottom: "10px",
               }}
@@ -135,7 +143,7 @@ const TodoPage = ({ setMode, mode }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "7px",
-                pt: 3,
+
                 marginBottom: "10px",
                 px: "1rem",
               }}

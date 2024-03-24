@@ -10,6 +10,7 @@ const NewTodoTextField = ({ value, setValue, addTask }) => {
         display: "flex",
         flexDirection: "row",
         px: "1rem",
+        pb: 3,
         gap: "1rem",
         paddingTop: "10px",
         marginTop: "10px",
