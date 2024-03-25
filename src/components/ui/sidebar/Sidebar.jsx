@@ -1,10 +1,51 @@
-import React from "react";
-import { Typography, Box, Paper, IconButton, Divider } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Typography,
+  Box,
+  Paper,
+  IconButton,
+  Divider,
+  TextField,
+  InputBase,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SidebarItem from "./SidebarItem";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 const Sidebar = () => {
-  const sidebarItems = ["My Day", "Important", "My Tasks"];
+  const sidebarItems = [
+    {
+      name: "My Day",
+      count: 0,
+    },
+    {
+      name: "Important",
+      count: 0,
+    },
+    {
+      name: "My Tasks",
+      count: 0,
+    },
+  ];
+  const [customSidebarItems, setCustomSidebarItems] = useLocalStorage(
+    "customSideBarItems",
+    []
+  );
+  const [newListItem, setNewListItem] = useState("");
+  function handleNewListItem(e) {
+    e.preventDefault();
+    if (newListItem == "") {
+      return;
+    }
+    setCustomSidebarItems((prev) => [
+      ...prev,
+      { id: Math.random() * 10, name: newListItem, count: 0 },
+    ]);
+    setNewListItem("");
+  }
+  function handleDeleteSidebarItem(id) {
+    setCustomSidebarItems((prev) => prev.filter((item) => item.id != id));
+  }
   return (
     <Box
       sx={{
@@ -22,7 +63,6 @@ const Sidebar = () => {
           flexDirection: "column",
           overflowY: "auto",
           // scrollbarWidth: "thin",
-
           boxShadow:
             "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
         }}
@@ -31,21 +71,27 @@ const Sidebar = () => {
           {sidebarItems.map((item) => {
             return (
               <SidebarItem
-                item={item}
-                count={2}
-                itemIcon={item}
-                isActive={item == "My Day" ? true : false}
+                item={item.name}
+                count={item.count}
+                itemIcon={item.name}
+                isActive={item.name == "My Day" ? true : false}
               />
             );
           })}
         </Box>
         <Divider sx={{ my: 1, width: "90%", marginX: "auto" }} />
         <Box>
-          {[1, 2, 3, 4, 5, 5, 6, 1, 2, 3, 4, 5, 5, 6, 1, 2, 3, 4, 5, 5, 6].map(
-            (item) => {
-              return <SidebarItem item={item} count={item} />;
-            }
-          )}
+          {customSidebarItems.map((item) => {
+            return (
+              <SidebarItem
+                id={item.id}
+                type="custom"
+                item={item.name}
+                count={item.count}
+                handleDeleteSidebarItem={handleDeleteSidebarItem}
+              />
+            );
+          })}
         </Box>
       </Paper>
       <Box
@@ -58,6 +104,7 @@ const Sidebar = () => {
         }}
       >
         <Paper
+          component={"form"}
           sx={{
             height: "100%",
             display: "flex",
@@ -65,13 +112,18 @@ const Sidebar = () => {
             // gap: "1rem",
             paddingX: "13px",
           }}
+          onSubmit={handleNewListItem}
         >
           <IconButton>
             <AddIcon />
           </IconButton>
-          <Typography variant="body1" sx={{ marginRight: "auto" }}>
-            New List
-          </Typography>
+          <InputBase
+            sx={{ width: 1, paddingRight: "10px" }}
+            placeholder="New List"
+            value={newListItem}
+            onChange={(e) => setNewListItem(e.target.value)}
+            // onChange={handleNewListItem}
+          ></InputBase>
         </Paper>
       </Box>
     </Box>

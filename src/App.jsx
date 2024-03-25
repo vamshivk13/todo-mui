@@ -10,6 +10,9 @@ function App() {
     palette: {
       mode: "dark",
     },
+    typography: {
+      fontSize: 13,
+    },
   });
   const lightTheme = createTheme({
     palette: {
@@ -20,6 +23,9 @@ function App() {
       customHeader: {
         main: "#fff",
       },
+    },
+    typography: {
+      fontSize: 13,
     },
     components: {
       // Name of the component
