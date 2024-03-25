@@ -11,26 +11,15 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import SidebarItem from "./SidebarItem";
 import useLocalStorage from "../../../hooks/useLocalStorage";
+import { v4 as uuidv4 } from "uuid";
 
-const Sidebar = () => {
-  const sidebarItems = [
-    {
-      name: "My Day",
-      count: 0,
-    },
-    {
-      name: "Important",
-      count: 0,
-    },
-    {
-      name: "My Tasks",
-      count: 0,
-    },
-  ];
-  const [customSidebarItems, setCustomSidebarItems] = useLocalStorage(
-    "customSideBarItems",
-    []
-  );
+const Sidebar = ({
+  currentSidebarItemId,
+  setCurrentSidebarItemId,
+  sidebarItems,
+  customSidebarItems,
+  tasks,
+}) => {
   const [newListItem, setNewListItem] = useState("");
   function handleNewListItem(e) {
     e.preventDefault();
@@ -39,7 +28,7 @@ const Sidebar = () => {
     }
     setCustomSidebarItems((prev) => [
       ...prev,
-      { id: Math.random() * 10, name: newListItem, count: 0 },
+      { id: uuidv4(), name: newListItem, count: 0 },
     ]);
     setNewListItem("");
   }
@@ -62,7 +51,6 @@ const Sidebar = () => {
           flexShrink: 0,
           flexDirection: "column",
           overflowY: "auto",
-          // scrollbarWidth: "thin",
           boxShadow:
             "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
         }}
@@ -71,10 +59,16 @@ const Sidebar = () => {
           {sidebarItems.map((item) => {
             return (
               <SidebarItem
+                id={item.id}
+                setCurrentSidebarItemId={setCurrentSidebarItemId}
                 item={item.name}
-                count={item.count}
+                count={
+                  tasks.filter(
+                    (task) => task.listTypeId == item.id && task.isDone == false
+                  ).length
+                }
                 itemIcon={item.name}
-                isActive={item.name == "My Day" ? true : false}
+                isActive={item.id == currentSidebarItemId ? true : false}
               />
             );
           })}
@@ -87,8 +81,14 @@ const Sidebar = () => {
                 id={item.id}
                 type="custom"
                 item={item.name}
-                count={item.count}
+                count={
+                  tasks.filter(
+                    (task) => task.listTypeId == item.id && task.isDone == false
+                  ).length
+                }
+                setCurrentSidebarItemId={setCurrentSidebarItemId}
                 handleDeleteSidebarItem={handleDeleteSidebarItem}
+                isActive={item.id == currentSidebarItemId ? true : false}
               />
             );
           })}

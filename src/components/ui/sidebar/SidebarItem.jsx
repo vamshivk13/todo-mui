@@ -20,6 +20,7 @@ const SidebarItem = ({
   isActive,
   id,
   handleDeleteSidebarItem,
+  setCurrentSidebarItemId,
 }) => {
   const [contextMenu, setContextMenu] = React.useState(null);
 
@@ -58,6 +59,7 @@ const SidebarItem = ({
         border: "none",
         boxShadow: "none",
       }}
+      onClick={() => setCurrentSidebarItemId(id)}
     >
       <Card
         className={`${isActive ? "active" : ""}`}

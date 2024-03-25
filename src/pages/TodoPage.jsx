@@ -14,8 +14,36 @@ const TodoPage = ({ setMode, mode }) => {
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [currentTasks, setCurrentTasks] = useState([]);
+  const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
+  const [sidebarItems, setSidebarItems] = useLocalStorage("sidebarItems", [
+    {
+      id: "MyDay",
+      name: "My Day",
+      count: 0,
+    },
+    {
+      id: "Important",
+      name: "Important",
+      count: 0,
+    },
+    {
+      id: "MyTasks",
+      name: "My Tasks",
+      count: 0,
+    },
+  ]);
+  const [customSidebarItems, setCustomSidebarItems] = useLocalStorage(
+    "customSideBarItems",
+    []
+  );
   const selectedTask = tasks.find((task) => task.id == selectedId);
-
+  useEffect(() => {
+    const currentTasks = tasks.filter(
+      (task) => task.listTypeId === currentSidebarItemId
+    );
+    setCurrentTasks(currentTasks);
+  }, [currentSidebarItemId, tasks]);
   function addTask(e) {
     e.preventDefault();
     if (value == "" || value == null || value == undefined) {
@@ -23,8 +51,42 @@ const TodoPage = ({ setMode, mode }) => {
     }
     setTasks((tasks) => [
       ...tasks,
-      { task: value, isDone: false, id: Math.random() * 10 },
+      {
+        task: value,
+        isDone: false,
+        id: Math.random() * 10,
+        notes: "",
+        createdAt: new Date(),
+        listTypeId: currentSidebarItemId,
+      },
     ]);
+    // if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
+    //   setSidebarItems((sidebarItems) => {
+    //     return sidebarItems.map((item) => {
+    //       if (item.id == currentSidebarItemId) {
+    //         return {
+    //           ...item,
+    //           count: item.count + 1,
+    //         };
+    //       } else {
+    //         return item;
+    //       }
+    //     });
+    //   });
+    // } else {
+    //   setCustomSidebarItems((sidebarItems) => {
+    //     return sidebarItems.map((item) => {
+    //       if (item.id == currentSidebarItemId) {
+    //         return {
+    //           ...item,
+    //           count: item.count + 1,
+    //         };
+    //       } else {
+    //         return item;
+    //       }
+    //     });
+    //   });
+    // }
     setValue("");
   }
   function onClose() {
@@ -39,6 +101,33 @@ const TodoPage = ({ setMode, mode }) => {
   function handleDeleteTask() {
     setTasks((tasks) => tasks.filter((task) => task.id !== selectedId));
     setIsOpen(false);
+    // if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
+    //   setSidebarItems((sidebarItems) => {
+    //     return sidebarItems.map((item) => {
+    //       if (item.id == currentSidebarItemId) {
+    //         return {
+    //           ...item,
+    //           count: item.count + 1,
+    //         };
+    //       } else {
+    //         return item;
+    //       }
+    //     });
+    //   });
+    // } else {
+    //   setCustomSidebarItems((sidebarItems) => {
+    //     return sidebarItems.map((item) => {
+    //       if (item.id == currentSidebarItemId) {
+    //         return {
+    //           ...item,
+    //           count: item.count + 1,
+    //         };
+    //       } else {
+    //         return item;
+    //       }
+    //     });
+    //   });
+    // }
   }
 
   function handleMarkAsDone(id) {
@@ -87,7 +176,14 @@ const TodoPage = ({ setMode, mode }) => {
           height: "calc(100% - 60px)",
         }}
       >
-        <Sidebar />
+        <Sidebar
+          setCurrentSidebarItemId={setCurrentSidebarItemId}
+          currentSidebarItemId={currentSidebarItemId}
+          sidebarItems={sidebarItems}
+          setCustomSidebarItems={setCustomSidebarItems}
+          customSidebarItems={customSidebarItems}
+          tasks={tasks}
+        />
         <Box
           component={"div"}
           display={{
@@ -123,7 +219,7 @@ const TodoPage = ({ setMode, mode }) => {
                 marginBottom: "10px",
               }}
             >
-              {tasks
+              {currentTasks
                 .filter((task) => task.isDone == false)
                 .map((task) => {
                   return (
@@ -141,12 +237,12 @@ const TodoPage = ({ setMode, mode }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "7px",
-
                 marginBottom: "10px",
                 px: "1rem",
               }}
             >
-              {tasks.filter((task) => task.isDone == true).length > 0 && (
+              {currentTasks.filter((task) => task.isDone == true).length >
+                0 && (
                 <Paper
                   sx={{
                     marginRight: "auto",
@@ -167,7 +263,7 @@ const TodoPage = ({ setMode, mode }) => {
                   </Typography>
                 </Paper>
               )}
-              {tasks
+              {currentTasks
                 .filter((task) => task.isDone == true)
                 .map((task) => {
                   return (
