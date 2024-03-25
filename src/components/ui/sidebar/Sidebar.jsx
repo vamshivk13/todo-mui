@@ -17,6 +17,7 @@ const Sidebar = ({
   currentSidebarItemId,
   setCurrentSidebarItemId,
   sidebarItems,
+  setCustomSidebarItems,
   customSidebarItems,
   tasks,
 }) => {

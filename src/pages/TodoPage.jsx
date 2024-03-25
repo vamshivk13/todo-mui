@@ -60,33 +60,6 @@ const TodoPage = ({ setMode, mode }) => {
         listTypeId: currentSidebarItemId,
       },
     ]);
-    // if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
-    //   setSidebarItems((sidebarItems) => {
-    //     return sidebarItems.map((item) => {
-    //       if (item.id == currentSidebarItemId) {
-    //         return {
-    //           ...item,
-    //           count: item.count + 1,
-    //         };
-    //       } else {
-    //         return item;
-    //       }
-    //     });
-    //   });
-    // } else {
-    //   setCustomSidebarItems((sidebarItems) => {
-    //     return sidebarItems.map((item) => {
-    //       if (item.id == currentSidebarItemId) {
-    //         return {
-    //           ...item,
-    //           count: item.count + 1,
-    //         };
-    //       } else {
-    //         return item;
-    //       }
-    //     });
-    //   });
-    // }
     setValue("");
   }
   function onClose() {
@@ -101,33 +74,6 @@ const TodoPage = ({ setMode, mode }) => {
   function handleDeleteTask() {
     setTasks((tasks) => tasks.filter((task) => task.id !== selectedId));
     setIsOpen(false);
-    // if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
-    //   setSidebarItems((sidebarItems) => {
-    //     return sidebarItems.map((item) => {
-    //       if (item.id == currentSidebarItemId) {
-    //         return {
-    //           ...item,
-    //           count: item.count + 1,
-    //         };
-    //       } else {
-    //         return item;
-    //       }
-    //     });
-    //   });
-    // } else {
-    //   setCustomSidebarItems((sidebarItems) => {
-    //     return sidebarItems.map((item) => {
-    //       if (item.id == currentSidebarItemId) {
-    //         return {
-    //           ...item,
-    //           count: item.count + 1,
-    //         };
-    //       } else {
-    //         return item;
-    //       }
-    //     });
-    //   });
-    // }
   }
 
   function handleMarkAsDone(id) {
@@ -198,7 +144,6 @@ const TodoPage = ({ setMode, mode }) => {
               display: "flex",
               flexDirection: "column",
               overflowY: "auto",
-              // scrollbarWidth: "thin",
             }}
             onClick={() => {
               setIsOpen(false);
