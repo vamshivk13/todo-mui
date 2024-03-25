@@ -47,7 +47,7 @@ const TodoView = ({
         <Paper
           sx={{
             overflowY: "auto",
-            scrollbarWidth: "thin",
+            // scrollbarWidth: "thin",
             height: "100%",
             borderRadius: "0 !important",
           }}

@@ -6,7 +6,14 @@ import SidebarItem from "./SidebarItem";
 const Sidebar = () => {
   const sidebarItems = ["My Day", "Important", "My Tasks"];
   return (
-    <Box sx={{ flex: 0.25, height: "100%", position: "relative" }}>
+    <Box
+      sx={{
+        flex: 0.25,
+        height: "100%",
+        position: "relative",
+        scrollbarColor: "red",
+      }}
+    >
       <Paper
         sx={{
           display: "flex",
@@ -14,7 +21,8 @@ const Sidebar = () => {
           flexShrink: 0,
           flexDirection: "column",
           overflowY: "auto",
-          scrollbarWidth: "thin",
+          // scrollbarWidth: "thin",
+
           boxShadow:
             "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
         }}

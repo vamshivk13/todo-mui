@@ -78,7 +78,6 @@ const TodoPage = ({ setMode, mode }) => {
       }}
     >
       <Header setMode={setMode} mode={mode} />
-
       <Box
         component={"div"}
         sx={{
@@ -103,7 +102,7 @@ const TodoPage = ({ setMode, mode }) => {
               display: "flex",
               flexDirection: "column",
               overflowY: "auto",
-              scrollbarWidth: "thin",
+              // scrollbarWidth: "thin",
             }}
             onClick={() => {
               setIsOpen(false);

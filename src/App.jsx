@@ -41,7 +41,7 @@ function App() {
   return (
     <ThemeProvider theme={mode == "light" ? lightTheme : darkTheme}>
       <CssBaseline>
-        <Box sx={{ height: "100%" }}>
+        <Box className={mode} sx={{ height: "100%" }}>
           <TodoPage setMode={setMode} mode={mode} />
         </Box>
       </CssBaseline>
