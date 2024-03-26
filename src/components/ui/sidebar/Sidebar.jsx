@@ -28,11 +28,13 @@ const Sidebar = ({
     if (newListItem == "") {
       return;
     }
+    const id = uuidv4();
     setCustomSidebarItems((prev) => [
       ...prev,
-      { id: uuidv4(), name: newListItem, count: 0 },
+      { id: id, name: newListItem, count: 0 },
     ]);
     setNewListItem("");
+    setCurrentSidebarItemId(id);
   }
   function handleDeleteSidebarItem(id) {
     setCustomSidebarItems((prev) => prev.filter((item) => item.id != id));
