@@ -38,6 +38,11 @@ const TodoPage = ({ setMode, mode }) => {
     []
   );
   const selectedTask = tasks.find((task) => task.id == selectedId);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [currentSidebarItemId]);
+
   useEffect(() => {
     const currentTasks = tasks.filter(
       (task) => task.listTypeId === currentSidebarItemId
@@ -128,6 +133,7 @@ const TodoPage = ({ setMode, mode }) => {
           sidebarItems={sidebarItems}
           setCustomSidebarItems={setCustomSidebarItems}
           customSidebarItems={customSidebarItems}
+          setTasks={setTasks}
           tasks={tasks}
         />
         <Box
