@@ -58,6 +58,8 @@ const SidebarItem = ({
         borderRadius: "none",
         border: "none",
         boxShadow: "none",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
       }}
       onClick={() => setCurrentSidebarItemId(id)}
     >
@@ -87,10 +89,12 @@ const SidebarItem = ({
         >
           {icon}
           <Typography
-            noWrap
             variant="body1"
             sx={{
               wordBreak: "break-all",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
               height: "100%",
               marginRight: "auto",
               fontWeight: "inherit",

@@ -46,6 +46,7 @@ const Sidebar = ({
     <Box
       sx={{
         flex: 0.25,
+        maxWidth: "20%",
         height: "100%",
         position: "relative",
         scrollbarColor: "red",

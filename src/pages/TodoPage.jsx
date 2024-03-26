@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Header from "../components/Header";
@@ -7,15 +7,27 @@ import Sidebar from "../components/ui/sidebar/Sidebar";
 import TodoView from "../components/ui/todo/TodoView";
 import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { Paper } from "@mui/material";
+import {
+  IconButton,
+  Input,
+  InputBase,
+  OutlinedInput,
+  Paper,
+} from "@mui/material";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 const TodoPage = ({ setMode, mode }) => {
+  const inputRef = useRef();
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
+  const [sidebarItemInputExpanded, setSidebarItemInputExpanded] =
+    useState(false);
+  const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
+    useState("");
   const [sidebarItems, setSidebarItems] = useLocalStorage("sidebarItems", [
     {
       id: "MyDay",
@@ -37,11 +49,22 @@ const TodoPage = ({ setMode, mode }) => {
     "customSideBarItems",
     []
   );
+
   const selectedTask = tasks.find((task) => task.id == selectedId);
+  const currentSideBarItem = ["MyDay", "Important", "MyTasks"].includes(
+    currentSidebarItemId
+  )
+    ? sidebarItems.find((item) => item.id == currentSidebarItemId)
+    : customSidebarItems.find((item) => item.id == currentSidebarItemId);
 
   useEffect(() => {
     setIsOpen(false);
   }, [currentSidebarItemId]);
+
+  useEffect(() => {
+    if (currentSideBarItem != undefined)
+      setUpdatedCurrentSidebarItem(currentSideBarItem.name);
+  }, [currentSideBarItem]);
 
   useEffect(() => {
     const currentTasks = tasks.filter(
@@ -95,6 +118,15 @@ const TodoPage = ({ setMode, mode }) => {
     setIsOpen(false);
   }
 
+  function switchToTextField(e) {
+    e.stopPropagation();
+
+    if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
+      return;
+    }
+    setSidebarItemInputExpanded((prev) => !prev);
+  }
+
   function handleEditTask(val) {
     setTasks((tasks) =>
       tasks.map((task) => {
@@ -108,13 +140,47 @@ const TodoPage = ({ setMode, mode }) => {
     );
     setIsOpen(false);
   }
+  function updateSidebarItemName() {
+    console.log("UPDATE");
+    // e?.preventDefault();
 
+    if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
+      // setSidebarItems((sidebarItems) =>
+      //   sidebarItems.map((item) => {
+      //     if (item.id == currentSidebarItemId) {
+      //       return {
+      //         ...item,
+      //         name: updatedCurrentSidebarItem,
+      //       };
+      //     } else {
+      //       return item;
+      //     }
+      //   })
+      // );
+      return;
+    } else {
+      setCustomSidebarItems((customSidebarItems) =>
+        customSidebarItems.map((item) => {
+          if (item.id == currentSidebarItemId) {
+            console.log("FOUND", updatedCurrentSidebarItem);
+            return {
+              ...item,
+              name: updatedCurrentSidebarItem,
+            };
+          } else {
+            return item;
+          }
+        })
+      );
+    }
+  }
   return (
     <Box
       component={"div"}
       sx={{
         overflow: "auto",
         height: "100%",
+        width: 1,
       }}
     >
       <Header setMode={setMode} mode={mode} />
@@ -124,6 +190,7 @@ const TodoPage = ({ setMode, mode }) => {
           marginTop: "60px",
           padding: 0,
           display: "flex",
+          width: "100%",
           height: "calc(100% - 60px)",
         }}
       >
@@ -140,6 +207,8 @@ const TodoPage = ({ setMode, mode }) => {
           component={"div"}
           display={{
             flex: 1,
+            width: "80%",
+            flexShrink: 0,
             display: "flex",
           }}
         >
@@ -153,8 +222,58 @@ const TodoPage = ({ setMode, mode }) => {
             }}
             onClick={() => {
               setIsOpen(false);
+              setSidebarItemInputExpanded(false);
+              updateSidebarItemName();
             }}
           >
+            <Box sx={{ px: "1rem", pt: 2 }}>
+              <Box
+                component={"form"}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  updateSidebarItemName();
+                  setSidebarItemInputExpanded(false);
+                }}
+                sx={{ display: "flex", alignItems: "center", gap: "7px" }}
+              >
+                {sidebarItemInputExpanded == false ? (
+                  <Typography
+                    component={"div"}
+                    variant="body1"
+                    sx={{
+                      fontWeight: "500",
+                      fontSize: "1.3rem",
+                      boxSizing: "border-box",
+                    }}
+                    onClick={switchToTextField}
+                  >
+                    {currentSideBarItem?.name}
+                  </Typography>
+                ) : (
+                  <InputBase
+                    sx={{
+                      border: "0.2px solid",
+                      borderRadius: "6px",
+                      paddingX: "4px",
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    value={updatedCurrentSidebarItem}
+                    autoFocus={true}
+                    onFocus={(e) =>
+                      (e.target.style.width =
+                        currentSideBarItem.name.length + "ch")
+                    }
+                    onChange={(e) => {
+                      e.target.style.width = e.target.value.length + "ch";
+                      setUpdatedCurrentSidebarItem(e.target.value);
+                    }}
+                  ></InputBase>
+                )}
+                <IconButton>
+                  <MoreHorizIcon />
+                </IconButton>
+              </Box>
+            </Box>
             <NewTodoTextField
               value={value}
               setValue={setValue}
