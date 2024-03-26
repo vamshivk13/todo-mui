@@ -21,6 +21,7 @@ const Sidebar = ({
   customSidebarItems,
   tasks,
   setTasks,
+  handleDeleteSidebarItem,
 }) => {
   const [newListItem, setNewListItem] = useState("");
   function handleNewListItem(e) {
@@ -36,12 +37,7 @@ const Sidebar = ({
     setNewListItem("");
     setCurrentSidebarItemId(id);
   }
-  function handleDeleteSidebarItem(id) {
-    setCustomSidebarItems((prev) => prev.filter((item) => item.id != id));
-    setTasks((prevTasks) =>
-      prevTasks.filter((task) => task.listTypeId != currentSidebarItemId)
-    );
-  }
+
   return (
     <Box
       sx={{
@@ -67,6 +63,7 @@ const Sidebar = ({
           {sidebarItems.map((item) => {
             return (
               <SidebarItem
+                key={item.id}
                 id={item.id}
                 setCurrentSidebarItemId={setCurrentSidebarItemId}
                 item={item.name}
@@ -86,6 +83,7 @@ const Sidebar = ({
           {customSidebarItems.map((item) => {
             return (
               <SidebarItem
+                key={item.id}
                 id={item.id}
                 type="custom"
                 item={item.name}

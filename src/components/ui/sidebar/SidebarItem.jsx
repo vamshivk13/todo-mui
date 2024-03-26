@@ -61,7 +61,11 @@ const SidebarItem = ({
         whiteSpace: "nowrap",
         textOverflow: "ellipsis",
       }}
-      onClick={() => setCurrentSidebarItemId(id)}
+      onClick={() => {
+        console.log("CLICKED---");
+
+        setCurrentSidebarItemId(id);
+      }}
     >
       <Card
         className={`${isActive ? "active" : ""}`}
@@ -116,7 +120,15 @@ const SidebarItem = ({
             : undefined
         }
       >
-        <MenuItem onClick={() => handleDeleteSidebarItem(id)}>Delete</MenuItem>
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteSidebarItem(id);
+            handleClose();
+          }}
+        >
+          Delete
+        </MenuItem>
       </Menu>
     </Paper>
   );

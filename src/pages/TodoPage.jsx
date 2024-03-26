@@ -23,7 +23,7 @@ const TodoPage = ({ setMode, mode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
-  const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
+  const [currentSidebarItemId, setCurrentSidebarItemId] = useState(null);
   const [sidebarItemInputExpanded, setSidebarItemInputExpanded] =
     useState(false);
   const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
@@ -72,6 +72,7 @@ const TodoPage = ({ setMode, mode }) => {
     );
     setCurrentTasks(currentTasks);
   }, [currentSidebarItemId, tasks]);
+
   function addTask(e) {
     e.preventDefault();
     if (value == "" || value == null || value == undefined) {
@@ -141,28 +142,12 @@ const TodoPage = ({ setMode, mode }) => {
     setIsOpen(false);
   }
   function updateSidebarItemName() {
-    console.log("UPDATE");
-    // e?.preventDefault();
-
     if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
-      // setSidebarItems((sidebarItems) =>
-      //   sidebarItems.map((item) => {
-      //     if (item.id == currentSidebarItemId) {
-      //       return {
-      //         ...item,
-      //         name: updatedCurrentSidebarItem,
-      //       };
-      //     } else {
-      //       return item;
-      //     }
-      //   })
-      // );
       return;
     } else {
       setCustomSidebarItems((customSidebarItems) =>
         customSidebarItems.map((item) => {
           if (item.id == currentSidebarItemId) {
-            console.log("FOUND", updatedCurrentSidebarItem);
             return {
               ...item,
               name: updatedCurrentSidebarItem,
@@ -174,6 +159,25 @@ const TodoPage = ({ setMode, mode }) => {
       );
     }
   }
+
+  function handleDeleteSidebarItem(id) {
+    let prevId = "MyDay";
+    customSidebarItems.forEach((item) => {
+      if (item.id == id) {
+        return;
+      }
+      prevId = item.id;
+    });
+    setCurrentSidebarItemId(prevId);
+    setCustomSidebarItems((prev) => prev.filter((item) => item.id != id));
+    setTasks((prevTasks) =>
+      prevTasks.filter((task) => {
+        task.listTypeId != id;
+      })
+    );
+  }
+
+  console.log(currentSidebarItemId);
   return (
     <Box
       component={"div"}
@@ -202,6 +206,7 @@ const TodoPage = ({ setMode, mode }) => {
           customSidebarItems={customSidebarItems}
           setTasks={setTasks}
           tasks={tasks}
+          handleDeleteSidebarItem={handleDeleteSidebarItem}
         />
         <Box
           component={"div"}
@@ -259,10 +264,10 @@ const TodoPage = ({ setMode, mode }) => {
                     onClick={(e) => e.stopPropagation()}
                     value={updatedCurrentSidebarItem}
                     autoFocus={true}
-                    onFocus={(e) =>
-                      (e.target.style.width =
-                        currentSideBarItem.name.length + "ch")
-                    }
+                    onFocus={(e) => {
+                      e.target.style.width =
+                        updatedCurrentSidebarItem.length + "ch";
+                    }}
                     onChange={(e) => {
                       e.target.style.width = e.target.value.length + "ch";
                       setUpdatedCurrentSidebarItem(e.target.value);
