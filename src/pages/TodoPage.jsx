@@ -7,6 +7,7 @@ import Sidebar from "../components/ui/sidebar/Sidebar";
 import TodoView from "../components/ui/todo/TodoView";
 import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
 import useLocalStorage from "../hooks/useLocalStorage";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   IconButton,
   Input,
@@ -21,9 +22,10 @@ const TodoPage = ({ setMode, mode }) => {
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
-  const [currentSidebarItemId, setCurrentSidebarItemId] = useState(null);
+  const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
   const [sidebarItemInputExpanded, setSidebarItemInputExpanded] =
     useState(false);
   const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
@@ -185,6 +187,7 @@ const TodoPage = ({ setMode, mode }) => {
         overflow: "auto",
         height: "100%",
         width: 1,
+        display: "flex",
       }}
     >
       <Header setMode={setMode} mode={mode} />
@@ -200,6 +203,8 @@ const TodoPage = ({ setMode, mode }) => {
       >
         <Sidebar
           setCurrentSidebarItemId={setCurrentSidebarItemId}
+          setIsSidebarOpen={setIsSidebarOpen}
+          isSidebarOpen={isSidebarOpen}
           currentSidebarItemId={currentSidebarItemId}
           sidebarItems={sidebarItems}
           setCustomSidebarItems={setCustomSidebarItems}
@@ -241,6 +246,11 @@ const TodoPage = ({ setMode, mode }) => {
                 }}
                 sx={{ display: "flex", alignItems: "center", gap: "7px" }}
               >
+                {!isSidebarOpen && (
+                  <IconButton onClick={() => setIsSidebarOpen(true)}>
+                    <MenuIcon />
+                  </IconButton>
+                )}
                 {sidebarItemInputExpanded == false ? (
                   <Typography
                     component={"div"}
@@ -284,7 +294,6 @@ const TodoPage = ({ setMode, mode }) => {
               setValue={setValue}
               addTask={addTask}
             />
-
             <Box
               sx={{
                 display: "flex",

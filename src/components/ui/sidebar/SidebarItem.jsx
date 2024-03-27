@@ -21,6 +21,7 @@ const SidebarItem = ({
   id,
   handleDeleteSidebarItem,
   setCurrentSidebarItemId,
+  setIsSidebarOpen,
 }) => {
   const [contextMenu, setContextMenu] = React.useState(null);
 
@@ -63,7 +64,6 @@ const SidebarItem = ({
       }}
       onClick={() => {
         console.log("CLICKED---");
-
         setCurrentSidebarItemId(id);
       }}
     >
