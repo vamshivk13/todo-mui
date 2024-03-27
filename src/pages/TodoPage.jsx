@@ -22,7 +22,7 @@ const TodoPage = ({ setMode, mode }) => {
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
