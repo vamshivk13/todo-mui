@@ -23,6 +23,7 @@ const TodoPage = ({ setMode, mode }) => {
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isTempSidebarOpen, setIsTempSidebarOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
@@ -212,6 +213,8 @@ const TodoPage = ({ setMode, mode }) => {
           setTasks={setTasks}
           tasks={tasks}
           handleDeleteSidebarItem={handleDeleteSidebarItem}
+          setIsTempSidebarOpen={setIsTempSidebarOpen}
+          isTempSidebarOpen={isTempSidebarOpen}
         />
         <Box
           component={"div"}
@@ -246,8 +249,13 @@ const TodoPage = ({ setMode, mode }) => {
                 }}
                 sx={{ display: "flex", alignItems: "center", gap: "7px" }}
               >
-                {!isSidebarOpen && (
-                  <IconButton onClick={() => setIsSidebarOpen(true)}>
+                {(!isSidebarOpen || !isTempSidebarOpen) && (
+                  <IconButton
+                    onClick={() => {
+                      setIsSidebarOpen((prev) => !prev);
+                      setIsTempSidebarOpen((prev) => !prev);
+                    }}
+                  >
                     <MenuIcon />
                   </IconButton>
                 )}

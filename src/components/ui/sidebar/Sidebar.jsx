@@ -23,6 +23,8 @@ const Sidebar = ({
   customSidebarItems,
   setIsSidebarOpen,
   isSidebarOpen,
+  isTempSidebarOpen,
+  setIsTempSidebarOpen,
   tasks,
   setTasks,
   handleDeleteSidebarItem,
@@ -68,7 +70,13 @@ const Sidebar = ({
           <Box sx={{ alignItems: "center", display: "flex", py: "1rem" }}>
             <IconButton
               sx={{ marginLeft: "13px" }}
-              onClick={() => setIsSidebarOpen((prev) => !prev)}
+              onClick={() => {
+                if (isSidebarOpen) {
+                  setIsSidebarOpen((prev) => !prev);
+                } else {
+                  setIsTempSidebarOpen((prev) => !prev);
+                }
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -177,9 +185,9 @@ const Sidebar = ({
       )}
       <Drawer
         variant="temporary"
-        open={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        onClick={() => setIsSidebarOpen(false)}
+        open={isTempSidebarOpen}
+        onClose={() => setIsTempSidebarOpen(false)}
+        onClick={() => setIsTempSidebarOpen(false)}
         sx={{
           // width: "20%",
           flex: "0.25",
