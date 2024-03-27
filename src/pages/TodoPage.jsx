@@ -24,6 +24,7 @@ const TodoPage = ({ setMode, mode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isTempSidebarOpen, setIsTempSidebarOpen] = useState(false);
+  const [isTempTodoViewOpen, setIsTempTodoViewOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
@@ -369,19 +370,19 @@ const TodoPage = ({ setMode, mode }) => {
                 })}
             </Box>
           </Box>
-          {isOpen && (
-            <TodoView
-              isOpen={isOpen}
-              onClose={onClose}
-              content={selectedTask}
-              title={"Todo Details"}
-              handleDeleteTask={handleDeleteTask}
-              handleMarkAsDone={handleMarkAsDone}
-              handleEditTask={handleEditTask}
-            />
-          )}
         </Box>
-
+        {isOpen && (
+          <TodoView
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            onClose={onClose}
+            content={selectedTask}
+            title={"Todo Details"}
+            handleDeleteTask={handleDeleteTask}
+            handleMarkAsDone={handleMarkAsDone}
+            handleEditTask={handleEditTask}
+          />
+        )}
         {/* <Modal
           isOpen={isOpen}
           onClose={onClose}

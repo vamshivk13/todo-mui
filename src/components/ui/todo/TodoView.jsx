@@ -8,6 +8,8 @@ import {
   InputBase,
   Paper,
   TextField,
+  Drawer,
+  Toolbar,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,22 +25,25 @@ const TodoView = ({
   handleDeleteTask,
   handleMarkAsDone,
   handleEditTask,
+  setIsOpen,
 }) => {
   const [value, setValue] = useState(content?.task);
 
   useEffect(() => {
     setValue(content?.task);
   }, [content.task]);
-  return (
+  const todoView = (
     <Box
       sx={{
-        flex: "0.35",
+        height: "100%",
+        flex: "1",
         position: "relative",
       }}
     >
       <Card
         sx={{
           height: "calc(100% - 50px)",
+          flex: 1,
           display: "flex",
           flexDirection: "column",
           borderRadius: "0 !important",
@@ -123,6 +128,57 @@ const TodoView = ({
         </Paper>
       </Box>
     </Box>
+  );
+  return (
+    <>
+      <Drawer
+        variant="permanent"
+        open={true}
+        anchor="right"
+        sx={{
+          width: "20%",
+          // flex: "0.25",
+          flexShrink: 0,
+          height: "100%",
+          display: { xs: "none", md: "block" },
+          [`& .MuiDrawer-paper`]: {
+            width: "20%",
+
+            // boxSizing: "border-box",
+          },
+        }}
+      >
+        <Toolbar sx={{ minHeight: { xs: "60px" } }} />
+        {todoView}
+      </Drawer>
+
+      <Drawer
+        variant="temporary"
+        anchor="right"
+        open={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+        sx={{
+          // width: "20%",
+          // flex: "0.25",
+
+          minWidth: "50%",
+
+          flexShrink: 0,
+          height: "100%",
+          display: { md: "none" },
+          [`& .MuiDrawer-paper`]: {
+            minWidth: "50%",
+            width: { xs: "75%", sm: "50%" },
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        <Toolbar sx={{ minHeight: { xs: "60px" } }} />
+        {todoView}
+      </Drawer>
+    </>
   );
 };
 
