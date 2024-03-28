@@ -33,6 +33,7 @@ const Sidebar = ({
 
   function handleNewListItem(e) {
     e.preventDefault();
+    e.stopPropagation();
     if (newListItem == "") {
       return;
     }
@@ -153,6 +154,7 @@ const Sidebar = ({
               sx={{ width: 1, paddingRight: "10px" }}
               placeholder="New List"
               value={newListItem}
+              onClick={(e) => e.stopPropagation()}
               onChange={(e) => setNewListItem(e.target.value)}
               // onChange={handleNewListItem}
             ></InputBase>

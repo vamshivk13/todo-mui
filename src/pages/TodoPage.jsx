@@ -232,7 +232,6 @@ const TodoPage = ({ setMode, mode }) => {
               flexShrink: 1,
               display: "flex",
               flexDirection: "column",
-              overflowY: "auto",
             }}
             onClick={() => {
               setIsOpen(false);
@@ -303,71 +302,73 @@ const TodoPage = ({ setMode, mode }) => {
               setValue={setValue}
               addTask={addTask}
             />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "7px",
-                px: "1rem",
-                marginBottom: "10px",
-              }}
-            >
-              {currentTasks
-                .filter((task) => task.isDone == false)
-                .map((task) => {
-                  return (
-                    <Card
-                      key={task.id}
-                      task={task}
-                      handleSelectedTask={handleSelectedTask}
-                      handleMarkAsDone={handleMarkAsDone}
-                    />
-                  );
-                })}
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "7px",
-                marginBottom: "10px",
-                px: "1rem",
-              }}
-            >
-              {currentTasks.filter((task) => task.isDone == true).length >
-                0 && (
-                <Paper
-                  sx={{
-                    marginRight: "auto",
-                    mt: 2,
-                    mb: 1,
-                    padding: "3px 10px",
-                  }}
-                >
-                  <Typography
-                    variant="subtitle1"
+            <Box sx={{ overflowY: "auto" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "7px",
+                  px: "1rem",
+                  marginBottom: "10px",
+                }}
+              >
+                {currentTasks
+                  .filter((task) => task.isDone == false)
+                  .map((task) => {
+                    return (
+                      <Card
+                        key={task.id}
+                        task={task}
+                        handleSelectedTask={handleSelectedTask}
+                        handleMarkAsDone={handleMarkAsDone}
+                      />
+                    );
+                  })}
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "7px",
+                  marginBottom: "10px",
+                  px: "1rem",
+                }}
+              >
+                {currentTasks.filter((task) => task.isDone == true).length >
+                  0 && (
+                  <Paper
                     sx={{
-                      fontSize: "13px",
-                      fontWeight: "600",
-                      borderRadius: "5px",
+                      marginRight: "auto",
+                      mt: 2,
+                      mb: 1,
+                      padding: "3px 10px",
                     }}
                   >
-                    Completed
-                  </Typography>
-                </Paper>
-              )}
-              {currentTasks
-                .filter((task) => task.isDone == true)
-                .map((task) => {
-                  return (
-                    <Card
-                      key={task.id}
-                      task={task}
-                      handleMarkAsDone={handleMarkAsDone}
-                      handleSelectedTask={handleSelectedTask}
-                    />
-                  );
-                })}
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        fontSize: "13px",
+                        fontWeight: "600",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      Completed
+                    </Typography>
+                  </Paper>
+                )}
+                {currentTasks
+                  .filter((task) => task.isDone == true)
+                  .map((task) => {
+                    return (
+                      <Card
+                        key={task.id}
+                        task={task}
+                        handleMarkAsDone={handleMarkAsDone}
+                        handleSelectedTask={handleSelectedTask}
+                      />
+                    );
+                  })}
+              </Box>
             </Box>
           </Box>
         </Box>
