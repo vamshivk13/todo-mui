@@ -192,7 +192,6 @@ const TodoPage = ({ setMode, mode }) => {
         display: "flex",
       }}
     >
-      <Header setMode={setMode} mode={mode} />
       <Box
         component={"div"}
         sx={{
