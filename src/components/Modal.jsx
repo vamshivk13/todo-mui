@@ -37,7 +37,6 @@ const Modal = ({
       sx={{ position: "relative" }}
       open={isOpen}
       variant="temporary"
-      // maxWidth={"md"}
     >
       <DialogTitle>{title}</DialogTitle>
       {/* <DialogContent sx={{ py: "1rem", width: "400px" }}>

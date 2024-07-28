@@ -1,12 +1,19 @@
-import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import {
+  Alert,
+  Box,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
 import TodoPage from "./pages/TodoPage";
 import { useState } from "react";
 import useLocalStorage from "./hooks/useLocalStorage";
 import RoutesProvider from "./routes/RoutesProvider";
 import Header from "./components/Header";
+import AuthProvider from "./store/AuthProvider";
+import AlertProvider from "./store/AlertProvider";
 
 function App() {
-  // const [mode, setMode] = useState("light");
   const [mode, setMode] = useLocalStorage("mode", "dark");
   const darkTheme = createTheme({
     palette: {
@@ -49,10 +56,14 @@ function App() {
   return (
     <ThemeProvider theme={mode == "dark" ? lightTheme : darkTheme}>
       <CssBaseline>
-        <Box className={mode} sx={{ height: "100%" }}>
-          <Header setMode={setMode} mode={mode} />
-          <RoutesProvider mode={mode} setMode={mode}></RoutesProvider>
-        </Box>
+        <AuthProvider>
+          <AlertProvider>
+            <Box className={mode} sx={{ height: "100%" }}>
+              <Header setMode={setMode} mode={mode} />
+              <RoutesProvider mode={mode} setMode={mode}></RoutesProvider>
+            </Box>
+          </AlertProvider>
+        </AuthProvider>
       </CssBaseline>
     </ThemeProvider>
   );

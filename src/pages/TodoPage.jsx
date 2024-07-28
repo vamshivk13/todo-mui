@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Header from "../components/Header";
@@ -16,6 +16,8 @@ import {
   Paper,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { authContext } from "../store/AuthProvider";
+import { useNavigate } from "react-router";
 
 const TodoPage = ({ setMode, mode }) => {
   const inputRef = useRef();
@@ -54,6 +56,9 @@ const TodoPage = ({ setMode, mode }) => {
     []
   );
 
+  const { user, setUser } = useContext(authContext);
+  const navigate = useNavigate();
+
   const selectedTask = tasks.find((task) => task.id == selectedId);
   const currentSideBarItem = ["MyDay", "Important", "MyTasks"].includes(
     currentSidebarItemId
@@ -76,6 +81,12 @@ const TodoPage = ({ setMode, mode }) => {
     );
     setCurrentTasks(currentTasks);
   }, [currentSidebarItemId, tasks]);
+
+  useEffect(() => {
+    if (!user.isAuthenticated) {
+      navigate("/");
+    }
+  }, [user.isAuthenticated]);
 
   function addTask(e) {
     e.preventDefault();

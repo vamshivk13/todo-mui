@@ -1,10 +1,33 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import React from "react";
+import {
+  Alert,
+  AppBar,
+  Box,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { getAuth, signOut } from "firebase/auth";
+import { useContext } from "react";
+import { authContext } from "../store/AuthProvider";
+import { useNavigate } from "react-router";
+import { alertContext } from "../store/AlertProvider";
 const Header = ({ setMode, mode }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const { user } = useContext(authContext);
+  const {
+    alert: { alertType, alertMessage },
+    setAlert,
+  } = useContext(alertContext);
+  const auth = getAuth();
+
   function handleDarkMode() {
     setMode((prev) => {
       if (prev == "light") {
@@ -12,6 +35,21 @@ const Header = ({ setMode, mode }) => {
       } else return "light";
     });
   }
+
+  function handleOpenAccount(e) {
+    setAnchorEl(e.currentTarget);
+    setIsDropDownOpen(true);
+  }
+
+  function handleClose() {
+    setIsDropDownOpen(false);
+  }
+
+  function handleLogout() {
+    signOut(auth);
+    handleClose();
+  }
+
   return (
     <AppBar
       position="fixed"
@@ -50,10 +88,54 @@ const Header = ({ setMode, mode }) => {
             )}
           </IconButton>
           <IconButton>
-            <AccountCircleIcon sx={{ fontSize: "2rem" }} />
+            <AccountCircleIcon
+              onClick={handleOpenAccount}
+              sx={{ fontSize: "2rem" }}
+            />
           </IconButton>
         </Box>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={isDropDownOpen}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+          sx={{ marginTop: "14px" }}
+        >
+          <MenuItem sx={{ textTransform: "capitalize" }} onClick={handleClose}>
+            Hi {user.displayName || "user"}!
+          </MenuItem>
+          {user.isAuthenticated && (
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          )}
+        </Menu>
       </Toolbar>
+      {alertMessage && (
+        <Alert
+          sx={{
+            position: "fixed",
+            top: {
+              sm: "70px",
+            },
+            bottom: {
+              sm: "inherit",
+              xs: "20px",
+            },
+            right: 0,
+          }}
+          severity={alertType}
+          onClose={() => {
+            setAlert({
+              alertType: "info",
+              alertMessage: null,
+            });
+          }}
+        >
+          {alertMessage}
+        </Alert>
+      )}
     </AppBar>
   );
 };
