@@ -11,20 +11,8 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DoneIcon from "@mui/icons-material/Done";
-import SaveIcon from "@mui/icons-material/Save";
-import UndoIcon from "@mui/icons-material/Undo";
 
-const Modal = ({
-  title,
-  content,
-  isOpen,
-  onClose,
-  handleDeleteTask,
-  handleMarkAsDone,
-  handleEditTask,
-}) => {
+const Modal = ({ title, content, isOpen, onClose }) => {
   console.log(content);
   const [value, setValue] = useState(content?.task);
   useEffect(() => {

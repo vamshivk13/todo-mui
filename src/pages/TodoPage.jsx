@@ -18,6 +18,7 @@ import {
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { authContext } from "../store/AuthProvider";
 import { useNavigate } from "react-router";
+import useFetch from "../hooks/useFetch";
 
 const TodoPage = ({ setMode, mode }) => {
   const inputRef = useRef();
@@ -66,6 +67,26 @@ const TodoPage = ({ setMode, mode }) => {
     ? sidebarItems.find((item) => item.id == currentSidebarItemId)
     : customSidebarItems.find((item) => item.id == currentSidebarItemId);
 
+  const [{ name }, setTasksAPI] = useFetch("POST", "/tasks.json");
+  const [tasksAPI, fetchTasks] = useFetch("GET", "/tasks.json");
+  const [, deleteTask] = useFetch("DELETE", "/tasks/");
+  const [, updateTask] = useFetch("UPDATE", "/tasks/");
+
+  useEffect(() => {
+    function loadTasks() {
+      fetchTasks(null);
+    }
+    loadTasks();
+  }, []);
+
+  useEffect(() => {
+    const keys = Object.keys(tasksAPI);
+    const initialTasks = keys.map((key) => {
+      return { ...tasksAPI[key], key };
+    });
+    setTasks(initialTasks);
+  }, [tasksAPI]);
+
   useEffect(() => {
     setIsOpen(false);
   }, [currentSidebarItemId]);
@@ -93,6 +114,14 @@ const TodoPage = ({ setMode, mode }) => {
     if (value == "" || value == null || value == undefined) {
       return;
     }
+    setTasksAPI({
+      task: value,
+      isDone: false,
+      id: Math.random() * 10,
+      notes: "",
+      createdAt: new Date(),
+      listTypeId: currentSidebarItemId,
+    });
     setTasks((tasks) => [
       ...tasks,
       {
@@ -102,8 +131,10 @@ const TodoPage = ({ setMode, mode }) => {
         notes: "",
         createdAt: new Date(),
         listTypeId: currentSidebarItemId,
+        objectId: name,
       },
     ]);
+
     setValue("");
   }
   function onClose() {
@@ -116,11 +147,24 @@ const TodoPage = ({ setMode, mode }) => {
   }
 
   function handleDeleteTask() {
+    const curTask = tasks.find((task) => task.id == selectedId);
+    deleteTask(curTask.key + ".json");
     setTasks((tasks) => tasks.filter((task) => task.id !== selectedId));
+
     setIsOpen(false);
   }
 
   function handleMarkAsDone(id) {
+    const curTask = tasks.find((task) => task.id == selectedId);
+
+    updateTask({
+      route: curTask.key + ".json",
+      data: {
+        ...curTask,
+        isDone: !curTask.isDone,
+      },
+    });
+
     setTasks((tasks) =>
       tasks.map((task) => {
         if (task.id == id) {
@@ -144,6 +188,15 @@ const TodoPage = ({ setMode, mode }) => {
   }
 
   function handleEditTask(val) {
+    const curTask = tasks.find((task) => task.id == selectedId);
+
+    updateTask({
+      route: curTask.key + ".json",
+      data: {
+        ...curTask,
+        task: val,
+      },
+    });
     setTasks((tasks) =>
       tasks.map((task) => {
         if (task.id == selectedId) {

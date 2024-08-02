@@ -107,9 +107,9 @@ const LoginForm = () => {
         console.log("Updating the user profile name");
         updateProfile(currentUser, {
           displayName,
-        }).then(() => {
+        }).then((user) => {
           setUser((prev) => {
-            return { ...prev, displayName };
+            return { ...prev, displayName, userId: user.uid };
           });
         });
       })
@@ -142,6 +142,7 @@ const LoginForm = () => {
             isAuthenticated: true,
             accessToken: userData.accessToken,
             displayName: userData.displayName,
+            userId: userData.uid,
           };
         });
 

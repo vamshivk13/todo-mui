@@ -4,3 +4,11 @@
 3. Integrate dark mode with localStorage --
 4. Fix Sidebar card components  --
 5. Add Responsiveness 
+
+
+// Add Logic to store data for notes in firebase 
+-> check if we can make calls with custom hooks.
+
+
+handle loading state
+handle mark as done bug
