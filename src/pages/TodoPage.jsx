@@ -80,7 +80,7 @@ const TodoPage = ({ setMode, mode }) => {
   }, []);
 
   useEffect(() => {
-    const keys = Object.keys(tasksAPI);
+    const keys = Object.keys(tasksAPI || {});
     const initialTasks = keys.map((key) => {
       return { ...tasksAPI[key], key };
     });
