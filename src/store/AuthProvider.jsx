@@ -14,6 +14,7 @@ const AuthProvider = ({ children }) => {
     userId: null,
     accessToken: null,
     displayName: null,
+    isLoading: false,
   });
 
   return (

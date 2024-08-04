@@ -59,9 +59,13 @@ const LoginForm = () => {
             accessToken: null,
             userId: null,
             displayName: null,
+            // isLoading: false,
           };
         });
       }
+      setUser((prev) => {
+        return { ...prev, isLoading: false };
+      });
     });
   }, []);
 
