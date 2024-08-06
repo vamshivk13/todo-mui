@@ -109,7 +109,10 @@ const TodoView = ({
             alignItems: "center",
           }}
         >
-          <IconButton onClick={handleDeleteTask} variant="outlined">
+          <IconButton
+            onClick={() => handleDeleteTask(content.id)}
+            variant="outlined"
+          >
             <DeleteIcon />
           </IconButton>
           <IconButton

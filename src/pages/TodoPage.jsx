@@ -146,8 +146,8 @@ const TodoPage = ({ setMode, mode }) => {
     setSelectedId(id);
   }
 
-  function handleDeleteTask() {
-    const curTask = tasks.find((task) => task.id == selectedId);
+  function handleDeleteTask(id) {
+    const curTask = tasks.find((task) => task.id == id);
     deleteTask(curTask.key + ".json");
     setTasks((tasks) => tasks.filter((task) => task.id !== selectedId));
 
