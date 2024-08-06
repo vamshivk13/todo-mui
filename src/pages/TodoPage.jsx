@@ -84,7 +84,7 @@ const TodoPage = ({ setMode, mode }) => {
     const initialTasks = keys.map((key) => {
       return { ...tasksAPI[key], key };
     });
-    setTasks(initialTasks);
+    setTasks(() => initialTasks);
   }, [tasksAPI]);
 
   useEffect(() => {
@@ -155,7 +155,7 @@ const TodoPage = ({ setMode, mode }) => {
   }
 
   function handleMarkAsDone(id) {
-    const curTask = tasks.find((task) => task.id == selectedId);
+    const curTask = tasks.find((task) => task.id == id);
 
     updateTask({
       route: curTask.key + ".json",
@@ -447,15 +447,6 @@ const TodoPage = ({ setMode, mode }) => {
             handleEditTask={handleEditTask}
           />
         )}
-        {/* <Modal
-          isOpen={isOpen}
-          onClose={onClose}
-          content={selectedTask}
-          title={"Todo Details"}
-          handleDeleteTask={handleDeleteTask}
-          handleMarkAsDone={handleMarkAsDone}
-          handleEditTask={handleEditTask}
-        /> */}
       </Box>
     </Box>
   );
