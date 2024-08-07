@@ -14,6 +14,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SidebarItem from "./SidebarItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import { v4 as uuidv4 } from "uuid";
+import useFetch from "../../../hooks/useFetch";
 
 const Sidebar = ({
   currentSidebarItemId,
@@ -31,6 +32,8 @@ const Sidebar = ({
 }) => {
   const [newListItem, setNewListItem] = useState("");
 
+  const [, postCustomList] = useFetch("POST", "/lists.json");
+
   function handleNewListItem(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -38,6 +41,11 @@ const Sidebar = ({
       return;
     }
     const id = uuidv4();
+    postCustomList({
+      id: id,
+      name: newListItem,
+      count: 0,
+    });
     setCustomSidebarItems((prev) => [
       ...prev,
       { id: id, name: newListItem, count: 0 },

@@ -71,12 +71,23 @@ const TodoPage = ({ setMode, mode }) => {
   const [tasksAPI, fetchTasks] = useFetch("GET", "/tasks.json");
   const [, deleteTask] = useFetch("DELETE", "/tasks/");
   const [, updateTask] = useFetch("UPDATE", "/tasks/");
-
+  const [customSidebarLists, fetchCustomSidebarLists] = useFetch(
+    "GET",
+    "/lists.json"
+  );
+  const [, deleteCustomList] = useFetch("DELETE", "/lists/");
   useEffect(() => {
     function loadTasks() {
       fetchTasks(null);
     }
     loadTasks();
+  }, []);
+
+  useEffect(() => {
+    function loadCustomLists() {
+      fetchCustomSidebarLists(null);
+    }
+    loadCustomLists();
   }, []);
 
   useEffect(() => {
@@ -86,6 +97,14 @@ const TodoPage = ({ setMode, mode }) => {
     });
     setTasks(() => initialTasks);
   }, [tasksAPI]);
+
+  useEffect(() => {
+    const keys = Object.keys(customSidebarLists || {});
+    const initialLists = keys.map((key) => {
+      return { ...customSidebarLists[key], key };
+    });
+    setCustomSidebarItems(initialLists);
+  }, [customSidebarLists]);
 
   useEffect(() => {
     setIsOpen(false);
@@ -229,7 +248,11 @@ const TodoPage = ({ setMode, mode }) => {
   }
 
   function handleDeleteSidebarItem(id) {
+    const curCustomSideBarItem = customSidebarItems.find(
+      (item) => item.id == id
+    );
     let prevId = "MyDay";
+    deleteCustomList(curCustomSideBarItem.key + ".json");
     customSidebarItems.forEach((item) => {
       if (item.id == id) {
         return;
