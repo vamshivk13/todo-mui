@@ -140,6 +140,7 @@ const TodoPage = ({ setMode, mode }) => {
       id: Math.random() * 10,
       notes: "",
       createdAt: Date.now(),
+      doneAt: null,
       listTypeId: currentSidebarItemId,
     });
     setTasks((tasks) => [
@@ -150,6 +151,7 @@ const TodoPage = ({ setMode, mode }) => {
         id: Math.random() * 10,
         notes: "",
         createdAt: Date.now(),
+        doneAt: null,
         listTypeId: currentSidebarItemId,
         objectId: name,
       },
@@ -182,6 +184,7 @@ const TodoPage = ({ setMode, mode }) => {
       data: {
         ...curTask,
         isDone: !curTask.isDone,
+        doneAt: Date.now(),
       },
     });
 
@@ -191,6 +194,7 @@ const TodoPage = ({ setMode, mode }) => {
           return {
             ...task,
             isDone: !task.isDone,
+            doneAt: Date.now(),
           };
         } else return task;
       })
@@ -453,6 +457,7 @@ const TodoPage = ({ setMode, mode }) => {
                 )}
                 {currentTasks
                   .filter((task) => task.isDone == true)
+                  .sort((taska, taskb) => taskb.doneAt - taska.doneAt)
                   .map((task) => {
                     return (
                       <Card
