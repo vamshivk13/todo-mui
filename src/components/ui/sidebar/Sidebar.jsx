@@ -80,11 +80,11 @@ const Sidebar = ({
             <IconButton
               sx={{ marginLeft: "13px" }}
               onClick={() => {
-                if (isSidebarOpen) {
-                  setIsSidebarOpen((prev) => !prev);
-                } else {
-                  setIsTempSidebarOpen((prev) => !prev);
-                }
+                // if (isSidebarOpen) {
+                setIsSidebarOpen((prev) => !prev);
+                // } else {
+                setIsTempSidebarOpen((prev) => !prev);
+                // }
               }}
             >
               <MenuIcon />
@@ -196,8 +196,14 @@ const Sidebar = ({
       <Drawer
         variant="temporary"
         open={isTempSidebarOpen}
-        onClose={() => setIsTempSidebarOpen(false)}
-        onClick={() => setIsTempSidebarOpen(false)}
+        onClose={() => {
+          setIsTempSidebarOpen(false);
+          setIsSidebarOpen(false);
+        }}
+        onClick={() => {
+          setIsTempSidebarOpen(false);
+          setIsSidebarOpen(false);
+        }}
         sx={{
           // width: "20%",
           flex: "0.25",

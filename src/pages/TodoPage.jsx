@@ -27,7 +27,7 @@ const TodoPage = ({ setMode, mode }) => {
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isTempSidebarOpen, setIsTempSidebarOpen] = useState(false);
+  const [isTempSidebarOpen, setIsTempSidebarOpen] = useState(true);
   const [isTempTodoViewOpen, setIsTempTodoViewOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
@@ -343,23 +343,19 @@ const TodoPage = ({ setMode, mode }) => {
                 }}
                 sx={{ display: "flex", alignItems: "center", gap: "7px" }}
               >
-                {(!isSidebarOpen || !isTempSidebarOpen) && (
-                  <IconButton
-                    onClick={() => {
-                      if (isSidebarOpen) {
-                        return;
-                      }
-                      setIsSidebarOpen((prev) => !prev);
-                      setIsTempSidebarOpen((prev) => !prev);
-                    }}
-                  >
-                    {isSidebarOpen ? (
-                      <ListIcon itemIcon={currentSidebarItemId} />
-                    ) : (
-                      <MenuIcon />
-                    )}
-                  </IconButton>
-                )}
+                <IconButton
+                  onClick={() => {
+                    setIsSidebarOpen((prev) => !prev);
+                    setIsTempSidebarOpen((prev) => !prev);
+                  }}
+                >
+                  {isSidebarOpen || isTempSidebarOpen ? (
+                    <ListIcon itemIcon={currentSidebarItemId} />
+                  ) : (
+                    <MenuIcon />
+                  )}
+                </IconButton>
+
                 {sidebarItemInputExpanded == false ? (
                   <Typography
                     component={"div"}
