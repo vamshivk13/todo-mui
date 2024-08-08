@@ -1,6 +1,7 @@
 import {
   Alert,
   AppBar,
+  Avatar,
   Box,
   IconButton,
   Toolbar,
@@ -75,7 +76,14 @@ const Header = ({ setMode, mode }) => {
           <ListAltIcon sx={{ fontSize: "2rem" }} />
           <Typography variant="body1">Todo</Typography>
         </Box>
-        <Box sx={{ gap: "1rem", display: "flex" }}>
+        <Box
+          sx={{
+            gap: "1rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <IconButton onClick={handleDarkMode}>
             {mode == "light" ? (
               <LightModeIcon
@@ -88,10 +96,11 @@ const Header = ({ setMode, mode }) => {
             )}
           </IconButton>
           <IconButton>
-            <AccountCircleIcon
-              onClick={handleOpenAccount}
-              sx={{ fontSize: "2rem" }}
-            />
+            <Avatar onClick={handleOpenAccount}>
+              {user?.displayName?.split(" ").reduce((ac, cur) => {
+                return ac + cur[0].toUpperCase();
+              }, "")}
+            </Avatar>
           </IconButton>
         </Box>
         <Menu
