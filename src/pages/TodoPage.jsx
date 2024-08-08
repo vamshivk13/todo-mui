@@ -214,7 +214,6 @@ const TodoPage = ({ setMode, mode }) => {
       data: {
         ...curTask,
         task: val,
-        createdAt: Date.now(),
       },
     });
     setTasks((tasks) =>
@@ -223,7 +222,6 @@ const TodoPage = ({ setMode, mode }) => {
           return {
             ...task,
             task: val,
-            createdAt: Date.now(),
           };
         } else return task;
       })
