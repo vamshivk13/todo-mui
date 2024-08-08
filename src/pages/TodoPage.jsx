@@ -266,6 +266,9 @@ const TodoPage = ({ setMode, mode }) => {
     });
     setCurrentSidebarItemId(prevId);
     setCustomSidebarItems((prev) => prev.filter((item) => item.id != id));
+    tasks.forEach((curTask) => {
+      if (curTask.listTypeId == id) deleteTask(curTask.key + ".json");
+    });
     setTasks((prevTasks) =>
       prevTasks.filter((task) => {
         task.listTypeId != id;
