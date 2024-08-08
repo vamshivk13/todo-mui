@@ -97,9 +97,12 @@ const Header = ({ setMode, mode }) => {
           </IconButton>
           <IconButton>
             <Avatar onClick={handleOpenAccount}>
-              {user?.displayName?.split(" ").reduce((ac, cur) => {
-                return ac + cur[0].toUpperCase();
-              }, "")}
+              {user?.displayName
+                ?.trim()
+                .split(" ")
+                .reduce((ac, cur) => {
+                  return ac + cur[0]?.toUpperCase();
+                }, "")}
             </Avatar>
           </IconButton>
         </Box>
