@@ -19,6 +19,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { authContext } from "../store/AuthProvider";
 import { useNavigate } from "react-router";
 import useFetch from "../hooks/useFetch";
+import ListIcon from "../util/ListIcon";
 
 const TodoPage = ({ setMode, mode }) => {
   const inputRef = useRef();
@@ -338,11 +339,18 @@ const TodoPage = ({ setMode, mode }) => {
                 {(!isSidebarOpen || !isTempSidebarOpen) && (
                   <IconButton
                     onClick={() => {
+                      if (isSidebarOpen) {
+                        return;
+                      }
                       setIsSidebarOpen((prev) => !prev);
                       setIsTempSidebarOpen((prev) => !prev);
                     }}
                   >
-                    <MenuIcon />
+                    {isSidebarOpen ? (
+                      <ListIcon itemIcon={currentSidebarItemId} />
+                    ) : (
+                      <MenuIcon />
+                    )}
                   </IconButton>
                 )}
                 {sidebarItemInputExpanded == false ? (

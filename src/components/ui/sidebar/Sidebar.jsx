@@ -104,7 +104,7 @@ const Sidebar = ({
                         task.listTypeId == item.id && task.isDone == false
                     ).length
                   }
-                  itemIcon={item.name}
+                  itemIcon={item.id}
                   isActive={item.id == currentSidebarItemId ? true : false}
                   setIsSidebarOpen={setIsSidebarOpen}
                 />

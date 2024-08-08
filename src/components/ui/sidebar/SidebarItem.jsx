@@ -1,5 +1,5 @@
 import React from "react";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+
 import {
   Paper,
   Card,
@@ -9,9 +9,8 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import TodayIcon from "@mui/icons-material/Today";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import ListIcon from "../../../util/ListIcon";
+
 const SidebarItem = ({
   type,
   item,
@@ -43,14 +42,8 @@ const SidebarItem = ({
   const handleClose = () => {
     setContextMenu(null);
   };
-  let icon = <FormatListBulletedIcon sx={{ fontSize: "1rem" }} />;
-  if (itemIcon == "My Day") {
-    icon = <TodayIcon sx={{ fontSize: "1rem" }} />;
-  } else if (itemIcon == "Important") {
-    icon = <StarBorderIcon sx={{ fontSize: "1rem" }} />;
-  } else if (itemIcon == "My Tasks") {
-    icon = <TaskAltIcon sx={{ fontSize: "1rem" }} />;
-  }
+  const icon = <ListIcon itemIcon={itemIcon} />;
+
   return (
     <Paper
       component={"div"}
@@ -63,7 +56,6 @@ const SidebarItem = ({
         textOverflow: "ellipsis",
       }}
       onClick={() => {
-        console.log("CLICKED---");
         setCurrentSidebarItemId(id);
       }}
     >
