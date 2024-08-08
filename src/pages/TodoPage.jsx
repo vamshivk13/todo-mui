@@ -58,6 +58,10 @@ const TodoPage = ({ setMode, mode }) => {
     []
   );
 
+  const date = new Date();
+  const month = date.toLocaleString("en-US", { month: "long" });
+  const day = date.toLocaleString("en-US", { weekday: "long" });
+
   const { user, setUser } = useContext(authContext);
   const navigate = useNavigate();
 
@@ -357,18 +361,31 @@ const TodoPage = ({ setMode, mode }) => {
                 </IconButton>
 
                 {sidebarItemInputExpanded == false ? (
-                  <Typography
-                    component={"div"}
-                    variant="body1"
-                    sx={{
-                      fontWeight: "500",
-                      fontSize: "1.3rem",
-                      boxSizing: "border-box",
-                    }}
-                    onClick={switchToTextField}
-                  >
-                    {currentSideBarItem?.name}
-                  </Typography>
+                  <Box>
+                    <Typography
+                      component={"div"}
+                      variant="body1"
+                      sx={{
+                        fontWeight: "500",
+                        fontSize: "1.3rem",
+                        boxSizing: "border-box",
+                      }}
+                      onClick={switchToTextField}
+                    >
+                      {currentSideBarItem?.name}
+                    </Typography>
+                    {currentSidebarItemId == "MyDay" && (
+                      <Typography
+                        fontFamily={
+                          ("Segoe", "Segoe UI", "Arial", "sans-serif")
+                        }
+                        fontWeight={100}
+                        fontSize={"1.5ch"}
+                      >
+                        {day + " " + month + " " + date.getDate()}
+                      </Typography>
+                    )}
+                  </Box>
                 ) : (
                   <InputBase
                     sx={{
