@@ -101,30 +101,30 @@ const TodoPage = ({ setMode, mode }) => {
   }, []);
 
   function updateTasksBasedOnDate() {
-    // tasks.forEach((task) => {
-    //   const createdDate = new Date(task.createdAt).toDateString();
-    //   console.log("today", createdDate, date);
-    //   if (createdDate != date.toDateString()) {
-    //     updateTask({
-    //       route: task.key + ".json",
-    //       data: {
-    //         ...task,
-    //         listTypeId: "MyTasks",
-    //       },
-    //     });
-    //   }
-    // });
-    // setTasks((prevTasks) => {
-    //   return prevTasks.map((task) => {
-    //     const createdDate = new Date(task.createdAt).toDateString();
-    //     if (createdDate != date.toDateString()) {
-    //       return {
-    //         ...task,
-    //         listTypeId: "MyTasks",
-    //       };
-    //     } else return task;
-    //   });
-    // });
+    tasks.forEach((task) => {
+      const createdDate = new Date(task.createdAt).toDateString();
+      console.log("today", createdDate, date);
+      if (createdDate != date.toDateString()) {
+        updateTask({
+          route: task.key + ".json",
+          data: {
+            ...task,
+            listTypeId: "MyTasks",
+          },
+        });
+      }
+    });
+    setTasks((prevTasks) => {
+      return prevTasks.map((task) => {
+        const createdDate = new Date(task.createdAt).toDateString();
+        if (createdDate != date.toDateString()) {
+          return {
+            ...task,
+            listTypeId: "MyTasks",
+          };
+        } else return task;
+      });
+    });
   }
   useEffect(() => {
     const keys = Object.keys(tasksAPI || {});
