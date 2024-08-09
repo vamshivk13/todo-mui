@@ -165,7 +165,11 @@ const Sidebar = ({
                   }
                   setCurrentSidebarItemId={setCurrentSidebarItemId}
                   handleDeleteSidebarItem={handleDeleteSidebarItem}
-                  isActive={item.id == currentSidebarItemId ? true : false}
+                  isActive={
+                    item.id == currentSidebarItemId && screenWidth > 600
+                      ? true
+                      : false
+                  }
                   setIsSidebarOpen={setIsSidebarOpen}
                   setIsTempSidebarOpen={setIsTempSidebarOpen}
                 />
