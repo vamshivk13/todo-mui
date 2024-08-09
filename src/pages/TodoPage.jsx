@@ -7,6 +7,7 @@ import Sidebar from "../components/ui/sidebar/Sidebar";
 import TodoView from "../components/ui/todo/TodoView";
 import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
 import useLocalStorage from "../hooks/useLocalStorage";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -33,6 +34,7 @@ const TodoPage = ({ setMode, mode }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [sidebarItemInputExpanded, setSidebarItemInputExpanded] =
     useState(false);
   const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
@@ -98,6 +100,23 @@ const TodoPage = ({ setMode, mode }) => {
       fetchCustomSidebarLists(null);
     }
     loadCustomLists();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+      if (window.innerWidth > 900) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   function updateTasksBasedOnDate() {
@@ -411,12 +430,17 @@ const TodoPage = ({ setMode, mode }) => {
               >
                 <IconButton
                   onClick={() => {
-                    setIsSidebarOpen((prev) => !prev);
-                    setIsTempSidebarOpen((prev) => !prev);
+                    if (screenWidth < 900) {
+                      setIsTempSidebarOpen((prev) => !prev);
+                    } else {
+                      setIsSidebarOpen((prev) => !prev);
+                    }
                   }}
                 >
-                  {isSidebarOpen || isTempSidebarOpen ? (
+                  {isSidebarOpen ? (
                     <ListIcon itemIcon={currentSidebarItemId} />
+                  ) : screenWidth < 600 ? (
+                    <ArrowBackIcon />
                   ) : (
                     <MenuIcon />
                   )}
