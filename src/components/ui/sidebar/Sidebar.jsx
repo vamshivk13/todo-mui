@@ -63,6 +63,8 @@ const Sidebar = ({
   useEffect(() => {
     if (window.innerWidth > 900) {
       setIsTempSidebarOpen(false);
+    } else {
+      setIsTempSidebarOpen(true);
     }
   }, []);
   useEffect(() => {
@@ -71,7 +73,7 @@ const Sidebar = ({
       if (window.innerWidth > 600) {
         setIsTempSidebarOpen(false);
       } else {
-        setIsTempSidebarOpen(true);
+        // setIsTempSidebarOpen(true);
       }
 
       setBreakpoint(getBreakpoint(window.innerWidth));
