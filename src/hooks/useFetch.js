@@ -16,9 +16,12 @@ const useFetch = (method, path) => {
 
   function makeAPIRequest(data) {
     if (method == "POST") {
-      axiosInstance
+      return axiosInstance
         .post(path, data)
-        .then((response) => setResponse(response.data))
+        .then((response) => {
+          setResponse(response.data);
+          return response.data;
+        })
         .catch((err) => {
           console.log(err);
         });

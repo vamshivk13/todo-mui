@@ -8,6 +8,7 @@ import TodoView from "../components/ui/todo/TodoView";
 import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
 import useLocalStorage from "../hooks/useLocalStorage";
 import MenuIcon from "@mui/icons-material/Menu";
+import { v4 as uuidv4 } from "uuid";
 import {
   IconButton,
   Input,
@@ -57,6 +58,7 @@ const TodoPage = ({ setMode, mode }) => {
     "customSideBarItems",
     []
   );
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const date = new Date();
   const month = date.toLocaleString("en-US", { month: "long" });
@@ -65,7 +67,6 @@ const TodoPage = ({ setMode, mode }) => {
   const { user, setUser } = useContext(authContext);
   const navigate = useNavigate();
 
-  const selectedTask = tasks.find((task) => task.id == selectedId);
   const currentSideBarItem = ["MyDay", "Important", "MyTasks"].includes(
     currentSidebarItemId
   )
@@ -81,10 +82,14 @@ const TodoPage = ({ setMode, mode }) => {
     "/lists.json"
   );
   const [, deleteCustomList] = useFetch("DELETE", "/lists/");
+
+  const [isTasksLoading, setIsTasksLoading] = useState(null);
+
   useEffect(() => {
     function loadTasks() {
       fetchTasks(null);
     }
+    setIsTasksLoading(true);
     loadTasks();
   }, []);
 
@@ -95,13 +100,47 @@ const TodoPage = ({ setMode, mode }) => {
     loadCustomLists();
   }, []);
 
+  function updateTasksBasedOnDate() {
+    // tasks.forEach((task) => {
+    //   const createdDate = new Date(task.createdAt).toDateString();
+    //   console.log("today", createdDate, date);
+    //   if (createdDate != date.toDateString()) {
+    //     updateTask({
+    //       route: task.key + ".json",
+    //       data: {
+    //         ...task,
+    //         listTypeId: "MyTasks",
+    //       },
+    //     });
+    //   }
+    // });
+    // setTasks((prevTasks) => {
+    //   return prevTasks.map((task) => {
+    //     const createdDate = new Date(task.createdAt).toDateString();
+    //     if (createdDate != date.toDateString()) {
+    //       return {
+    //         ...task,
+    //         listTypeId: "MyTasks",
+    //       };
+    //     } else return task;
+    //   });
+    // });
+  }
   useEffect(() => {
     const keys = Object.keys(tasksAPI || {});
     const initialTasks = keys.map((key) => {
       return { ...tasksAPI[key], key };
     });
+    console.log("Loaded", initialTasks, keys);
     setTasks(() => initialTasks);
+    setIsTasksLoading(false);
   }, [tasksAPI]);
+
+  useEffect(() => {
+    if (isTasksLoading == false) {
+      updateTasksBasedOnDate();
+    }
+  }, [tasksAPI, isTasksLoading]);
 
   useEffect(() => {
     const keys = Object.keys(customSidebarLists || {});
@@ -133,43 +172,64 @@ const TodoPage = ({ setMode, mode }) => {
     }
   }, [user.isAuthenticated]);
 
-  function addTask(e) {
+  async function addTask(e) {
+    console.log("add task is called");
     e.preventDefault();
     if (value == "" || value == null || value == undefined) {
       return;
     }
-    setTasksAPI({
+    // const taskId = value + currentSidebarItemId
+    const taskId = uuidv4();
+    setTasks((tasks) => {
+      return [
+        ...tasks,
+        {
+          task: value,
+          isDone: false,
+          notes: "",
+          createdAt: Date.now(),
+          doneAt: null,
+          listTypeId: currentSidebarItemId,
+          id: taskId,
+          key: null,
+        },
+      ];
+    });
+    const data = await setTasksAPI({
       task: value,
       isDone: false,
-      id: Math.random() * 10,
       notes: "",
       createdAt: Date.now(),
       doneAt: null,
+      id: taskId,
       listTypeId: currentSidebarItemId,
     });
-    setTasks((tasks) => [
-      ...tasks,
-      {
-        task: value,
-        isDone: false,
-        id: Math.random() * 10,
-        notes: "",
-        createdAt: Date.now(),
-        doneAt: null,
-        listTypeId: currentSidebarItemId,
-        objectId: name,
-      },
-    ]);
+
+    setTasks((prev) => {
+      return prev.map((curTask) => {
+        if (curTask.id == taskId) {
+          return {
+            ...curTask,
+            key: data.name,
+          };
+        } else return curTask;
+      });
+    });
 
     setValue("");
   }
+
+  console.log("TASKSS", tasks);
   function onClose() {
     setIsOpen(false);
     setSelectedId(null);
   }
   function handleSelectedTask(id) {
+    console.log("Selcted Id", id);
     setIsOpen(true);
     setSelectedId(id);
+    const selectedTask = tasks.find((task) => task.id == id);
+    setSelectedTask(selectedTask);
   }
 
   function handleDeleteTask(id) {
@@ -215,8 +275,10 @@ const TodoPage = ({ setMode, mode }) => {
     setSidebarItemInputExpanded((prev) => !prev);
   }
 
-  function handleEditTask(val) {
-    const curTask = tasks.find((task) => task.id == selectedId);
+  function handleEditTask(val, id) {
+    console.log("handle edit task is called", id, tasks);
+    const curTask = tasks.find((task) => task.id == id);
+    console.log("handle edit task is called", id, tasks, curTask);
 
     updateTask({
       route: curTask.key + ".json",
@@ -225,16 +287,16 @@ const TodoPage = ({ setMode, mode }) => {
         task: val,
       },
     });
-    setTasks((tasks) =>
-      tasks.map((task) => {
-        if (task.id == selectedId) {
+    setTasks((tasks) => {
+      return tasks.map((task) => {
+        if (task.id == id) {
           return {
             ...task,
             task: val,
           };
         } else return task;
-      })
-    );
+      });
+    });
     setIsOpen(false);
   }
   function updateSidebarItemName() {

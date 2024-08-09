@@ -14,10 +14,11 @@ const useLocalStorage = (key, value) => {
     }
   });
   function setStorageValue(value) {
-    const valueToStore =
-      value instanceof Function ? value(storageValue) : value;
-    setValue(valueToStore);
-    localStorage.setItem(key, JSON.stringify(valueToStore));
+    setValue((prevValue) => {
+      const val = value instanceof Function ? value(prevValue) : value;
+      localStorage.setItem(key, JSON.stringify(val));
+      return val;
+    });
   }
   return [storageValue, setStorageValue];
 };

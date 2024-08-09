@@ -30,8 +30,8 @@ const TodoView = ({
   const [value, setValue] = useState(content?.task);
 
   useEffect(() => {
-    setValue(content?.task);
-  }, [content.task]);
+    if (content) setValue(content?.task);
+  }, [content?.task]);
   const todoView = (
     <Box
       sx={{
@@ -64,7 +64,7 @@ const TodoView = ({
               value={value}
               onKeyDown={(e) => {
                 if (e.key == "Enter") {
-                  handleEditTask(value);
+                  handleEditTask(value, content?.id);
                 }
               }}
               // defaultValue={"efasd"}
@@ -110,7 +110,7 @@ const TodoView = ({
           }}
         >
           <IconButton
-            onClick={() => handleDeleteTask(content.id)}
+            onClick={() => handleDeleteTask(content?.id)}
             variant="outlined"
           >
             <DeleteIcon />
@@ -124,7 +124,7 @@ const TodoView = ({
           <IconButton
             type="submit"
             variant="outlined"
-            onClick={() => handleEditTask(value)}
+            onClick={() => handleEditTask(value, content?.id)}
           >
             <SaveIcon />
           </IconButton>
