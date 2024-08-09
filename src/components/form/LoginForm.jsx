@@ -48,7 +48,7 @@ const LoginForm = () => {
             isAuthenticated: true,
             accessToken: user.accessToken,
             displayName: user.displayName,
-            userId: user.uid,
+            userId: user?.uid,
           };
         });
       } else {
@@ -111,10 +111,10 @@ const LoginForm = () => {
         console.log("Updating the user profile name");
         updateProfile(currentUser, {
           displayName,
-        }).then((user) => {
-          setUser((prev) => {
-            return { ...prev, displayName, userId: user.uid };
-          });
+        });
+        console.log("USER FROM REGISTER", user, currentUser);
+        setUser((prev) => {
+          return { ...prev, displayName, userId: currentUser.uid };
         });
       })
       .catch((error) => {
@@ -146,7 +146,7 @@ const LoginForm = () => {
             isAuthenticated: true,
             accessToken: userData.accessToken,
             displayName: userData.displayName,
-            userId: userData.uid,
+            userId: userData?.uid,
           };
         });
 

@@ -5,11 +5,11 @@ import { authContext } from "../store/AuthProvider";
 const useFetch = (method, path) => {
   const [response, setResponse] = useState([]);
   const {
-    user: { userId: uid },
+    user: { userId },
   } = useContext(authContext);
 
   const axiosInstance = axios.create({
-    baseURL: `https://todo-mui-vk-default-rtdb.firebaseio.com/${uid}`,
+    baseURL: `https://todo-mui-vk-default-rtdb.firebaseio.com/${userId}`,
   });
 
   console.log(method, " ", path, " ", response);
