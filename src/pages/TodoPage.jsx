@@ -194,6 +194,7 @@ const TodoPage = ({ setMode, mode }) => {
   async function addTask(e) {
     console.log("add task is called");
     e.preventDefault();
+    e.stopPropagation();
     if (value == "" || value == null || value == undefined) {
       return;
     }
