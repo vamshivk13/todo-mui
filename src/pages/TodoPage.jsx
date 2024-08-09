@@ -14,8 +14,10 @@ import {
   IconButton,
   Input,
   InputBase,
+  LinearProgress,
   OutlinedInput,
   Paper,
+  Skeleton,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { authContext } from "../store/AuthProvider";
@@ -88,8 +90,9 @@ const TodoPage = ({ setMode, mode }) => {
   const [isTasksLoading, setIsTasksLoading] = useState(null);
 
   useEffect(() => {
-    function loadTasks() {
-      fetchTasks(null);
+    async function loadTasks() {
+      await fetchTasks(null);
+      setIsTasksLoading(false);
     }
     setIsTasksLoading(true);
     loadTasks();
@@ -152,7 +155,6 @@ const TodoPage = ({ setMode, mode }) => {
     });
     console.log("Loaded", initialTasks, keys);
     setTasks(() => initialTasks);
-    setIsTasksLoading(false);
   }, [tasksAPI]);
 
   useEffect(() => {
@@ -215,6 +217,7 @@ const TodoPage = ({ setMode, mode }) => {
         },
       ];
     });
+    setValue("");
     const data = await setTasksAPI({
       task: value,
       isDone: false,
@@ -235,8 +238,6 @@ const TodoPage = ({ setMode, mode }) => {
         } else return curTask;
       });
     });
-
-    setValue("");
   }
 
   console.log("TASKSS", tasks);
@@ -419,6 +420,7 @@ const TodoPage = ({ setMode, mode }) => {
               updateSidebarItemName();
             }}
           >
+            {isTasksLoading && <LinearProgress sx={{ height: "5px" }} />}
             <Box sx={{ px: "1rem", pt: 2 }}>
               <Box
                 component={"form"}

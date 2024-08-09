@@ -26,7 +26,9 @@ const useFetch = (method, path) => {
           console.log(err);
         });
     } else if (method == "GET") {
-      axiosInstance.get(path).then((response) => setResponse(response.data));
+      return axiosInstance
+        .get(path)
+        .then((response) => setResponse(response.data));
     } else if (method == "DELETE") {
       axiosInstance
         .delete(path + data)

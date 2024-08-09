@@ -8,6 +8,7 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Skeleton,
 } from "@mui/material";
 import ListIcon from "../../../util/ListIcon";
 
@@ -101,7 +102,7 @@ const SidebarItem = ({
           >
             {item}
           </Typography>
-          <Badge sx={{ opacity: 0.8 }}>{count}</Badge>
+          {false ? <Skeleton /> : <Badge sx={{ opacity: 0.8 }}>{count}</Badge>}
         </CardContent>
       </Card>
       <Menu
