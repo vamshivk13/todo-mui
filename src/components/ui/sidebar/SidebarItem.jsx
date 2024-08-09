@@ -21,6 +21,7 @@ const SidebarItem = ({
   handleDeleteSidebarItem,
   setCurrentSidebarItemId,
   setIsSidebarOpen,
+  setIsTempSidebarOpen,
 }) => {
   const [contextMenu, setContextMenu] = React.useState(null);
 
@@ -57,6 +58,7 @@ const SidebarItem = ({
       }}
       onClick={() => {
         setCurrentSidebarItemId(id);
+        setIsTempSidebarOpen(false);
       }}
     >
       <Card

@@ -141,6 +141,7 @@ const Sidebar = ({
                       : false
                   }
                   setIsSidebarOpen={setIsSidebarOpen}
+                  setIsTempSidebarOpen={setIsTempSidebarOpen}
                 />
               );
             })}
@@ -164,6 +165,7 @@ const Sidebar = ({
                   handleDeleteSidebarItem={handleDeleteSidebarItem}
                   isActive={item.id == currentSidebarItemId ? true : false}
                   setIsSidebarOpen={setIsSidebarOpen}
+                  setIsTempSidebarOpen={setIsTempSidebarOpen}
                 />
               );
             })}
