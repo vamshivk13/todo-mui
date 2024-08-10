@@ -2,6 +2,7 @@ import React from "react";
 import { Paper, Card, CardContent, Typography, Button } from "@mui/material";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useTheme } from "@emotion/react";
 const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
   return (
     <Paper
@@ -56,7 +57,13 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
               }}
             />
           )}
-          <Typography variant="body1" sx={{ wordBreak: "break-all" }}>
+          <Typography
+            variant="body1"
+            sx={{
+              wordBreak: "break-all",
+              color: useTheme().typography.custom.main,
+            }}
+          >
             {task?.task}
           </Typography>
         </CardContent>

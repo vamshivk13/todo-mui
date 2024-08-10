@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Typography,
   Box,
@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import useFetch from "../../../hooks/useFetch";
 
 import { getBreakpoint } from "../../../util/getBreakpoints";
+import { themeContext } from "../../../store/ColorThemeProvider";
 
 const Sidebar = ({
   currentSidebarItemId,
@@ -39,6 +40,7 @@ const Sidebar = ({
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   const [, postCustomList] = useFetch("POST", "/lists.json");
+  const [currentColor, setCurrentColor] = useContext(themeContext);
 
   function handleNewListItem(e) {
     e.preventDefault();
@@ -51,13 +53,16 @@ const Sidebar = ({
       id: id,
       name: newListItem,
       count: 0,
+      color: null,
     });
+
     setCustomSidebarItems((prev) => [
       ...prev,
-      { id: id, name: newListItem, count: 0 },
+      { id: id, name: newListItem, count: 0, color: null },
     ]);
     setNewListItem("");
     setCurrentSidebarItemId(id);
+    setCurrentColor(null);
   }
 
   useEffect(() => {
@@ -163,6 +168,7 @@ const Sidebar = ({
                         task.listTypeId == item.id && task.isDone == false
                     ).length
                   }
+                  color={item.color}
                   setCurrentSidebarItemId={setCurrentSidebarItemId}
                   handleDeleteSidebarItem={handleDeleteSidebarItem}
                   isActive={

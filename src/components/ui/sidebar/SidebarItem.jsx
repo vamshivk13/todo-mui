@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   Paper,
@@ -11,6 +11,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import ListIcon from "../../../util/ListIcon";
+import { themeContext } from "../../../store/ColorThemeProvider";
 
 const SidebarItem = ({
   type,
@@ -23,8 +24,10 @@ const SidebarItem = ({
   setCurrentSidebarItemId,
   setIsSidebarOpen,
   setIsTempSidebarOpen,
+  color,
 }) => {
   const [contextMenu, setContextMenu] = React.useState(null);
+  const [currentColor, setCurrentColor] = useContext(themeContext);
 
   const handleContextMenu = (event) => {
     if (type != "custom") return;
@@ -44,7 +47,7 @@ const SidebarItem = ({
   const handleClose = () => {
     setContextMenu(null);
   };
-  const icon = <ListIcon itemIcon={itemIcon} />;
+  const icon = <ListIcon itemIcon={itemIcon} color={color} />;
 
   return (
     <Paper
@@ -60,6 +63,7 @@ const SidebarItem = ({
       onClick={() => {
         setCurrentSidebarItemId(id);
         setIsTempSidebarOpen(false);
+        setCurrentColor(color);
       }}
     >
       <Card

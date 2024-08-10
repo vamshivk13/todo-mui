@@ -12,6 +12,7 @@ import RoutesProvider from "./routes/RoutesProvider";
 import Header from "./components/Header";
 import AuthProvider from "./store/AuthProvider";
 import AlertProvider from "./store/AlertProvider";
+import ColorThemeProvider from "./store/ColorThemeProvider";
 
 function App() {
   const [mode, setMode] = useLocalStorage("mode", "dark");
@@ -21,6 +22,9 @@ function App() {
     },
     typography: {
       fontSize: 13,
+      custom: {
+        main: "#fff",
+      },
     },
   });
   const lightTheme = createTheme({
@@ -33,8 +37,12 @@ function App() {
         main: "#fff",
       },
     },
+
     typography: {
       fontSize: 13,
+      custom: {
+        main: "#000",
+      },
     },
     components: {
       // Name of the component
@@ -58,10 +66,12 @@ function App() {
       <CssBaseline>
         <AuthProvider>
           <AlertProvider>
-            <Box className={mode} sx={{ height: "100%" }}>
-              <Header setMode={setMode} mode={mode} />
-              <RoutesProvider mode={mode} setMode={mode}></RoutesProvider>
-            </Box>
+            <ColorThemeProvider>
+              <Box className={mode} sx={{ height: "100%" }}>
+                <Header setMode={setMode} mode={mode} />
+                <RoutesProvider mode={mode} setMode={mode}></RoutesProvider>
+              </Box>
+            </ColorThemeProvider>
           </AlertProvider>
         </AuthProvider>
       </CssBaseline>

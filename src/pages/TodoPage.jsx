@@ -10,20 +10,14 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MenuIcon from "@mui/icons-material/Menu";
 import { v4 as uuidv4 } from "uuid";
-import {
-  IconButton,
-  Input,
-  InputBase,
-  LinearProgress,
-  OutlinedInput,
-  Paper,
-  Skeleton,
-} from "@mui/material";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { IconButton, InputBase, LinearProgress, Paper } from "@mui/material";
 import { authContext } from "../store/AuthProvider";
 import { useNavigate } from "react-router";
 import useFetch from "../hooks/useFetch";
 import ListIcon from "../util/ListIcon";
+import { ThemeProvider, createTheme } from "@mui/material";
+import MoreMenu from "../components/ui/todo/MoreMenu";
+import { themeContext } from "../store/ColorThemeProvider";
 
 const TodoPage = ({ setMode, mode }) => {
   const inputRef = useRef();
@@ -37,10 +31,12 @@ const TodoPage = ({ setMode, mode }) => {
   const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [currentColor, setCurrentColor] = useContext(themeContext);
   const [sidebarItemInputExpanded, setSidebarItemInputExpanded] =
     useState(false);
   const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
     useState("");
+
   const [sidebarItems, setSidebarItems] = useLocalStorage("sidebarItems", [
     {
       id: "MyDay",
@@ -200,7 +196,7 @@ const TodoPage = ({ setMode, mode }) => {
     if (value == "" || value == null || value == undefined) {
       return;
     }
-    // const taskId = value + currentSidebarItemId
+
     const taskId = uuidv4();
     setTasks((tasks) => {
       return [
@@ -320,6 +316,7 @@ const TodoPage = ({ setMode, mode }) => {
     });
     setIsOpen(false);
   }
+
   function updateSidebarItemName() {
     if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
       return;
@@ -338,6 +335,8 @@ const TodoPage = ({ setMode, mode }) => {
       );
     }
   }
+
+  function updateSidebarColor() {}
 
   function handleDeleteSidebarItem(id) {
     const curCustomSideBarItem = customSidebarItems.find(
@@ -398,197 +397,235 @@ const TodoPage = ({ setMode, mode }) => {
           setIsTempSidebarOpen={setIsTempSidebarOpen}
           isTempSidebarOpen={isTempSidebarOpen}
         />
-        <Box
-          component={"div"}
-          display={{
-            flex: 1,
-            width: "80%",
-            flexShrink: 0,
-            display: "flex",
-          }}
+        <ThemeProvider
+          theme={(theme) =>
+            createTheme({
+              ...theme,
+              typography: {
+                ...theme.typography,
+                body1: {
+                  color: currentColor,
+                },
+              },
+              components: {
+                MuiIconButton: {
+                  styleOverrides: {
+                    root: {
+                      color: currentColor, // Default color for IconButton (using primary color)
+                      "&:hover": {
+                        color: "secondary.main", // Change color on hover
+                      },
+                    },
+                  },
+                },
+                MuiSvgIcon: {
+                  styleOverrides: {
+                    root: {
+                      color: currentColor, // Default color for IconButton (using primary color)
+                      "&:hover": {
+                        color: "secondary.main", // Change color on hover
+                      },
+                    },
+                  },
+                },
+              },
+            })
+          }
         >
           <Box
-            sx={{
+            component={"div"}
+            display={{
               flex: 1,
-              flexShrink: 1,
+              width: "80%",
+              flexShrink: 0,
               display: "flex",
-              flexDirection: "column",
-            }}
-            onClick={() => {
-              setIsOpen(false);
-              setSidebarItemInputExpanded(false);
-              updateSidebarItemName();
             }}
           >
-            {isTasksLoading && <LinearProgress sx={{ height: "5px" }} />}
-            <Box sx={{ px: "1rem", pt: 2 }}>
-              <Box
-                component={"form"}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  updateSidebarItemName();
-                  setSidebarItemInputExpanded(false);
-                }}
-                sx={{ display: "flex", alignItems: "center", gap: "7px" }}
-              >
-                <IconButton
-                  onClick={() => {
-                    if (screenWidth < 900) {
-                      setIsTempSidebarOpen((prev) => !prev);
-                    } else {
-                      setIsSidebarOpen((prev) => !prev);
-                    }
+            <Box
+              sx={{
+                flex: 1,
+                flexShrink: 1,
+                display: "flex",
+                flexDirection: "column",
+              }}
+              onClick={() => {
+                setIsOpen(false);
+                setSidebarItemInputExpanded(false);
+                updateSidebarItemName();
+              }}
+            >
+              {isTasksLoading && <LinearProgress sx={{ height: "5px" }} />}
+              <Box sx={{ px: "1rem", pt: 2 }}>
+                <Box
+                  component={"form"}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    updateSidebarItemName();
+                    setSidebarItemInputExpanded(false);
                   }}
+                  sx={{ display: "flex", alignItems: "center", gap: "7px" }}
                 >
-                  {isSidebarOpen ? (
-                    <ListIcon itemIcon={currentSidebarItemId} />
-                  ) : screenWidth < 600 ? (
-                    <ArrowBackIcon />
-                  ) : (
-                    <MenuIcon />
-                  )}
-                </IconButton>
-
-                {sidebarItemInputExpanded == false ? (
-                  <Box>
-                    <Typography
-                      component={"div"}
-                      variant="body1"
-                      sx={{
-                        fontWeight: "500",
-                        fontSize: "1.3rem",
-                        boxSizing: "border-box",
-                      }}
-                      onClick={switchToTextField}
-                    >
-                      {currentSideBarItem?.name}
-                    </Typography>
-                    {currentSidebarItemId == "MyDay" && (
-                      <Typography
-                        fontFamily={
-                          ("Segoe", "Segoe UI", "Arial", "sans-serif")
-                        }
-                        fontWeight={100}
-                        fontSize={"1.5ch"}
-                      >
-                        {day + " " + month + " " + date.getDate()}
-                      </Typography>
-                    )}
-                  </Box>
-                ) : (
-                  <InputBase
-                    sx={{
-                      border: "0.2px solid",
-                      borderRadius: "6px",
-                      paddingX: "4px",
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    value={updatedCurrentSidebarItem}
-                    autoFocus={true}
-                    onFocus={(e) => {
-                      e.target.style.width =
-                        updatedCurrentSidebarItem.length + "ch";
-                    }}
-                    onChange={(e) => {
-                      e.target.style.width = e.target.value.length + "ch";
-                      setUpdatedCurrentSidebarItem(e.target.value);
-                    }}
-                  ></InputBase>
-                )}
-                <IconButton>
-                  <MoreHorizIcon />
-                </IconButton>
-              </Box>
-            </Box>
-            <NewTodoTextField
-              value={value}
-              setValue={setValue}
-              addTask={addTask}
-            />
-            <Box sx={{ overflowY: "auto" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "7px",
-                  px: "1rem",
-                  marginBottom: "10px",
-                }}
-              >
-                {currentTasks
-                  .filter((task) => task.isDone == false)
-                  .sort((taska, taskb) => taskb.createdAt - taska.createdAt)
-                  .map((task) => {
-                    return (
-                      <Card
-                        key={task.id}
-                        task={task}
-                        handleSelectedTask={handleSelectedTask}
-                        handleMarkAsDone={handleMarkAsDone}
-                      />
-                    );
-                  })}
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "7px",
-                  marginBottom: "10px",
-                  px: "1rem",
-                }}
-              >
-                {currentTasks.filter((task) => task.isDone == true).length >
-                  0 && (
-                  <Paper
-                    sx={{
-                      marginRight: "auto",
-                      mt: 2,
-                      mb: 1,
-                      padding: "3px 10px",
+                  <IconButton
+                    onClick={() => {
+                      if (screenWidth < 900) {
+                        setIsTempSidebarOpen((prev) => !prev);
+                      } else {
+                        setIsSidebarOpen((prev) => !prev);
+                      }
                     }}
                   >
-                    <Typography
-                      variant="subtitle1"
+                    {isSidebarOpen ? (
+                      <ListIcon itemIcon={currentSidebarItemId} />
+                    ) : screenWidth < 600 ? (
+                      <ArrowBackIcon />
+                    ) : (
+                      <MenuIcon />
+                    )}
+                  </IconButton>
+
+                  {sidebarItemInputExpanded == false ? (
+                    <Box>
+                      <Typography
+                        component={"div"}
+                        variant="body1"
+                        sx={{
+                          fontWeight: "500",
+                          fontSize: "1.3rem",
+                          boxSizing: "border-box",
+                        }}
+                        onClick={switchToTextField}
+                      >
+                        {currentSideBarItem?.name}
+                      </Typography>
+                      {currentSidebarItemId == "MyDay" && (
+                        <Typography
+                          fontFamily={
+                            ("Segoe", "Segoe UI", "Arial", "sans-serif")
+                          }
+                          fontWeight={100}
+                          fontSize={"1.5ch"}
+                        >
+                          {day + " " + month + " " + date.getDate()}
+                        </Typography>
+                      )}
+                    </Box>
+                  ) : (
+                    <InputBase
                       sx={{
-                        fontSize: "13px",
-                        fontWeight: "600",
-                        borderRadius: "5px",
+                        border: "0.2px solid",
+                        borderRadius: "6px",
+                        paddingX: "4px",
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      value={updatedCurrentSidebarItem}
+                      autoFocus={true}
+                      onFocus={(e) => {
+                        e.target.style.width =
+                          updatedCurrentSidebarItem.length + "ch";
+                      }}
+                      onChange={(e) => {
+                        e.target.style.width = e.target.value.length + "ch";
+                        setUpdatedCurrentSidebarItem(e.target.value);
+                      }}
+                    ></InputBase>
+                  )}
+                  <MoreMenu
+                    setCustomSidebarItems={setCustomSidebarItems}
+                    currentSidebarItemId={currentSidebarItemId}
+                    customSidebarItems={customSidebarItems}
+                  />
+                </Box>
+              </Box>
+              <NewTodoTextField
+                value={value}
+                setValue={setValue}
+                addTask={addTask}
+              />
+              <Box sx={{ overflowY: "auto" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "7px",
+                    px: "1rem",
+                    marginBottom: "10px",
+                  }}
+                >
+                  {currentTasks
+                    .filter((task) => task.isDone == false)
+                    .sort((taska, taskb) => taskb.createdAt - taska.createdAt)
+                    .map((task) => {
+                      return (
+                        <Card
+                          key={task.id}
+                          task={task}
+                          handleSelectedTask={handleSelectedTask}
+                          handleMarkAsDone={handleMarkAsDone}
+                        />
+                      );
+                    })}
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "7px",
+                    marginBottom: "10px",
+                    px: "1rem",
+                  }}
+                >
+                  {currentTasks.filter((task) => task.isDone == true).length >
+                    0 && (
+                    <Paper
+                      sx={{
+                        marginRight: "auto",
+                        mt: 2,
+                        mb: 1,
+                        padding: "3px 10px",
                       }}
                     >
-                      Completed
-                    </Typography>
-                  </Paper>
-                )}
-                {currentTasks
-                  .filter((task) => task.isDone == true)
-                  .sort((taska, taskb) => taskb.doneAt - taska.doneAt)
-                  .map((task) => {
-                    return (
-                      <Card
-                        key={task.id}
-                        task={task}
-                        handleMarkAsDone={handleMarkAsDone}
-                        handleSelectedTask={handleSelectedTask}
-                      />
-                    );
-                  })}
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontSize: "13px",
+                          fontWeight: "600",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        Completed
+                      </Typography>
+                    </Paper>
+                  )}
+                  {currentTasks
+                    .filter((task) => task.isDone == true)
+                    .sort((taska, taskb) => taskb.doneAt - taska.doneAt)
+                    .map((task) => {
+                      return (
+                        <Card
+                          key={task.id}
+                          task={task}
+                          handleMarkAsDone={handleMarkAsDone}
+                          handleSelectedTask={handleSelectedTask}
+                        />
+                      );
+                    })}
+                </Box>
               </Box>
             </Box>
           </Box>
-        </Box>
-        {isOpen && (
-          <TodoView
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            onClose={onClose}
-            content={selectedTask}
-            title={"Todo Details"}
-            handleDeleteTask={handleDeleteTask}
-            handleMarkAsDone={handleMarkAsDone}
-            handleEditTask={handleEditTask}
-          />
-        )}
+          {isOpen && (
+            <TodoView
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              onClose={onClose}
+              content={selectedTask}
+              title={"Todo Details"}
+              handleDeleteTask={handleDeleteTask}
+              handleMarkAsDone={handleMarkAsDone}
+              handleEditTask={handleEditTask}
+            />
+          )}
+        </ThemeProvider>
       </Box>
     </Box>
   );
