@@ -9,6 +9,7 @@ import {
   InputBase,
   Drawer,
   Toolbar,
+  useTheme,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SidebarItem from "./SidebarItem";
@@ -91,136 +92,133 @@ const Sidebar = ({
     };
   }, []);
   const sidebar = (
-    <>
-      <Toolbar sx={{ minHeight: { xs: "60px" } }} />
+    <Box sx={{ height: "100%", overflow: "hidden" }}>
+      <Toolbar sx={{ minHeight: { xs: "60px" } }}></Toolbar>
+
+      <Paper
+        sx={{
+          display: "flex",
+          height: "calc(100% - 110px)",
+          flexShrink: 0,
+          flexDirection: "column",
+          boxShadow:
+            "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
+          overflowY: "auto",
+        }}
+      >
+        {!(isTempSidebarOpen && screenWidth < 600) && (
+          <Box
+            sx={{
+              alignItems: "center",
+              display: "flex",
+              py: "1rem",
+            }}
+          >
+            <IconButton
+              sx={{ marginLeft: "13px" }}
+              onClick={() => {
+                if (screenWidth < 900) {
+                  setIsTempSidebarOpen((prev) => !prev);
+                } else {
+                  setIsSidebarOpen((prev) => !prev);
+                }
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
+        )}
+        <Box sx={{ mt: `${screenWidth < 600 ? "10px" : "0"}` }}>
+          {sidebarItems.map((item) => {
+            return (
+              <SidebarItem
+                key={item.id}
+                id={item.id}
+                setCurrentSidebarItemId={setCurrentSidebarItemId}
+                item={item.name}
+                color={item.color}
+                count={
+                  tasks.filter(
+                    (task) => task.listTypeId == item.id && task.isDone == false
+                  ).length
+                }
+                itemIcon={item.id}
+                isActive={
+                  item.id == currentSidebarItemId && screenWidth > 600
+                    ? true
+                    : false
+                }
+                setIsSidebarOpen={setIsSidebarOpen}
+                setIsTempSidebarOpen={setIsTempSidebarOpen}
+                currentSidebarItemId={currentSidebarItemId}
+              />
+            );
+          })}
+        </Box>
+        <Divider sx={{ my: 1, width: "90%", marginX: "auto" }} />
+        <Box>
+          {customSidebarItems.map((item) => {
+            return (
+              <SidebarItem
+                key={item.id}
+                id={item.id}
+                type="custom"
+                item={item.name}
+                count={
+                  tasks.filter(
+                    (task) => task.listTypeId == item.id && task.isDone == false
+                  ).length
+                }
+                color={item.color}
+                setCurrentSidebarItemId={setCurrentSidebarItemId}
+                handleDeleteSidebarItem={handleDeleteSidebarItem}
+                isActive={
+                  item.id == currentSidebarItemId && screenWidth > 600
+                    ? true
+                    : false
+                }
+                setIsSidebarOpen={setIsSidebarOpen}
+                setIsTempSidebarOpen={setIsTempSidebarOpen}
+                currentSidebarItemId={currentSidebarItemId}
+              />
+            );
+          })}
+        </Box>
+      </Paper>
       <Box
         sx={{
-          height: "100%",
-          position: "relative",
-          scrollbarColor: "red",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "50px",
         }}
       >
         <Paper
+          component={"form"}
           sx={{
+            height: "100%",
             display: "flex",
-            height: "calc(100% - 50px)",
-            flexShrink: 0,
-            flexDirection: "column",
-            overflowY: "auto",
-            boxShadow:
-              "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
+            alignItems: "center",
+            // gap: "1rem",
+            paddingX: "13px",
           }}
+          onSubmit={handleNewListItem}
         >
-          {!(isTempSidebarOpen && screenWidth < 600) && (
-            <Box sx={{ alignItems: "center", display: "flex", py: "1rem" }}>
-              <IconButton
-                sx={{ marginLeft: "13px" }}
-                onClick={() => {
-                  if (screenWidth < 900) {
-                    setIsTempSidebarOpen((prev) => !prev);
-                  } else {
-                    setIsSidebarOpen((prev) => !prev);
-                  }
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Box>
-          )}
-          <Box sx={{ mt: `${screenWidth < 600 ? "10px" : "0"}` }}>
-            {sidebarItems.map((item) => {
-              return (
-                <SidebarItem
-                  key={item.id}
-                  id={item.id}
-                  setCurrentSidebarItemId={setCurrentSidebarItemId}
-                  item={item.name}
-                  color={item.color}
-                  count={
-                    tasks.filter(
-                      (task) =>
-                        task.listTypeId == item.id && task.isDone == false
-                    ).length
-                  }
-                  itemIcon={item.id}
-                  isActive={
-                    item.id == currentSidebarItemId && screenWidth > 600
-                      ? true
-                      : false
-                  }
-                  setIsSidebarOpen={setIsSidebarOpen}
-                  setIsTempSidebarOpen={setIsTempSidebarOpen}
-                  currentSidebarItemId={currentSidebarItemId}
-                />
-              );
-            })}
-          </Box>
-          <Divider sx={{ my: 1, width: "90%", marginX: "auto" }} />
-          <Box>
-            {customSidebarItems.map((item) => {
-              return (
-                <SidebarItem
-                  key={item.id}
-                  id={item.id}
-                  type="custom"
-                  item={item.name}
-                  count={
-                    tasks.filter(
-                      (task) =>
-                        task.listTypeId == item.id && task.isDone == false
-                    ).length
-                  }
-                  color={item.color}
-                  setCurrentSidebarItemId={setCurrentSidebarItemId}
-                  handleDeleteSidebarItem={handleDeleteSidebarItem}
-                  isActive={
-                    item.id == currentSidebarItemId && screenWidth > 600
-                      ? true
-                      : false
-                  }
-                  setIsSidebarOpen={setIsSidebarOpen}
-                  setIsTempSidebarOpen={setIsTempSidebarOpen}
-                  currentSidebarItemId={currentSidebarItemId}
-                />
-              );
-            })}
-          </Box>
+          <IconButton>
+            <AddIcon />
+          </IconButton>
+          <InputBase
+            sx={{ width: 1, paddingRight: "10px" }}
+            placeholder="New List"
+            value={newListItem}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => setNewListItem(e.target.value)}
+            // onChange={handleNewListItem}
+          ></InputBase>
         </Paper>
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: "50px",
-          }}
-        >
-          <Paper
-            component={"form"}
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              // gap: "1rem",
-              paddingX: "13px",
-            }}
-            onSubmit={handleNewListItem}
-          >
-            <IconButton>
-              <AddIcon />
-            </IconButton>
-            <InputBase
-              sx={{ width: 1, paddingRight: "10px" }}
-              placeholder="New List"
-              value={newListItem}
-              onClick={(e) => e.stopPropagation()}
-              onChange={(e) => setNewListItem(e.target.value)}
-              // onChange={handleNewListItem}
-            ></InputBase>
-          </Paper>
-        </Box>
       </Box>
-    </>
+    </Box>
   );
   return (
     <>
@@ -231,11 +229,13 @@ const Sidebar = ({
           sx={{
             width: "20%",
             // flex: "0.25",
+
             flexShrink: 0,
             height: "100%",
             display: { xs: "none", md: "block" },
             [`& .MuiDrawer-paper`]: {
               width: "20%",
+              bgcolor: useTheme().palette.mode == "light" && "#FFFEFE",
             },
           }}
         >
@@ -268,6 +268,7 @@ const Sidebar = ({
               xs: "100%",
             },
             boxSizing: "border-box",
+            bgcolor: useTheme().palette.mode == "light" && "#FFFEFE",
           },
         }}
       >

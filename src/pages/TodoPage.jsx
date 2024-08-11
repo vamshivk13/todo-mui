@@ -20,6 +20,7 @@ import MoreMenu from "../components/ui/todo/MoreMenu";
 import { themeContext } from "../store/ColorThemeProvider";
 import { colorThemeObject } from "../util/getThemeColors";
 import { sidebarItems as defaultSidebarItems } from "../util/getSidebarItems";
+import { useTheme } from "@emotion/react";
 const TodoPage = () => {
   const inputRef = useRef();
   const [value, setValue] = useState("");
@@ -398,6 +399,7 @@ const TodoPage = () => {
           display: "flex",
           width: "100%",
           height: "calc(100% - 60px)",
+          bgcolor: useTheme().palette.mode == "light" && "#FAF8F9",
         }}
       >
         <Sidebar

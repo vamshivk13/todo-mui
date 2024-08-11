@@ -73,7 +73,7 @@ const Header = ({ setMode, mode }) => {
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <Toolbar>
+      <Toolbar variant="dense">
         <Box
           sx={{
             display: "flex",
@@ -84,7 +84,9 @@ const Header = ({ setMode, mode }) => {
           }}
         >
           <ListAltIcon sx={{ fontSize: "2rem" }} />
-          <Typography variant="body1">Todo</Typography>
+          <Typography fontFamily="sans-serif" fontWeight={500} variant="h6">
+            Task It
+          </Typography>
         </Box>
         <Box
           sx={{
