@@ -1,8 +1,16 @@
-import { Chip, IconButton, Menu, MenuItem, Stack } from "@mui/material";
+import {
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  useTheme,
+} from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { themeContext } from "../../../store/ColorThemeProvider";
 import useFetch from "../../../hooks/useFetch";
+import { colors } from "../../../util/getThemeColors";
 
 const MoreMenu = ({
   currentSidebarItemId,
@@ -15,6 +23,11 @@ const MoreMenu = ({
   const [, updateCustomSidebar] = useFetch("UPDATE", "/lists/");
   const open = Boolean(anchor);
   const open1 = Boolean(themeAnchor);
+  const theme = useTheme();
+  const defaultColor =
+    theme.palette.mode == "dark"
+      ? theme.palette.common.white
+      : theme.palette.common.black;
   function handleMoreOptions(e) {
     setAnchor(e.currentTarget);
   }
@@ -29,6 +42,7 @@ const MoreMenu = ({
   }
 
   function handleChangeColor(color) {
+    color = color == defaultColor ? null : color;
     setCurrentColor(color);
     setCustomSidebarItems((prev) => {
       return prev.map((item) => {
@@ -55,6 +69,20 @@ const MoreMenu = ({
     });
   }
 
+  const ColoredMenuItem = ({ color }) => {
+    return (
+      <MenuItem
+        onClick={() => {
+          handleChangeColor(color);
+          setAnchor(null);
+          setThemeAnchor(null);
+        }}
+      >
+        <Chip variant="filled" sx={{ bgcolor: color }} />
+      </MenuItem>
+    );
+  };
+
   return (
     <>
       <IconButton onClick={handleMoreOptions}>
@@ -62,6 +90,7 @@ const MoreMenu = ({
       </IconButton>
       <Menu open={open} onClose={handleClose} anchorEl={anchor}>
         <MenuItem onClick={handleColorMenu}>Change Theme</MenuItem>
+        <MenuItem>Delete List</MenuItem>
       </Menu>
       <Menu
         anchorOrigin={{
@@ -73,42 +102,9 @@ const MoreMenu = ({
         onClose={handleThemeMenuClose}
       >
         <Stack flexDirection={"row"}>
-          <MenuItem
-            onClick={() => {
-              handleChangeColor("#2196f3");
-            }}
-          >
-            <Chip variant="filled" sx={{ bgcolor: "#2196f3" }} />
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleChangeColor("#f44336");
-            }}
-          >
-            <Chip variant="filled" sx={{ bgcolor: "#f44336" }} />
-          </MenuItem>
-          <MenuItem
-            o
-            onClick={() => {
-              handleChangeColor("#4caf50");
-            }}
-          >
-            <Chip variant="filled" sx={{ bgcolor: "#4caf50" }} />
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleChangeColor("#ff9800");
-            }}
-          >
-            <Chip variant="filled" sx={{ bgcolor: "#ff9800" }} />
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              handleChangeColor("#ffeb3b");
-            }}
-          >
-            <Chip variant="filled" sx={{ bgcolor: "#ffeb3b" }} />
-          </MenuItem>
+          {[...colors, defaultColor].map((color, index) => (
+            <ColoredMenuItem key={index} color={color} />
+          ))}
         </Stack>
       </Menu>
     </>
