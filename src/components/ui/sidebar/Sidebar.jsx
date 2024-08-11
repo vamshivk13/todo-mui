@@ -135,6 +135,7 @@ const Sidebar = ({
                   id={item.id}
                   setCurrentSidebarItemId={setCurrentSidebarItemId}
                   item={item.name}
+                  color={item.color}
                   count={
                     tasks.filter(
                       (task) =>
@@ -149,6 +150,7 @@ const Sidebar = ({
                   }
                   setIsSidebarOpen={setIsSidebarOpen}
                   setIsTempSidebarOpen={setIsTempSidebarOpen}
+                  currentSidebarItemId={currentSidebarItemId}
                 />
               );
             })}
@@ -178,6 +180,7 @@ const Sidebar = ({
                   }
                   setIsSidebarOpen={setIsSidebarOpen}
                   setIsTempSidebarOpen={setIsTempSidebarOpen}
+                  currentSidebarItemId={currentSidebarItemId}
                 />
               );
             })}

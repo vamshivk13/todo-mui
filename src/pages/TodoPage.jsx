@@ -18,8 +18,9 @@ import ListIcon from "../util/ListIcon";
 import { ThemeProvider, createTheme } from "@mui/material";
 import MoreMenu from "../components/ui/todo/MoreMenu";
 import { themeContext } from "../store/ColorThemeProvider";
-
-const TodoPage = ({ setMode, mode }) => {
+import { colorThemeObject } from "../util/getThemeColors";
+import { sidebarItems as defaultSidebarItems } from "../util/getSidebarItems";
+const TodoPage = () => {
   const inputRef = useRef();
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useLocalStorage("tasks", []);
@@ -37,23 +38,10 @@ const TodoPage = ({ setMode, mode }) => {
   const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
     useState("");
 
-  const [sidebarItems, setSidebarItems] = useLocalStorage("sidebarItems", [
-    {
-      id: "MyDay",
-      name: "My Day",
-      count: 0,
-    },
-    {
-      id: "Important",
-      name: "Important",
-      count: 0,
-    },
-    {
-      id: "MyTasks",
-      name: "My Tasks",
-      count: 0,
-    },
-  ]);
+  const [sidebarItems, setSidebarItems] = useLocalStorage(
+    "sidebarItems",
+    defaultSidebarItems
+  );
   const [customSidebarItems, setCustomSidebarItems] = useLocalStorage(
     "customSideBarItems",
     []
@@ -77,13 +65,45 @@ const TodoPage = ({ setMode, mode }) => {
   const [tasksAPI, fetchTasks] = useFetch("GET", "/tasks.json");
   const [, deleteTask] = useFetch("DELETE", "/tasks/");
   const [, updateTask] = useFetch("UPDATE", "/tasks/");
+  const [initialSidebarItems, fetchDefaultSidebarItems] = useFetch(
+    "GET",
+    "/default-lists.json"
+  );
   const [customSidebarLists, fetchCustomSidebarLists] = useFetch(
     "GET",
     "/lists.json"
   );
-  const [, deleteCustomList] = useFetch("DELETE", "/lists/");
 
+  const [, deleteCustomList] = useFetch("DELETE", "/lists/");
   const [isTasksLoading, setIsTasksLoading] = useState(null);
+
+  useEffect(() => {
+    function getDefaultSidebarItems() {
+      fetchDefaultSidebarItems(null);
+    }
+    getDefaultSidebarItems();
+  }, []);
+  useEffect(() => {
+    const keys = Object.keys(initialSidebarItems || {});
+    const initialItems = keys.map((key) => {
+      return { ...initialSidebarItems[key], key };
+    });
+    const updatedSidebarItemsOnLoad = sidebarItems.map((item) => {
+      const initialItemforId = initialItems.find(
+        (iItem) => iItem.id == item.id
+      );
+      if (initialItemforId) {
+        return {
+          ...item,
+          color: initialItemforId.color,
+          key: initialItemforId.key,
+        };
+      } else {
+        return item;
+      }
+    });
+    setSidebarItems(() => updatedSidebarItemsOnLoad);
+  }, [initialSidebarItems]);
 
   useEffect(() => {
     async function loadTasks() {
@@ -236,7 +256,6 @@ const TodoPage = ({ setMode, mode }) => {
     });
   }
 
-  console.log("TASKSS", tasks);
   function onClose() {
     setIsOpen(false);
     setSelectedId(null);
@@ -336,8 +355,6 @@ const TodoPage = ({ setMode, mode }) => {
     }
   }
 
-  function updateSidebarColor() {}
-
   function handleDeleteSidebarItem(id) {
     const curCustomSideBarItem = customSidebarItems.find(
       (item) => item.id == id
@@ -398,39 +415,7 @@ const TodoPage = ({ setMode, mode }) => {
           isTempSidebarOpen={isTempSidebarOpen}
         />
         <ThemeProvider
-          theme={(theme) =>
-            createTheme({
-              ...theme,
-              typography: {
-                ...theme.typography,
-                body1: {
-                  color: currentColor,
-                },
-              },
-              components: {
-                MuiIconButton: {
-                  styleOverrides: {
-                    root: {
-                      color: currentColor, // Default color for IconButton (using primary color)
-                      "&:hover": {
-                        color: "secondary.main", // Change color on hover
-                      },
-                    },
-                  },
-                },
-                MuiSvgIcon: {
-                  styleOverrides: {
-                    root: {
-                      color: currentColor, // Default color for IconButton (using primary color)
-                      "&:hover": {
-                        color: "secondary.main", // Change color on hover
-                      },
-                    },
-                  },
-                },
-              },
-            })
-          }
+          theme={(theme) => createTheme(colorThemeObject(theme, currentColor))}
         >
           <Box
             component={"div"}
@@ -533,6 +518,8 @@ const TodoPage = ({ setMode, mode }) => {
                     setCustomSidebarItems={setCustomSidebarItems}
                     currentSidebarItemId={currentSidebarItemId}
                     customSidebarItems={customSidebarItems}
+                    sidebarItems={sidebarItems}
+                    setSidebarItems={setSidebarItems}
                   />
                 </Box>
               </Box>

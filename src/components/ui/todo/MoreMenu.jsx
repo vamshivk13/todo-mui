@@ -16,14 +16,19 @@ const MoreMenu = ({
   currentSidebarItemId,
   setCustomSidebarItems,
   customSidebarItems,
+  sidebarItems,
+  setSidebarItems,
 }) => {
   const [anchor, setAnchor] = useState(null);
   const [themeAnchor, setThemeAnchor] = useState(null);
   const [, setCurrentColor] = useContext(themeContext);
   const [, updateCustomSidebar] = useFetch("UPDATE", "/lists/");
+  const [, updateSidebarItem] = useFetch("UPDATE", "/default-lists/");
+  const [, postSidebarItem] = useFetch("POST", "/default-lists.json");
   const open = Boolean(anchor);
   const open1 = Boolean(themeAnchor);
   const theme = useTheme();
+
   const defaultColor =
     theme.palette.mode == "dark"
       ? theme.palette.common.white
@@ -44,29 +49,65 @@ const MoreMenu = ({
   function handleChangeColor(color) {
     color = color == defaultColor ? null : color;
     setCurrentColor(color);
-    setCustomSidebarItems((prev) => {
-      return prev.map((item) => {
-        if (item.id == currentSidebarItemId) {
-          return {
-            ...item,
-            color: color,
-          };
-        } else return item;
-      });
-    });
-    const curSidebarItem = customSidebarItems.find(
-      (item) => item.id == currentSidebarItemId
-    );
-    const sidebarItemKey = curSidebarItem.key;
-    delete curSidebarItem.key;
 
-    updateCustomSidebar({
-      route: sidebarItemKey + ".json",
-      data: {
-        ...curSidebarItem,
-        color: color,
-      },
-    });
+    // check if it is part of default side bar items.
+    if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
+      setSidebarItems((prev) => {
+        return prev.map((item) => {
+          if (item.id == currentSidebarItemId) {
+            return {
+              ...item,
+              color: color,
+            };
+          } else return item;
+        });
+      });
+      const curSidebarItem = sidebarItems.find(
+        (item) => item.id == currentSidebarItemId
+      );
+      const sidebarItemKey = curSidebarItem?.key;
+      delete curSidebarItem?.key;
+
+      if (sidebarItemKey) {
+        updateSidebarItem({
+          route: sidebarItemKey + ".json",
+          data: {
+            ...curSidebarItem,
+            color: color,
+          },
+        });
+      } else {
+        postSidebarItem({
+          ...curSidebarItem,
+          color: color,
+        });
+      }
+    } else {
+      setCustomSidebarItems((prev) => {
+        return prev.map((item) => {
+          if (item.id == currentSidebarItemId) {
+            return {
+              ...item,
+              color: color,
+            };
+          } else return item;
+        });
+      });
+      const curSidebarItem = customSidebarItems.find(
+        (item) => item.id == currentSidebarItemId
+      );
+      const sidebarItemKey = curSidebarItem?.key;
+      delete curSidebarItem?.key;
+
+      if (sidebarItemKey)
+        updateCustomSidebar({
+          route: sidebarItemKey + ".json",
+          data: {
+            ...curSidebarItem,
+            color: color,
+          },
+        });
+    }
   }
 
   const ColoredMenuItem = ({ color }) => {

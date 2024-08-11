@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import {
   Paper,
@@ -22,13 +22,18 @@ const SidebarItem = ({
   id,
   handleDeleteSidebarItem,
   setCurrentSidebarItemId,
-  setIsSidebarOpen,
   setIsTempSidebarOpen,
   color,
+  currentSidebarItemId,
 }) => {
   const [contextMenu, setContextMenu] = React.useState(null);
   const [currentColor, setCurrentColor] = useContext(themeContext);
 
+  useEffect(() => {
+    if (id == currentSidebarItemId) {
+      setCurrentColor(color);
+    }
+  }, [id, currentSidebarItemId]);
   const handleContextMenu = (event) => {
     if (type != "custom") return;
     event.preventDefault();
@@ -44,6 +49,7 @@ const SidebarItem = ({
           null
     );
   };
+
   const handleClose = () => {
     setContextMenu(null);
   };

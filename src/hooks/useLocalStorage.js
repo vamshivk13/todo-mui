@@ -10,6 +10,7 @@ const useLocalStorage = (key, value) => {
     ) {
       return JSON.parse(localStorageValue);
     } else {
+      localStorage.setItem(key, JSON.stringify(value));
       return value;
     }
   });
