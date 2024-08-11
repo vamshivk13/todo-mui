@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -23,6 +24,10 @@ import { useNavigate } from "react-router";
 import { alertContext } from "../store/AlertProvider";
 import PersonIcon from "@mui/icons-material/Person";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import {
+  getUserAccountTooltipName,
+  getUserDisplayName,
+} from "../util/getAccountdetails";
 
 const Header = ({ setMode, mode }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -89,27 +94,26 @@ const Header = ({ setMode, mode }) => {
             alignItems: "center",
           }}
         >
-          <IconButton onClick={handleDarkMode}>
-            {mode == "light" ? (
-              <LightModeIcon
-                sx={{
-                  fontSize: "2rem",
-                }}
-              />
-            ) : (
-              <DarkModeIcon sx={{ fontSize: "2rem" }} />
-            )}
-          </IconButton>
-          <IconButton>
-            <Avatar onClick={handleOpenAccount}>
-              {user?.displayName
-                ?.trim()
-                .split(" ")
-                .reduce((ac, cur) => {
-                  return ac + cur[0]?.toUpperCase();
-                }, "")}
-            </Avatar>
-          </IconButton>
+          <Tooltip title={mode == "light" ? "Light Mode" : "Dark Mode"}>
+            <IconButton onClick={handleDarkMode}>
+              {mode == "light" ? (
+                <LightModeIcon
+                  sx={{
+                    fontSize: "2rem",
+                  }}
+                />
+              ) : (
+                <DarkModeIcon sx={{ fontSize: "2rem" }} />
+              )}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={getUserAccountTooltipName(user?.displayName)}>
+            <IconButton>
+              <Avatar onClick={handleOpenAccount}>
+                {getUserDisplayName(user?.displayName)}
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </Box>
         <Menu
           id="basic-menu"

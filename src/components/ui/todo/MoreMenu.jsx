@@ -6,6 +6,7 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Tooltip,
   useTheme,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
@@ -130,9 +131,11 @@ const MoreMenu = ({
 
   return (
     <>
-      <IconButton onClick={handleMoreOptions}>
-        <MoreHorizIcon />
-      </IconButton>
+      <Tooltip title={"List Options Menu"} placement="right">
+        <IconButton onClick={handleMoreOptions}>
+          <MoreHorizIcon />
+        </IconButton>
+      </Tooltip>
       <Menu open={open} onClose={handleClose} anchorEl={anchor}>
         <MenuItem onClick={handleColorMenu}>
           <ListItemIcon>

@@ -10,6 +10,7 @@ import {
   TextField,
   Drawer,
   Toolbar,
+  useTheme,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -57,7 +58,10 @@ const TodoView = ({
             borderRadius: "0 !important",
           }}
         >
-          <CardHeader title="Todo Details"></CardHeader>
+          <CardHeader
+            title="Todo Details"
+            sx={{ color: useTheme().typography.body1.color }}
+          ></CardHeader>
           <CardContent sx={{ py: "1rem", flex: 1 }}>
             <InputBase
               type="text"
