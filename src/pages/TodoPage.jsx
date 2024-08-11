@@ -474,7 +474,7 @@ const TodoPage = () => {
                         component={"div"}
                         variant="body1"
                         sx={{
-                          fontWeight: "500",
+                          fontWeight: "800",
                           fontSize: "1.3rem",
                           boxSizing: "border-box",
                         }}

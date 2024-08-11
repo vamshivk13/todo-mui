@@ -1,6 +1,8 @@
 import {
   Chip,
   IconButton,
+  ListItemIcon,
+  ListItemText,
   Menu,
   MenuItem,
   Stack,
@@ -11,6 +13,8 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { themeContext } from "../../../store/ColorThemeProvider";
 import useFetch from "../../../hooks/useFetch";
 import { colors } from "../../../util/getThemeColors";
+import ColorLensIcon from "@mui/icons-material/ColorLens";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const MoreMenu = ({
   currentSidebarItemId,
@@ -130,8 +134,18 @@ const MoreMenu = ({
         <MoreHorizIcon />
       </IconButton>
       <Menu open={open} onClose={handleClose} anchorEl={anchor}>
-        <MenuItem onClick={handleColorMenu}>Change Theme</MenuItem>
-        <MenuItem>Delete List</MenuItem>
+        <MenuItem onClick={handleColorMenu}>
+          <ListItemIcon>
+            <ColorLensIcon />
+          </ListItemIcon>
+          <ListItemText>Change Theme</ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <DeleteOutlineIcon />
+          </ListItemIcon>
+          <ListItemText>Delete List</ListItemText>
+        </MenuItem>
       </Menu>
       <Menu
         anchorOrigin={{

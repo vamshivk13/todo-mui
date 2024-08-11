@@ -4,6 +4,8 @@ import {
   Avatar,
   Box,
   IconButton,
+  ListItemIcon,
+  ListItemText,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -19,6 +21,9 @@ import { useContext } from "react";
 import { authContext } from "../store/AuthProvider";
 import { useNavigate } from "react-router";
 import { alertContext } from "../store/AlertProvider";
+import PersonIcon from "@mui/icons-material/Person";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+
 const Header = ({ setMode, mode }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -117,10 +122,18 @@ const Header = ({ setMode, mode }) => {
           sx={{ marginTop: "14px" }}
         >
           <MenuItem sx={{ textTransform: "capitalize" }} onClick={handleClose}>
-            Hi {user.displayName || "user"}!
+            <ListItemIcon>
+              <PersonIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Hi {user.displayName || "user"}!</ListItemText>
           </MenuItem>
           {user.isAuthenticated && (
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>
+              <ListItemIcon>
+                <MeetingRoomIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Logout</ListItemText>
+            </MenuItem>
           )}
         </Menu>
       </Toolbar>
