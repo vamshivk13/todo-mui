@@ -21,6 +21,8 @@ import { themeContext } from "../store/ColorThemeProvider";
 import { colorThemeObject } from "../util/getThemeColors";
 import { sidebarItems as defaultSidebarItems } from "../util/getSidebarItems";
 import { useTheme } from "@emotion/react";
+import SyncAnimation from "../components/sync/SyncAnimation";
+
 const TodoPage = () => {
   const inputRef = useRef();
   const [value, setValue] = useState("");
@@ -62,10 +64,20 @@ const TodoPage = () => {
     ? sidebarItems.find((item) => item.id == currentSidebarItemId)
     : customSidebarItems.find((item) => item.id == currentSidebarItemId);
 
-  const [{ name }, setTasksAPI] = useFetch("POST", "/tasks.json");
+  const [{ name }, setTasksAPI, isPostSyncing, isPostSuccess] = useFetch(
+    "POST",
+    "/tasks.json"
+  );
+  const [status, setStatus] = useState(null);
   const [tasksAPI, fetchTasks] = useFetch("GET", "/tasks.json");
-  const [, deleteTask] = useFetch("DELETE", "/tasks/");
-  const [, updateTask] = useFetch("UPDATE", "/tasks/");
+  const [, deleteTask, isDeleteSyncing, isDeleteSuccess] = useFetch(
+    "DELETE",
+    "/tasks/"
+  );
+  const [, updateTask, isUpdateSyncing, isUpdateSuccess] = useFetch(
+    "UPDATE",
+    "/tasks/"
+  );
   const [initialSidebarItems, fetchDefaultSidebarItems] = useFetch(
     "GET",
     "/default-lists.json"
@@ -143,7 +155,7 @@ const TodoPage = () => {
     tasks.forEach((task) => {
       const createdDate = new Date(task.createdAt).toDateString();
       console.log("today", createdDate, date);
-      if (createdDate != date.toDateString()) {
+      if (createdDate != date.toDateString() && task.listTypeId == "MyDay") {
         updateTask({
           route: task.key + ".json",
           data: {
@@ -209,6 +221,22 @@ const TodoPage = () => {
       navigate("/");
     }
   }, [user.isAuthenticated]);
+
+  useEffect(() => {
+    if (isDeleteSyncing || isPostSyncing || isUpdateSyncing) {
+      setStatus("syncing");
+    } else {
+      setStatus(null);
+    }
+  }, [isDeleteSyncing, isPostSyncing, isUpdateSyncing]);
+
+  useEffect(() => {
+    if (isPostSuccess || isUpdateSuccess || isDeleteSuccess)
+      setStatus("success");
+    else {
+      setStatus(null);
+    }
+  }, [isPostSuccess, isUpdateSuccess, isDeleteSuccess]);
 
   async function addTask(e) {
     console.log("add task is called");
@@ -523,6 +551,8 @@ const TodoPage = () => {
                     sidebarItems={sidebarItems}
                     setSidebarItems={setSidebarItems}
                   />
+
+                  <SyncAnimation status={status} setStatus={setStatus} />
                 </Box>
               </Box>
               <NewTodoTextField
