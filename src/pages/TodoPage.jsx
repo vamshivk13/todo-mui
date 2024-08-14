@@ -22,7 +22,7 @@ import { colorThemeObject } from "../util/getThemeColors";
 import { sidebarItems as defaultSidebarItems } from "../util/getSidebarItems";
 import { useTheme } from "@emotion/react";
 import SyncAnimation from "../components/animation/SyncAnimation";
-import TypeAnimation from "../components/animation/TypeAnimation";
+import doneTone from "../../public/doneTone.mp3";
 
 const TodoPage = () => {
   const inputRef = useRef();
@@ -90,6 +90,9 @@ const TodoPage = () => {
 
   const [, deleteCustomList] = useFetch("DELETE", "/lists/");
   const [isTasksLoading, setIsTasksLoading] = useState(null);
+
+  // done tone
+  const doneToneRef = useRef(new Audio(doneTone));
 
   useEffect(() => {
     function getDefaultSidebarItems() {
@@ -317,6 +320,12 @@ const TodoPage = () => {
         doneAt: Date.now(),
       },
     });
+
+    if (!curTask.isDone) {
+      doneToneRef.current.pause();
+      doneToneRef.current.currentTime = 0;
+      doneToneRef.current.play();
+    }
 
     setTasks((tasks) =>
       tasks.map((task) => {
