@@ -1,74 +1,70 @@
 import { Box, duration, useTheme } from "@mui/material";
 import React from "react";
 import { animated, useSpring } from "@react-spring/web";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 const TypeAnimation = ({ isTyping }) => {
   const spring1 = useSpring({
     from: { y: 0 },
-    to: { y: -7 },
+    to: [{ y: 5 }],
+    config: { tension: 180, friction: 12 },
     // config: { duration: 300 },
     loop: isTyping,
   });
   const spring2 = useSpring({
     from: { y: 0 },
-    to: { y: -7 },
+    to: [{ y: 5 }],
+    config: { tension: 180, friction: 12 },
     delay: 50,
     // config: { duration: 300 },
     loop: isTyping,
   });
   const spring3 = useSpring({
     from: { y: 0 },
-    to: { y: -7 },
+    to: [{ y: 5 }],
+    config: { tension: 180, friction: 12 },
     // config: { duration: 300 },
     delay: 100,
     loop: isTyping,
   });
-  const color = useTheme().typography.body1.color
-    ? useTheme().typography.body1.color
-    : useTheme().palette.mode == "dark"
-    ? "white"
-    : "black";
+
   return (
     <Box
       sx={{
         display: "flex",
-        gap: "3px",
-        // justifyContent: "center",
-        // alignItems: "center",
-        // bgcolor: "green",
-        ml: "auto",
+        // gap: "1px",
+        height: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        // bgcolor: "green",s
       }}
     >
       {isTyping && (
-        <>
-          <animated.div
-            style={{
-              borderRadius: "50%",
-              height: "8px",
-              width: "8px",
-              backgroundColor: color,
-              ...spring1,
-            }}
-          ></animated.div>
-          <animated.div
-            style={{
-              borderRadius: "50%",
-              height: "8px",
-              width: "8px",
-              backgroundColor: color,
-              ...spring2,
-            }}
-          ></animated.div>
-          <animated.div
-            style={{
-              borderRadius: "50%",
-              height: "8px",
-              width: "8px",
-              backgroundColor: color,
-              ...spring3,
-            }}
-          ></animated.div>
-        </>
+        <animated.div
+          style={{
+            ...spring1,
+          }}
+        >
+          <FiberManualRecordIcon sx={{ fontSize: "12px", p: 0, m: 0 }} />
+        </animated.div>
+      )}
+      {isTyping && (
+        <animated.div
+          style={{
+            ...spring2,
+          }}
+        >
+          <FiberManualRecordIcon sx={{ fontSize: "12px", p: 0, m: 0 }} />
+        </animated.div>
+      )}
+      {isTyping && (
+        <animated.div
+          style={{
+            ...spring3,
+          }}
+        >
+          <FiberManualRecordIcon sx={{ fontSize: "12px", p: 0, m: 0 }} />
+        </animated.div>
       )}
     </Box>
   );

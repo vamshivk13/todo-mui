@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Paper, InputBase, IconButton, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import TypeAnimation from "../../animation/TypeAnimation";
 
 const NewTodoTextField = ({
   value,
   setValue,
   addTask,
-  setIsTyping,
   currentSidebarItemId,
 }) => {
+  const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
 
   useEffect(() => {
@@ -24,6 +25,7 @@ const NewTodoTextField = ({
         pb: 3,
         gap: "1rem",
         paddingTop: "10px",
+        height: "85px",
         marginTop: "10px",
       }}
       onSubmit={addTask}
@@ -33,6 +35,7 @@ const NewTodoTextField = ({
           flex: 1,
           display: "flex",
           padding: "3px 10px",
+          justifyItems: "center",
           boxShadow:
             "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
         }}
@@ -60,13 +63,16 @@ const NewTodoTextField = ({
             borderRadius: "10px !important",
           }}
         />
-        <IconButton type="submit">
-          <AddIcon
-            sx={{
-              fontSize: "2rem",
-            }}
-          />
-        </IconButton>
+        {!isTyping && (
+          <IconButton type="submit">
+            <AddIcon
+              sx={{
+                fontSize: "2rem",
+              }}
+            />
+          </IconButton>
+        )}
+        <TypeAnimation isTyping={isTyping} />
       </Paper>
     </Box>
   );

@@ -90,7 +90,6 @@ const TodoPage = () => {
 
   const [, deleteCustomList] = useFetch("DELETE", "/lists/");
   const [isTasksLoading, setIsTasksLoading] = useState(null);
-  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
     function getDefaultSidebarItems() {
@@ -555,7 +554,6 @@ const TodoPage = () => {
                   />
 
                   <Box sx={{ ml: "auto", marginRight: "1rem" }}>
-                    <TypeAnimation isTyping={isTyping} />
                     <SyncAnimation status={status} setStatus={setStatus} />
                   </Box>
                 </Box>
@@ -564,7 +562,6 @@ const TodoPage = () => {
                 value={value}
                 setValue={setValue}
                 addTask={addTask}
-                setIsTyping={setIsTyping}
                 currentSidebarItemId={currentSidebarItemId}
               />
               <Box sx={{ overflowY: "auto" }}>
