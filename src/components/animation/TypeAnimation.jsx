@@ -23,10 +23,16 @@ const TypeAnimation = ({ isTyping }) => {
     delay: 100,
     loop: isTyping,
   });
+  const color = useTheme().typography.body1.color
+    ? useTheme().typography.body1.color
+    : useTheme().palette.mode == "dark"
+    ? "white"
+    : "black";
   return (
     <Box
       sx={{
         display: "flex",
+        gap: "3px",
         // justifyContent: "center",
         // alignItems: "center",
         // bgcolor: "green",
@@ -40,7 +46,7 @@ const TypeAnimation = ({ isTyping }) => {
               borderRadius: "50%",
               height: "8px",
               width: "8px",
-              backgroundColor: useTheme().typography.body1.color,
+              backgroundColor: color,
               ...spring1,
             }}
           ></animated.div>
@@ -49,7 +55,7 @@ const TypeAnimation = ({ isTyping }) => {
               borderRadius: "50%",
               height: "8px",
               width: "8px",
-              backgroundColor: useTheme().typography.body1.color,
+              backgroundColor: color,
               ...spring2,
             }}
           ></animated.div>
@@ -58,7 +64,7 @@ const TypeAnimation = ({ isTyping }) => {
               borderRadius: "50%",
               height: "8px",
               width: "8px",
-              backgroundColor: useTheme().typography.body1.color,
+              backgroundColor: color,
               ...spring3,
             }}
           ></animated.div>
