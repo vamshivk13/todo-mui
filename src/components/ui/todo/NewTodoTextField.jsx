@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Paper, InputBase, IconButton, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-const NewTodoTextField = ({ value, setValue, addTask }) => {
+const NewTodoTextField = ({
+  value,
+  setValue,
+  addTask,
+  setIsTyping,
+  currentSidebarItemId,
+}) => {
+  const [typingTimeout, setTypingTimeout] = useState(null);
+
+  useEffect(() => {
+    setValue("");
+  }, [currentSidebarItemId]);
   return (
     <Box
       component={"form"}
@@ -31,7 +42,18 @@ const NewTodoTextField = ({ value, setValue, addTask }) => {
           placeholder="Add Todo"
           size="medium"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            clearTimeout();
+            setIsTyping(true);
+            if (typingTimeout) {
+              clearTimeout(typingTimeout);
+            }
+            const timer = setTimeout(() => {
+              setIsTyping(false);
+            }, 400);
+            setTypingTimeout(timer);
+          }}
           sx={{
             flex: 1,
             borderWidth: "2px",

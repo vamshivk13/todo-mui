@@ -21,7 +21,8 @@ import { themeContext } from "../store/ColorThemeProvider";
 import { colorThemeObject } from "../util/getThemeColors";
 import { sidebarItems as defaultSidebarItems } from "../util/getSidebarItems";
 import { useTheme } from "@emotion/react";
-import SyncAnimation from "../components/sync/SyncAnimation";
+import SyncAnimation from "../components/animation/SyncAnimation";
+import TypeAnimation from "../components/animation/TypeAnimation";
 
 const TodoPage = () => {
   const inputRef = useRef();
@@ -89,6 +90,7 @@ const TodoPage = () => {
 
   const [, deleteCustomList] = useFetch("DELETE", "/lists/");
   const [isTasksLoading, setIsTasksLoading] = useState(null);
+  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
     function getDefaultSidebarItems() {
@@ -552,13 +554,18 @@ const TodoPage = () => {
                     setSidebarItems={setSidebarItems}
                   />
 
-                  <SyncAnimation status={status} setStatus={setStatus} />
+                  <Box sx={{ ml: "auto", marginRight: "1rem" }}>
+                    <TypeAnimation isTyping={isTyping} />
+                    <SyncAnimation status={status} setStatus={setStatus} />
+                  </Box>
                 </Box>
               </Box>
               <NewTodoTextField
                 value={value}
                 setValue={setValue}
                 addTask={addTask}
+                setIsTyping={setIsTyping}
+                currentSidebarItemId={currentSidebarItemId}
               />
               <Box sx={{ overflowY: "auto" }}>
                 <Box

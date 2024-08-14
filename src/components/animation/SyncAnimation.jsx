@@ -25,7 +25,7 @@ const SyncAnimation = ({ status, setStatus }) => {
   });
 
   return (
-    <Box sx={{ ml: "auto" }}>
+    <Box sx={{ ml: "auto", display: `${status ? "block" : "none"}` }}>
       {status === "syncing" && (
         <animated.div style={syncingAnimation}>
           <SyncIcon />
