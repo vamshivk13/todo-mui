@@ -70,7 +70,6 @@ const SidebarItem = ({
       onClick={() => {
         setCurrentSidebarItemId(id);
         setIsTempSidebarOpen(false);
-        setIsSidebarOpen(false);
         setCurrentColor(color);
       }}
     >

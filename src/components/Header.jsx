@@ -28,6 +28,7 @@ import {
   getUserAccountTooltipName,
   getUserDisplayName,
 } from "../util/getAccountdetails";
+import { appStateContext } from "../store/ApplicationStateProvider";
 
 const Header = ({ setMode, mode }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -38,6 +39,7 @@ const Header = ({ setMode, mode }) => {
     setAlert,
   } = useContext(alertContext);
   const auth = getAuth();
+  const { setIsSettingsOpened } = useContext(appStateContext);
 
   function handleDarkMode() {
     setMode((prev) => {
@@ -132,6 +134,15 @@ const Header = ({ setMode, mode }) => {
               <PersonIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>Hi {user.displayName || "user"}!</ListItemText>
+          </MenuItem>
+          <MenuItem
+            sx={{ textTransform: "capitalize" }}
+            onClick={() => setIsSettingsOpened(true)}
+          >
+            {/* <ListItemIcon>
+              <PersonIcon fontSize="small" />
+            </ListItemIcon> */}
+            <ListItemText>Settings</ListItemText>
           </MenuItem>
           {user.isAuthenticated && (
             <MenuItem onClick={handleLogout}>

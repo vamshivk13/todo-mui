@@ -13,6 +13,7 @@ import Header from "./components/Header";
 import AuthProvider from "./store/AuthProvider";
 import AlertProvider from "./store/AlertProvider";
 import ColorThemeProvider from "./store/ColorThemeProvider";
+import ApplicationStateProvider from "./store/ApplicationStateProvider";
 
 function App() {
   const [mode, setMode] = useLocalStorage("mode", "dark");
@@ -67,10 +68,12 @@ function App() {
         <AuthProvider>
           <AlertProvider>
             <ColorThemeProvider>
-              <Box className={mode} sx={{ height: "100%" }}>
-                <Header setMode={setMode} mode={mode} />
-                <RoutesProvider mode={mode} setMode={mode}></RoutesProvider>
-              </Box>
+              <ApplicationStateProvider>
+                <Box className={mode} sx={{ height: "100%" }}>
+                  <Header setMode={setMode} mode={mode} />
+                  <RoutesProvider mode={mode} setMode={mode}></RoutesProvider>
+                </Box>
+              </ApplicationStateProvider>
             </ColorThemeProvider>
           </AlertProvider>
         </AuthProvider>

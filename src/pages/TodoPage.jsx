@@ -23,6 +23,7 @@ import { sidebarItems as defaultSidebarItems } from "../util/getSidebarItems";
 import { useTheme } from "@emotion/react";
 import SyncAnimation from "../components/animation/SyncAnimation";
 import doneTone from "/doneTone.wav";
+import SettingsDrawer from "../components/ui/drawer/settings/SettingsDrawer";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
@@ -655,6 +656,7 @@ const TodoPage = () => {
               handleEditTask={handleEditTask}
             />
           )}
+          <SettingsDrawer />
         </ThemeProvider>
       </Box>
     </Box>

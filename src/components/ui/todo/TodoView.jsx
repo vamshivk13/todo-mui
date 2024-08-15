@@ -201,7 +201,8 @@ const TodoView = ({
           },
         }}
       >
-        <Toolbar sx={{ minHeight: { xs: "60px" } }} />2{todoView}
+        <Toolbar sx={{ minHeight: { xs: "60px" } }} />
+        {todoView}
       </Drawer>
 
       <Drawer
