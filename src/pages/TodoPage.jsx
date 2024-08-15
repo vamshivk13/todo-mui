@@ -22,16 +22,14 @@ import { colorThemeObject } from "../util/getThemeColors";
 import { sidebarItems as defaultSidebarItems } from "../util/getSidebarItems";
 import { useTheme } from "@emotion/react";
 import SyncAnimation from "../components/animation/SyncAnimation";
-import doneTone from "../../public/doneTone.mp3";
+import doneTone from "/doneTone.wav";
 
 const TodoPage = () => {
-  const inputRef = useRef();
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isTempSidebarOpen, setIsTempSidebarOpen] = useState(true);
-  const [isTempTodoViewOpen, setIsTempTodoViewOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");

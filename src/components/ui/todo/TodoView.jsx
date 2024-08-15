@@ -7,17 +7,20 @@ import {
   IconButton,
   InputBase,
   Paper,
-  TextField,
   Drawer,
   Toolbar,
   useTheme,
+  Typography,
+  Stack,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 import SaveIcon from "@mui/icons-material/Save";
 import UndoIcon from "@mui/icons-material/Undo";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 const TodoView = ({
   isOpen,
@@ -29,10 +32,31 @@ const TodoView = ({
   setIsOpen,
 }) => {
   const [value, setValue] = useState(content?.task);
+  const [customSideBarItems] = useLocalStorage("customSideBarItems");
+  const [sidebarItems] = useLocalStorage("sidebarItems");
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     if (content) setValue(content?.task);
   }, [content?.task]);
+
+  useEffect(() => {
+    function handleResize() {
+      setScreenWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  function getListName(id) {
+    if (sidebarItems.find((item) => item.id == id)) {
+      return sidebarItems.find((item) => item.id == id).name;
+    } else {
+      return customSideBarItems.find((item) => item.id == id).name;
+    }
+  }
   const todoView = (
     <Box
       sx={{
@@ -58,6 +82,31 @@ const TodoView = ({
             borderRadius: "0 !important",
           }}
         >
+          {screenWidth < 600 && (
+            <Stack
+              flexDirection={"row"}
+              alignItems={"center"}
+              gap={"12px"}
+              sx={{ padding: "10px 9px" }}
+            >
+              <IconButton
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <ArrowBackIcon
+                  fontSize="small"
+                  sx={{
+                    color: useTheme().palette.mode == "dark" ? "#FFF" : "#000",
+                  }}
+                />
+              </IconButton>
+
+              <Typography variant="subtitle1" sx={{ fontSize: "1.1rem" }}>
+                {getListName(content.listTypeId)}
+              </Typography>
+            </Stack>
+          )}
           <CardHeader
             title="Todo Details"
             sx={{ color: useTheme().typography.body1.color }}
@@ -71,7 +120,6 @@ const TodoView = ({
                   handleEditTask(value, content?.id);
                 }
               }}
-              // defaultValue={"efasd"}
               autoFocus="autofocus"
               onFocus={(e) =>
                 e.currentTarget.setSelectionRange(
@@ -150,13 +198,10 @@ const TodoView = ({
           display: { xs: "none", md: "block" },
           [`& .MuiDrawer-paper`]: {
             width: "20%",
-
-            // boxSizing: "border-box",
           },
         }}
       >
-        <Toolbar sx={{ minHeight: { xs: "60px" } }} />
-        {todoView}
+        <Toolbar sx={{ minHeight: { xs: "60px" } }} />2{todoView}
       </Drawer>
 
       <Drawer
@@ -167,17 +212,13 @@ const TodoView = ({
           setIsOpen(false);
         }}
         sx={{
-          // width: "20%",
-          // flex: "0.25",
-
           minWidth: "50%",
-
           flexShrink: 0,
           height: "100%",
           display: { md: "none" },
           [`& .MuiDrawer-paper`]: {
             minWidth: "50%",
-            width: { xs: "75%", sm: "50%" },
+            width: { xs: "100%", sm: "50%" },
             boxSizing: "border-box",
           },
         }}

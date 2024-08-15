@@ -23,6 +23,7 @@ const SidebarItem = ({
   handleDeleteSidebarItem,
   setCurrentSidebarItemId,
   setIsTempSidebarOpen,
+  setIsSidebarOpen,
   color,
   currentSidebarItemId,
 }) => {
@@ -69,6 +70,7 @@ const SidebarItem = ({
       onClick={() => {
         setCurrentSidebarItemId(id);
         setIsTempSidebarOpen(false);
+        setIsSidebarOpen(false);
         setCurrentColor(color);
       }}
     >

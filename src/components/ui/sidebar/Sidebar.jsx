@@ -106,7 +106,7 @@ const Sidebar = ({
           overflowY: "auto",
         }}
       >
-        {!(isTempSidebarOpen && screenWidth < 600) && (
+        {!(screenWidth < 600) && (
           <Box
             sx={{
               alignItems: "center",
@@ -214,7 +214,6 @@ const Sidebar = ({
             value={newListItem}
             onClick={(e) => e.stopPropagation()}
             onChange={(e) => setNewListItem(e.target.value)}
-            // onChange={handleNewListItem}
           ></InputBase>
         </Paper>
       </Box>
@@ -250,8 +249,10 @@ const Sidebar = ({
           setIsSidebarOpen(false);
         }}
         onClick={() => {
-          setIsTempSidebarOpen(false);
-          setIsSidebarOpen(false);
+          if (window.innerWidth > 600) {
+            setIsTempSidebarOpen(false);
+            setIsSidebarOpen(false);
+          } else return;
         }}
         sx={{
           width: {
