@@ -9,25 +9,77 @@ import {
 } from "@mui/material";
 import React, { useContext } from "react";
 import { appStateContext } from "../../../../store/ApplicationStateProvider";
+import SettingsItem from "./SettingsItem";
+import CloseSharpIcon from "@mui/icons-material/CloseSharp";
+import useFetch from "../../../../hooks/useFetch";
 
 const SettingsDrawer = () => {
-  const { isSettingsOpened, setIsSettingsOpened } = useContext(appStateContext);
+  const {
+    isSettingsOpened,
+    setIsSettingsOpened,
+    setSettingsState,
+    settingsState,
+  } = useContext(appStateContext);
+
+  const [, updateSettingsState] = useFetch("UPDATE", "/settings/");
+  const [, postSettingsState] = useFetch("POST", "/settings.json");
+  console.log(settingsState);
+  async function handleSoundSetting(e) {
+    const isChecked = e.target.checked;
+    console.log("ischecked", isChecked);
+    if (isChecked) {
+      setSettingsState((prev) => {
+        return {
+          ...prev,
+          isSoundEnabled: isChecked,
+        };
+      });
+    } else {
+      setSettingsState((prev) => {
+        return {
+          ...prev,
+          isSoundEnabled: isChecked,
+        };
+      });
+    }
+    if (!settingsState.key) {
+      const { name } = await postSettingsState({
+        ...settingsState,
+        isSoundEnabled: isChecked,
+      });
+      setSettingsState((prev) => {
+        return { ...prev, key: name };
+      });
+    } else {
+      const settings = settingsState;
+      const key = settings.key;
+      delete settings.key;
+      updateSettingsState({
+        route: key + ".json",
+        data: { ...settingsState, isSoundEnabled: isChecked },
+      });
+    }
+  }
+
   return (
     <Drawer
       anchor="right"
       open={isSettingsOpened}
       PaperProps={{
         sx: {
-          width: "20%",
+          minWidth: "20%",
           height: "100%",
+          bgcolor: useTheme().palette.mode == "light" && "#FAF8F9",
         },
       }}
+      hideBackdrop={false}
+      variant="temporary"
       onClose={() => setIsSettingsOpened(false)}
     >
       <Toolbar />
       <Box
         sx={{
-          padding: "1rem 10px",
+          padding: "1rem 15px",
           color: useTheme().palette.mode == "dark" ? "#FFF" : "#000",
         }}
       >
@@ -40,35 +92,30 @@ const SettingsDrawer = () => {
           }}
         >
           <Typography variant="h5">Settings</Typography>
-          <IconButton>X</IconButton>
+          <IconButton
+            onClick={() => {
+              setIsSettingsOpened(false);
+            }}
+          >
+            <CloseSharpIcon />
+          </IconButton>
         </Box>
         <Typography
           variant="h6"
           fontSize={"1.2rem"}
-          sx={{ marginBottom: "10px" }}
+          sx={{ marginBottom: "18px" }}
         >
           General
         </Typography>
-        <Box>
-          <Typography
-            fontWeight={"700"}
-            fontSize={"13px"}
-            sx={{ color: "inherit" }}
-          >
-            Enable Sound On Task Completion
-          </Typography>
-          <Switch size="medium"></Switch>
-        </Box>
-        <Box>
-          <Typography
-            fontWeight={"700"}
-            fontSize={"13px"}
-            sx={{ color: "inherit" }}
-          >
-            Enable Alert before Task Delete
-          </Typography>
-          <Switch></Switch>
-        </Box>
+        <SettingsItem
+          title={"Enable Task Completion Sound"}
+          isChecked={settingsState.isSoundEnabled}
+          onChange={handleSoundSetting}
+        />
+        <SettingsItem
+          title={"Alert Before Task Deletion"}
+          onChange={() => {}}
+        />
       </Box>
     </Drawer>
   );

@@ -24,6 +24,7 @@ import { useTheme } from "@emotion/react";
 import SyncAnimation from "../components/animation/SyncAnimation";
 import doneTone from "/doneTone.wav";
 import SettingsDrawer from "../components/ui/drawer/settings/SettingsDrawer";
+import { appStateContext } from "../store/ApplicationStateProvider";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
@@ -90,8 +91,9 @@ const TodoPage = () => {
   const [, deleteCustomList] = useFetch("DELETE", "/lists/");
   const [isTasksLoading, setIsTasksLoading] = useState(null);
 
-  // done tone
+  // task completion sound
   const doneToneRef = useRef(new Audio(doneTone));
+  const { settingsState } = useContext(appStateContext);
 
   useEffect(() => {
     function getDefaultSidebarItems() {
@@ -320,7 +322,7 @@ const TodoPage = () => {
       },
     });
 
-    if (!curTask.isDone) {
+    if (!curTask.isDone && settingsState.isSoundEnabled) {
       doneToneRef.current.pause();
       doneToneRef.current.currentTime = 0;
       doneToneRef.current.play();

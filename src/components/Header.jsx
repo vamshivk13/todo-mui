@@ -24,6 +24,7 @@ import { useNavigate } from "react-router";
 import { alertContext } from "../store/AlertProvider";
 import PersonIcon from "@mui/icons-material/Person";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
   getUserAccountTooltipName,
   getUserDisplayName,
@@ -137,11 +138,14 @@ const Header = ({ setMode, mode }) => {
           </MenuItem>
           <MenuItem
             sx={{ textTransform: "capitalize" }}
-            onClick={() => setIsSettingsOpened(true)}
+            onClick={() => {
+              setIsSettingsOpened(true);
+              handleClose();
+            }}
           >
-            {/* <ListItemIcon>
-              <PersonIcon fontSize="small" />
-            </ListItemIcon> */}
+            <ListItemIcon>
+              <SettingsIcon fontSize="small" />
+            </ListItemIcon>
             <ListItemText>Settings</ListItemText>
           </MenuItem>
           {user.isAuthenticated && (
