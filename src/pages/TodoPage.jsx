@@ -275,7 +275,6 @@ const TodoPage = () => {
 
     setIsOpen(false);
   }
-  console.log("tasks", tasks);
 
   function handleMarkAsDone(id) {
     const curTask = tasks.find((task) => task.id == id);
@@ -520,6 +519,7 @@ const TodoPage = () => {
                 currentSidebarItemId={currentSidebarItemId}
                 handleMarkAsDone={handleMarkAsDone}
                 handleSelectedTask={handleSelectedTask}
+                tasks={tasks}
               />
             </Box>
           </Box>

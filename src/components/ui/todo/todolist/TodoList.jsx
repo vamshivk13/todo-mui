@@ -8,8 +8,8 @@ const TodoList = ({
   currentSidebarItemId,
   handleMarkAsDone,
   handleSelectedTask,
+  tasks,
 }) => {
-  const [tasks] = useLocalStorage("tasks");
   const [currentTasks, setCurrentTasks] = useState([]);
   const isDonePresent =
     currentTasks.filter((task) => task.isDone == true).length > 0;
@@ -38,6 +38,7 @@ const TodoList = ({
     );
     setCurrentTasks(currentTasks);
   }, [currentSidebarItemId, tasks]);
+  console.log("TASKS", tasks);
 
   return (
     <Box sx={{ overflowY: "auto" }}>

@@ -10,7 +10,7 @@ const CompletedHeader = ({ count }) => {
       sx={{
         display: "flex",
         alignItems: "center",
-        gap: "9px",
+        gap: "7px",
         mt: 2,
         mb: 1,
 
@@ -30,9 +30,11 @@ const CompletedHeader = ({ count }) => {
         </Typography>
       </Paper>
       <Typography
-        variant="subtitle1"
+        variant="body1"
         sx={{
-          fontFamily: "Poppins",
+          fontFamily: "Grey Qo",
+          fontSize: "3ch",
+          fontWeight: "600",
         }}
       >
         {count}
