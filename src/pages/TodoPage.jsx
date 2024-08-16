@@ -22,16 +22,15 @@ import doneTone from "/doneTone.wav";
 import SettingsDrawer from "../components/ui/drawer/settings/SettingsDrawer";
 import { appStateContext } from "../store/ApplicationStateProvider";
 import SidebarIcon from "../components/ui/header/todo/SidebarIcon";
-import TodoList from "../components/ui/todo/TodoList";
+import TodoList from "../components/ui/todo/todolist/TodoList";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
-  const [currentColor, setCurrentColor] = useContext(themeContext);
+  const [currentColor] = useContext(themeContext);
   const [sidebarItemInputExpanded, setSidebarItemInputExpanded] =
     useState(false);
   const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
