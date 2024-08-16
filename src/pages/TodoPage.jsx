@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-import Card from "../components/ui/todo/TodoCard";
 import Sidebar from "../components/ui/sidebar/Sidebar";
 import TodoView from "../components/ui/todo/TodoView";
 import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
@@ -23,6 +22,7 @@ import doneTone from "/doneTone.wav";
 import SettingsDrawer from "../components/ui/drawer/settings/SettingsDrawer";
 import { appStateContext } from "../store/ApplicationStateProvider";
 import SidebarIcon from "../components/ui/header/todo/SidebarIcon";
+import TodoList from "../components/ui/todo/TodoList";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
@@ -191,13 +191,6 @@ const TodoPage = () => {
   }, [currentSideBarItem]);
 
   useEffect(() => {
-    const currentTasks = tasks.filter(
-      (task) => task.listTypeId === currentSidebarItemId
-    );
-    setCurrentTasks(currentTasks);
-  }, [currentSidebarItemId, tasks]);
-
-  useEffect(() => {
     if (!user.isAuthenticated) {
       navigate("/");
     }
@@ -283,6 +276,7 @@ const TodoPage = () => {
 
     setIsOpen(false);
   }
+  console.log("tasks", tasks);
 
   function handleMarkAsDone(id) {
     const curTask = tasks.find((task) => task.id == id);
@@ -523,76 +517,11 @@ const TodoPage = () => {
                 addTask={addTask}
                 currentSidebarItemId={currentSidebarItemId}
               />
-              <Box sx={{ overflowY: "auto" }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "7px",
-                    px: "1rem",
-                    marginBottom: "10px",
-                  }}
-                >
-                  {currentTasks
-                    .filter((task) => task.isDone == false)
-                    .sort((taska, taskb) => taskb.createdAt - taska.createdAt)
-                    .map((task) => {
-                      return (
-                        <Card
-                          key={task.id}
-                          task={task}
-                          handleSelectedTask={handleSelectedTask}
-                          handleMarkAsDone={handleMarkAsDone}
-                        />
-                      );
-                    })}
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "7px",
-                    marginBottom: "10px",
-                    px: "1rem",
-                  }}
-                >
-                  {currentTasks.filter((task) => task.isDone == true).length >
-                    0 && (
-                    <Paper
-                      sx={{
-                        marginRight: "auto",
-                        mt: 2,
-                        mb: 1,
-                        padding: "3px 10px",
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          fontSize: "13px",
-                          fontWeight: "600",
-                          borderRadius: "5px",
-                        }}
-                      >
-                        Completed
-                      </Typography>
-                    </Paper>
-                  )}
-                  {currentTasks
-                    .filter((task) => task.isDone == true)
-                    .sort((taska, taskb) => taskb.doneAt - taska.doneAt)
-                    .map((task) => {
-                      return (
-                        <Card
-                          key={task.id}
-                          task={task}
-                          handleMarkAsDone={handleMarkAsDone}
-                          handleSelectedTask={handleSelectedTask}
-                        />
-                      );
-                    })}
-                </Box>
-              </Box>
+              <TodoList
+                currentSidebarItemId={currentSidebarItemId}
+                handleMarkAsDone={handleMarkAsDone}
+                handleSelectedTask={handleSelectedTask}
+              />
             </Box>
           </Box>
           {isOpen && (
