@@ -9,6 +9,7 @@ const TodoList = ({
   handleMarkAsDone,
   handleSelectedTask,
   tasks,
+  customSidebarItems,
 }) => {
   const [currentTasks, setCurrentTasks] = useState([]);
   const isDonePresent =
@@ -50,6 +51,7 @@ const TodoList = ({
               task={task}
               handleSelectedTask={handleSelectedTask}
               handleMarkAsDone={handleMarkAsDone}
+              customSidebarItems={customSidebarItems}
             />
           );
         })}
@@ -63,6 +65,7 @@ const TodoList = ({
               task={task}
               handleMarkAsDone={handleMarkAsDone}
               handleSelectedTask={handleSelectedTask}
+              customSidebarItems={customSidebarItems}
             />
           );
         })}

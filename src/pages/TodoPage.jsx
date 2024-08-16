@@ -23,27 +23,30 @@ import SettingsDrawer from "../components/ui/drawer/settings/SettingsDrawer";
 import { appStateContext } from "../store/ApplicationStateProvider";
 import SidebarIcon from "../components/ui/header/todo/SidebarIcon";
 import TodoList from "../components/ui/todo/todolist/TodoList";
+import { appDataContext } from "../store/AppDataProvider";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
-  const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
+
   const [currentColor] = useContext(themeContext);
   const [sidebarItemInputExpanded, setSidebarItemInputExpanded] =
     useState(false);
   const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
     useState("");
 
-  const [sidebarItems, setSidebarItems] = useLocalStorage(
-    "sidebarItems",
-    defaultSidebarItems
-  );
-  const [customSidebarItems, setCustomSidebarItems] = useLocalStorage(
-    "customSideBarItems",
-    []
-  );
+  const {
+    customSidebarItems,
+    setCustomSidebarItems,
+    tasks,
+    setTasks,
+    sidebarItems,
+    setSidebarItems,
+    currentSidebarItemId,
+    setCurrentSidebarItemId,
+  } = useContext(appDataContext);
+
   const [selectedTask, setSelectedTask] = useState(null);
 
   const date = new Date();

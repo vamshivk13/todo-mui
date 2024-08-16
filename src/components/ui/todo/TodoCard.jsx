@@ -6,20 +6,40 @@ import {
   Typography,
   Button,
   IconButton,
+  Menu,
 } from "@mui/material";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useTheme } from "@emotion/react";
+import TodoMenu from "./todomenu/TodoMenu";
 const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
   const [showHoverEffect, setShowHoverEffect] = useState(false);
+  const [contextMenu, setContextMenu] = useState(null);
+
+  function handleContextMenu(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenu(
+      contextMenu === null
+        ? {
+            mouseX: e.clientX + 2,
+            mouseY: e.clientY - 6,
+          }
+        : null
+    );
+  }
   return (
     <Paper
       elevation={0}
       onClick={(e) => {
+        if (contextMenu) {
+          return;
+        }
         e.stopPropagation();
         handleSelectedTask(task?.id);
       }}
+      onContextMenu={handleContextMenu}
     >
       <Card
         sx={{
@@ -84,6 +104,16 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
           </Typography>
         </CardContent>
       </Card>
+      <TodoMenu
+        task={task}
+        isOpen={contextMenu !== null}
+        anchorPosition={
+          contextMenu !== null
+            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+            : undefined
+        }
+        setContextMenu={setContextMenu}
+      />
     </Paper>
   );
 };

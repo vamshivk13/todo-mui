@@ -12,6 +12,7 @@ import AuthProvider from "./store/AuthProvider";
 import AlertProvider from "./store/AlertProvider";
 import ColorThemeProvider from "./store/ColorThemeProvider";
 import ApplicationStateProvider from "./store/ApplicationStateProvider";
+import AppDataProvider from "./store/AppDataProvider";
 
 function App() {
   const [mode, setMode] = useLocalStorage("mode", "dark");
@@ -66,12 +67,14 @@ function App() {
         <AuthProvider>
           <AlertProvider>
             <ColorThemeProvider>
-              <ApplicationStateProvider>
-                <Box className={mode} sx={{ height: "100%" }}>
-                  <Header setMode={setMode} mode={mode} />
-                  <RoutesProvider mode={mode} setMode={mode}></RoutesProvider>
-                </Box>
-              </ApplicationStateProvider>
+              <AppDataProvider>
+                <ApplicationStateProvider>
+                  <Box className={mode} sx={{ height: "100%" }}>
+                    <Header setMode={setMode} mode={mode} />
+                    <RoutesProvider mode={mode} setMode={mode}></RoutesProvider>
+                  </Box>
+                </ApplicationStateProvider>
+              </AppDataProvider>
             </ColorThemeProvider>
           </AlertProvider>
         </AuthProvider>
