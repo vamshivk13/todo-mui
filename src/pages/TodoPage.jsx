@@ -387,7 +387,7 @@ const TodoPage = () => {
     });
     setTasks((prevTasks) =>
       prevTasks.filter((task) => {
-        task.listTypeId != id;
+        return task.listTypeId != id;
       })
     );
   }
