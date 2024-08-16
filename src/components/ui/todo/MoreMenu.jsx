@@ -23,6 +23,7 @@ const MoreMenu = ({
   customSidebarItems,
   sidebarItems,
   setSidebarItems,
+  handleDeleteSidebarItem,
 }) => {
   const [anchor, setAnchor] = useState(null);
   const [themeAnchor, setThemeAnchor] = useState(null);
@@ -143,7 +144,12 @@ const MoreMenu = ({
           </ListItemIcon>
           <ListItemText>Change Theme</ListItemText>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleDeleteSidebarItem(currentSidebarItemId);
+            handleClose();
+          }}
+        >
           <ListItemIcon>
             <DeleteOutlineIcon />
           </ListItemIcon>

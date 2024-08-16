@@ -360,6 +360,15 @@ const TodoPage = () => {
   }
 
   function handleDeleteSidebarItem(id) {
+    if (
+      defaultSidebarItems.findIndex(
+        (item) => item.id == currentSidebarItemId
+      ) >= 0
+    ) {
+      console.log("Returning", currentSidebarItemId);
+      return;
+    }
+    console.log("Continuing", currentSidebarItemId);
     const curCustomSideBarItem = customSidebarItems.find(
       (item) => item.id == id
     );
@@ -502,6 +511,7 @@ const TodoPage = () => {
                     customSidebarItems={customSidebarItems}
                     sidebarItems={sidebarItems}
                     setSidebarItems={setSidebarItems}
+                    handleDeleteSidebarItem={handleDeleteSidebarItem}
                   />
 
                   <Box sx={{ ml: "auto", marginRight: "1rem" }}>

@@ -36,27 +36,39 @@ const Sidebar = ({
     isTempSidebarOpen,
     screenWidth,
   } = useContext(appStateContext);
-  const [, postCustomList] = useFetch("POST", "/lists.json");
+  const [{ name }, postCustomList] = useFetch("POST", "/lists.json");
   const [currentColor, setCurrentColor] = useContext(themeContext);
 
-  function handleNewListItem(e) {
+  async function handleNewListItem(e) {
     e.preventDefault();
     e.stopPropagation();
     if (newListItem == "") {
       return;
     }
     const id = uuidv4();
-    postCustomList({
+    setCustomSidebarItems((prev) => [
+      ...prev,
+      { id: id, name: newListItem, count: 0, color: null },
+    ]);
+    const { name } = await postCustomList({
       id: id,
       name: newListItem,
       count: 0,
       color: null,
     });
 
-    setCustomSidebarItems((prev) => [
-      ...prev,
-      { id: id, name: newListItem, count: 0, color: null },
-    ]);
+    setCustomSidebarItems((prev) => {
+      return prev.map((item) => {
+        if (item.id == id) {
+          return {
+            ...item,
+            key: name,
+          };
+        } else {
+          return item;
+        }
+      });
+    });
     setNewListItem("");
     setCurrentSidebarItemId(id);
     setCurrentColor(null);

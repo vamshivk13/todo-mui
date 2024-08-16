@@ -38,6 +38,7 @@ const SidebarItem = ({
   const handleContextMenu = (event) => {
     if (type != "custom") return;
     event.preventDefault();
+    setCurrentSidebarItemId(id);
     setContextMenu(
       contextMenu === null
         ? {
