@@ -10,26 +10,24 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { getAuth, signOut } from "firebase/auth";
 import { useContext } from "react";
-import { authContext } from "../store/AuthProvider";
-import { useNavigate } from "react-router";
-import { alertContext } from "../store/AlertProvider";
+import { authContext } from "../../../store/AuthProvider";
 import PersonIcon from "@mui/icons-material/Person";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
   getUserAccountTooltipName,
   getUserDisplayName,
-} from "../util/getAccountdetails";
-import { appStateContext } from "../store/ApplicationStateProvider";
+} from "../../../util/getAccountdetails";
+import { appStateContext } from "../../../store/ApplicationStateProvider";
+import { alertContext } from "../../../store/AlertProvider";
 
 const Header = ({ setMode, mode }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -113,10 +111,8 @@ const Header = ({ setMode, mode }) => {
             </IconButton>
           </Tooltip>
           <Tooltip title={getUserAccountTooltipName(user?.displayName)}>
-            <IconButton>
-              <Avatar onClick={handleOpenAccount}>
-                {getUserDisplayName(user?.displayName)}
-              </Avatar>
+            <IconButton onClick={handleOpenAccount}>
+              <Avatar>{getUserDisplayName(user?.displayName)}</Avatar>
             </IconButton>
           </Tooltip>
         </Box>

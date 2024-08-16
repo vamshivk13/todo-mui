@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
-  Typography,
   Box,
   Paper,
   IconButton,
   Divider,
-  TextField,
   InputBase,
   Drawer,
   Toolbar,
@@ -17,8 +15,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { v4 as uuidv4 } from "uuid";
 import useFetch from "../../../hooks/useFetch";
 
-import { getBreakpoint } from "../../../util/getBreakpoints";
 import { themeContext } from "../../../store/ColorThemeProvider";
+import { appStateContext } from "../../../store/ApplicationStateProvider";
 
 const Sidebar = ({
   currentSidebarItemId,
@@ -26,20 +24,18 @@ const Sidebar = ({
   sidebarItems,
   setCustomSidebarItems,
   customSidebarItems,
-  setIsSidebarOpen,
-  isSidebarOpen,
-  isTempSidebarOpen,
-  setIsTempSidebarOpen,
   tasks,
-  setTasks,
   handleDeleteSidebarItem,
 }) => {
   const [newListItem, setNewListItem] = useState("");
-  const [breakpoint, setBreakpoint] = useState(
-    getBreakpoint(window.innerWidth)
-  );
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
+  const {
+    isSidebarOpen,
+    setIsTempSidebarOpen,
+    setIsSidebarOpen,
+    isTempSidebarOpen,
+    screenWidth,
+  } = useContext(appStateContext);
   const [, postCustomList] = useFetch("POST", "/lists.json");
   const [currentColor, setCurrentColor] = useContext(themeContext);
 
@@ -66,31 +62,6 @@ const Sidebar = ({
     setCurrentColor(null);
   }
 
-  useEffect(() => {
-    if (window.innerWidth > 900) {
-      setIsTempSidebarOpen(false);
-    } else {
-      setIsTempSidebarOpen(true);
-    }
-  }, []);
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-      if (window.innerWidth > 600) {
-        setIsTempSidebarOpen(false);
-      } else {
-        // setIsTempSidebarOpen(true);
-      }
-
-      setBreakpoint(getBreakpoint(window.innerWidth));
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
   const sidebar = (
     <Box sx={{ height: "100%", overflow: "hidden" }}>
       <Toolbar sx={{ minHeight: { xs: "60px" } }}></Toolbar>
@@ -148,8 +119,6 @@ const Sidebar = ({
                     ? true
                     : false
                 }
-                setIsSidebarOpen={setIsSidebarOpen}
-                setIsTempSidebarOpen={setIsTempSidebarOpen}
                 currentSidebarItemId={currentSidebarItemId}
               />
             );
@@ -177,8 +146,6 @@ const Sidebar = ({
                     ? true
                     : false
                 }
-                setIsSidebarOpen={setIsSidebarOpen}
-                setIsTempSidebarOpen={setIsTempSidebarOpen}
                 currentSidebarItemId={currentSidebarItemId}
               />
             );
@@ -249,7 +216,7 @@ const Sidebar = ({
           setIsSidebarOpen(false);
         }}
         onClick={() => {
-          if (window.innerWidth > 600) {
+          if (screenWidth > 600) {
             setIsTempSidebarOpen(false);
             setIsSidebarOpen(false);
           } else return;

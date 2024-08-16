@@ -13,7 +13,6 @@ import {
 import React, { useEffect, useState } from "react";
 
 const Modal = ({ title, content, isOpen, onClose }) => {
-  console.log(content);
   const [value, setValue] = useState(content?.task);
   useEffect(() => {
     setValue(content?.task);

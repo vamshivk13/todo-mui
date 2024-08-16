@@ -103,22 +103,18 @@ const LoginForm = () => {
       .then((userCredential) => {
         // Signed up
         const user = userCredential.user;
-        console.log(user);
         return Promise.resolve(auth.currentUser);
         // ...
       })
       .then((currentUser) => {
-        console.log("Updating the user profile name");
         updateProfile(currentUser, {
           displayName,
         });
-        console.log("USER FROM REGISTER", user, currentUser);
         setUser((prev) => {
           return { ...prev, displayName, userId: currentUser.uid };
         });
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
         setAlert((prev) => {
           return {
@@ -127,8 +123,6 @@ const LoginForm = () => {
             alertType: "error",
           };
         });
-        console.log(error);
-        // ..
       });
   };
 
@@ -137,8 +131,6 @@ const LoginForm = () => {
       .then((userCredential) => {
         // Signed in
         const userData = userCredential.user;
-        console.log(userData);
-
         Cookies.set("token", userData.accessToken);
         setUser((user) => {
           return {

@@ -23,10 +23,9 @@ const SettingsDrawer = () => {
 
   const [, updateSettingsState] = useFetch("UPDATE", "/settings/");
   const [, postSettingsState] = useFetch("POST", "/settings.json");
-  console.log(settingsState);
+
   async function handleSoundSetting(e) {
     const isChecked = e.target.checked;
-    console.log("ischecked", isChecked);
     if (isChecked) {
       setSettingsState((prev) => {
         return {

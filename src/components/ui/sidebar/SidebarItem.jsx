@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import ListIcon from "../../../util/ListIcon";
 import { themeContext } from "../../../store/ColorThemeProvider";
+import { appStateContext } from "../../../store/ApplicationStateProvider";
 
 const SidebarItem = ({
   type,
@@ -22,13 +23,12 @@ const SidebarItem = ({
   id,
   handleDeleteSidebarItem,
   setCurrentSidebarItemId,
-  setIsTempSidebarOpen,
-  setIsSidebarOpen,
   color,
   currentSidebarItemId,
 }) => {
   const [contextMenu, setContextMenu] = React.useState(null);
-  const [currentColor, setCurrentColor] = useContext(themeContext);
+  const [, setCurrentColor] = useContext(themeContext);
+  const { setIsTempSidebarOpen } = useContext(appStateContext);
 
   useEffect(() => {
     if (id == currentSidebarItemId) {

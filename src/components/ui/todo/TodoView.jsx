@@ -13,7 +13,7 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 import SaveIcon from "@mui/icons-material/Save";
@@ -21,6 +21,7 @@ import UndoIcon from "@mui/icons-material/Undo";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import useLocalStorage from "../../../hooks/useLocalStorage";
+import { appStateContext } from "../../../store/ApplicationStateProvider";
 
 const TodoView = ({
   isOpen,
@@ -34,21 +35,11 @@ const TodoView = ({
   const [value, setValue] = useState(content?.task);
   const [customSideBarItems] = useLocalStorage("customSideBarItems");
   const [sidebarItems] = useLocalStorage("sidebarItems");
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const { screenWidth } = useContext(appStateContext);
 
   useEffect(() => {
     if (content) setValue(content?.task);
   }, [content?.task]);
-
-  useEffect(() => {
-    function handleResize() {
-      setScreenWidth(window.innerWidth);
-    }
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   function getListName(id) {
     if (sidebarItems.find((item) => item.id == id)) {

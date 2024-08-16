@@ -5,11 +5,9 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
-import TodoPage from "./pages/TodoPage";
-import { useState } from "react";
 import useLocalStorage from "./hooks/useLocalStorage";
 import RoutesProvider from "./routes/RoutesProvider";
-import Header from "./components/Header";
+import Header from "./components/ui/header/Header";
 import AuthProvider from "./store/AuthProvider";
 import AlertProvider from "./store/AlertProvider";
 import ColorThemeProvider from "./store/ColorThemeProvider";

@@ -1,20 +1,17 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Header from "../components/Header";
+
 import Card from "../components/ui/todo/TodoCard";
 import Sidebar from "../components/ui/sidebar/Sidebar";
 import TodoView from "../components/ui/todo/TodoView";
 import NewTodoTextField from "../components/ui/todo/NewTodoTextField";
 import useLocalStorage from "../hooks/useLocalStorage";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MenuIcon from "@mui/icons-material/Menu";
 import { v4 as uuidv4 } from "uuid";
-import { IconButton, InputBase, LinearProgress, Paper } from "@mui/material";
+import { InputBase, LinearProgress, Paper } from "@mui/material";
 import { authContext } from "../store/AuthProvider";
 import { useNavigate } from "react-router";
 import useFetch from "../hooks/useFetch";
-import ListIcon from "../util/ListIcon";
 import { ThemeProvider, createTheme } from "@mui/material";
 import MoreMenu from "../components/ui/todo/MoreMenu";
 import { themeContext } from "../store/ColorThemeProvider";
@@ -25,17 +22,15 @@ import SyncAnimation from "../components/animation/SyncAnimation";
 import doneTone from "/doneTone.wav";
 import SettingsDrawer from "../components/ui/drawer/settings/SettingsDrawer";
 import { appStateContext } from "../store/ApplicationStateProvider";
+import SidebarIcon from "../components/ui/header/todo/SidebarIcon";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useLocalStorage("tasks", []);
   const [isOpen, setIsOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isTempSidebarOpen, setIsTempSidebarOpen] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
   const [currentTasks, setCurrentTasks] = useState([]);
   const [currentSidebarItemId, setCurrentSidebarItemId] = useState("MyDay");
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [currentColor, setCurrentColor] = useContext(themeContext);
   const [sidebarItemInputExpanded, setSidebarItemInputExpanded] =
     useState(false);
@@ -139,27 +134,9 @@ const TodoPage = () => {
     loadCustomLists();
   }, []);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-      if (window.innerWidth > 900) {
-        setIsSidebarOpen(true);
-      } else {
-        setIsSidebarOpen(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   function updateTasksBasedOnDate() {
     tasks.forEach((task) => {
       const createdDate = new Date(task.createdAt).toDateString();
-      console.log("today", createdDate, date);
       if (createdDate != date.toDateString() && task.listTypeId == "MyDay") {
         updateTask({
           route: task.key + ".json",
@@ -187,7 +164,6 @@ const TodoPage = () => {
     const initialTasks = keys.map((key) => {
       return { ...tasksAPI[key], key };
     });
-    console.log("Loaded", initialTasks, keys);
     setTasks(() => initialTasks);
   }, [tasksAPI]);
 
@@ -244,7 +220,6 @@ const TodoPage = () => {
   }, [isPostSuccess, isUpdateSuccess, isDeleteSuccess]);
 
   async function addTask(e) {
-    console.log("add task is called");
     e.preventDefault();
     e.stopPropagation();
     if (value == "" || value == null || value == undefined) {
@@ -295,7 +270,6 @@ const TodoPage = () => {
     setSelectedId(null);
   }
   function handleSelectedTask(id) {
-    console.log("Selcted Id", id);
     setIsOpen(true);
     setSelectedId(id);
     const selectedTask = tasks.find((task) => task.id == id);
@@ -352,9 +326,7 @@ const TodoPage = () => {
   }
 
   function handleEditTask(val, id) {
-    console.log("handle edit task is called", id, tasks);
     const curTask = tasks.find((task) => task.id == id);
-    console.log("handle edit task is called", id, tasks, curTask);
 
     updateTask({
       route: curTask.key + ".json",
@@ -419,7 +391,6 @@ const TodoPage = () => {
     );
   }
 
-  console.log(currentSidebarItemId);
   return (
     <Box
       component={"div"}
@@ -443,17 +414,12 @@ const TodoPage = () => {
       >
         <Sidebar
           setCurrentSidebarItemId={setCurrentSidebarItemId}
-          setIsSidebarOpen={setIsSidebarOpen}
-          isSidebarOpen={isSidebarOpen}
           currentSidebarItemId={currentSidebarItemId}
           sidebarItems={sidebarItems}
           setCustomSidebarItems={setCustomSidebarItems}
           customSidebarItems={customSidebarItems}
-          setTasks={setTasks}
           tasks={tasks}
           handleDeleteSidebarItem={handleDeleteSidebarItem}
-          setIsTempSidebarOpen={setIsTempSidebarOpen}
-          isTempSidebarOpen={isTempSidebarOpen}
         />
         <ThemeProvider
           theme={(theme) => createTheme(colorThemeObject(theme, currentColor))}
@@ -491,24 +457,7 @@ const TodoPage = () => {
                   }}
                   sx={{ display: "flex", alignItems: "center", gap: "7px" }}
                 >
-                  <IconButton
-                    onClick={() => {
-                      if (screenWidth < 900) {
-                        setIsTempSidebarOpen((prev) => !prev);
-                      } else {
-                        setIsSidebarOpen((prev) => !prev);
-                      }
-                    }}
-                  >
-                    {isSidebarOpen ? (
-                      <ListIcon itemIcon={currentSidebarItemId} />
-                    ) : screenWidth < 600 ? (
-                      <ArrowBackIcon />
-                    ) : (
-                      <MenuIcon />
-                    )}
-                  </IconButton>
-
+                  <SidebarIcon currentSidebarItemId={currentSidebarItemId} />
                   {sidebarItemInputExpanded == false ? (
                     <Box>
                       <Typography

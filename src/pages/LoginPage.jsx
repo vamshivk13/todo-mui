@@ -11,10 +11,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 const LoginPage = () => {
   const { user, setUser } = useContext(authContext);
   const navigate = useNavigate();
-  const auth = getAuth();
-
-  console.log(auth);
-  console.log(user);
 
   useEffect(() => {
     setUser((prev) => {

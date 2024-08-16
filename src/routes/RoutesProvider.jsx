@@ -1,9 +1,7 @@
 import React from "react";
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import TodoPage from "../pages/TodoPage";
-import Header from "../components/Header";
-import { Alert } from "@mui/material";
 
 const RoutesProvider = ({ children, mode, setMode }) => {
   const router = createBrowserRouter([

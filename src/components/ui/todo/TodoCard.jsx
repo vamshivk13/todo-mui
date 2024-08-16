@@ -46,23 +46,13 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
               }}
               disableRipple
             >
-              <CheckCircleIcon
-                sx={
-                  {
-                    // opacity: "0.5",
-                    // "&:hover": {
-                    //   opacity: 1,
-                    // },
-                  }
-                }
-              />
+              <CheckCircleIcon />
             </IconButton>
           ) : (
             <IconButton
               sx={{ padding: 0 }}
               onClick={(e) => {
                 e.stopPropagation();
-                console.log("IDDD", task.id);
                 handleMarkAsDone(task.id);
               }}
               disableRipple
