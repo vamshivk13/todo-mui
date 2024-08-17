@@ -41,14 +41,19 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
     const curTask = task;
     // 2. get the list type id
     const toMoveListId = item.id;
+    const curDate = Date.now();
 
+    const toUpdate =
+      toMoveListId == "MyDay"
+        ? { listTypeId: toMoveListId, createdAt: curDate }
+        : { listTypeId: toMoveListId };
     // 4. update the same on tasks state
     setTasks((prev) => {
       return prev.map((item) => {
         if (item.id == curTask.id) {
           return {
             ...item,
-            listTypeId: toMoveListId,
+            ...toUpdate,
           };
         } else {
           return item;
@@ -60,7 +65,7 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
       route: curTask.key + ".json",
       data: {
         ...task,
-        listTypeId: toMoveListId,
+        ...toUpdate,
       },
     });
     setMoveAnchor(null);
@@ -74,7 +79,13 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
 
     // 3. add a new task with updated id and updated listTypeId
     const id = uuidv4();
-    const updatedTask = { ...curTask, id: id, listTypeId: toCopyListId };
+    const curDate = Date.now();
+    const updatedTask = {
+      ...curTask,
+      id: id,
+      listTypeId: toCopyListId,
+      createdAt: curDate,
+    };
     setTasks((prev) => {
       return [...prev, updatedTask];
     });

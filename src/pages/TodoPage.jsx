@@ -383,10 +383,9 @@ const TodoPage = () => {
         (item) => item.id == currentSidebarItemId
       ) >= 0
     ) {
-      console.log("Returning", currentSidebarItemId);
       return;
     }
-    console.log("Continuing", currentSidebarItemId);
+
     const curCustomSideBarItem = customSidebarItems.find(
       (item) => item.id == id
     );

@@ -43,7 +43,6 @@ const TodoList = ({
       );
     setCurrentTasks(currentTasks);
   }, [currentSidebarItemId, tasks]);
-  console.log("TASKS", tasks);
 
   return (
     <Box sx={{ overflowY: "auto" }}>
