@@ -8,6 +8,7 @@ import {
   Drawer,
   Toolbar,
   useTheme,
+  Collapse,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SidebarItem from "./SidebarItem";
@@ -17,6 +18,7 @@ import useFetch from "../../../hooks/useFetch";
 
 import { themeContext } from "../../../store/ColorThemeProvider";
 import { appStateContext } from "../../../store/ApplicationStateProvider";
+import { TransitionGroup } from "react-transition-group";
 
 const Sidebar = ({
   currentSidebarItemId,
@@ -143,30 +145,35 @@ const Sidebar = ({
         </Box>
         <Divider sx={{ my: 1, width: "90%", marginX: "auto" }} />
         <Box>
-          {customSidebarItems.map((item) => {
-            return (
-              <SidebarItem
-                key={item.id}
-                id={item.id}
-                type="custom"
-                item={item.name}
-                count={
-                  tasks.filter(
-                    (task) => task.listTypeId == item.id && task.isDone == false
-                  ).length
-                }
-                color={item.color}
-                setCurrentSidebarItemId={setCurrentSidebarItemId}
-                handleDeleteSidebarItem={handleDeleteSidebarItem}
-                isActive={
-                  item.id == currentSidebarItemId && screenWidth > 600
-                    ? true
-                    : false
-                }
-                currentSidebarItemId={currentSidebarItemId}
-              />
-            );
-          })}
+          <TransitionGroup component={null}>
+            {customSidebarItems.map((item) => {
+              return (
+                <Collapse key={item.id}>
+                  <SidebarItem
+                    // key={item.id}
+                    id={item.id}
+                    type="custom"
+                    item={item.name}
+                    count={
+                      tasks.filter(
+                        (task) =>
+                          task.listTypeId == item.id && task.isDone == false
+                      ).length
+                    }
+                    color={item.color}
+                    setCurrentSidebarItemId={setCurrentSidebarItemId}
+                    handleDeleteSidebarItem={handleDeleteSidebarItem}
+                    isActive={
+                      item.id == currentSidebarItemId && screenWidth > 600
+                        ? true
+                        : false
+                    }
+                    currentSidebarItemId={currentSidebarItemId}
+                  />
+                </Collapse>
+              );
+            })}
+          </TransitionGroup>
         </Box>
       </Paper>
       <Box

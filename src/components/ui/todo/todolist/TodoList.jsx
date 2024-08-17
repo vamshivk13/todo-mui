@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Card from "../TodoCard";
-import { Box } from "@mui/material";
+import { Box, Collapse, List, ListItem } from "@mui/material";
 import useLocalStorage from "../../../../hooks/useLocalStorage";
 import CompletedHeader from "./CompletedHeader";
 import { getCompletedTasks, getTodoTasks } from "../../../../util/getTasks";
+import { TransitionGroup } from "react-transition-group";
 const TodoList = ({
   currentSidebarItemId,
   handleMarkAsDone,
@@ -13,25 +14,9 @@ const TodoList = ({
 }) => {
   const [currentTasks, setCurrentTasks] = useState([]);
   const isDonePresent =
-    currentTasks.filter((task) => task.isDone == true).length > 0;
+    currentTasks.filter((task) => task?.isDone == true).length > 0;
   const completedTasks = getCompletedTasks(currentTasks);
   const toDoTasks = getTodoTasks(currentTasks);
-
-  const WrapperBox = ({ children }) => {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "7px",
-          px: "1rem",
-          marginBottom: "10px",
-        }}
-      >
-        {children}
-      </Box>
-    );
-  };
 
   useEffect(() => {
     let currentTasks = [];
@@ -46,33 +31,55 @@ const TodoList = ({
 
   return (
     <Box sx={{ overflowY: "auto" }}>
-      <WrapperBox>
-        {toDoTasks.map((task) => {
-          return (
-            <Card
-              key={task.id}
-              task={task}
-              handleSelectedTask={handleSelectedTask}
-              handleMarkAsDone={handleMarkAsDone}
-              customSidebarItems={customSidebarItems}
-            />
-          );
-        })}
-      </WrapperBox>
-      <WrapperBox>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "7px",
+          px: "1rem",
+          marginBottom: "10px",
+        }}
+      >
+        <TransitionGroup component={null}>
+          {toDoTasks.map((task) => {
+            return (
+              <Collapse key={task.id}>
+                <Card
+                  task={task}
+                  handleSelectedTask={handleSelectedTask}
+                  handleMarkAsDone={handleMarkAsDone}
+                  customSidebarItems={customSidebarItems}
+                />
+              </Collapse>
+            );
+          })}
+        </TransitionGroup>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "7px",
+          px: "1rem",
+          marginBottom: "10px",
+        }}
+      >
         {isDonePresent && <CompletedHeader count={completedTasks.length} />}
-        {completedTasks.map((task) => {
-          return (
-            <Card
-              key={task.id}
-              task={task}
-              handleMarkAsDone={handleMarkAsDone}
-              handleSelectedTask={handleSelectedTask}
-              customSidebarItems={customSidebarItems}
-            />
-          );
-        })}
-      </WrapperBox>
+        <TransitionGroup component={null}>
+          {completedTasks.map((task) => {
+            return (
+              <Collapse key={task.id}>
+                <Card
+                  task={task}
+                  handleMarkAsDone={handleMarkAsDone}
+                  handleSelectedTask={handleSelectedTask}
+                  customSidebarItems={customSidebarItems}
+                />
+              </Collapse>
+            );
+          })}
+        </TransitionGroup>
+      </Box>
     </Box>
   );
 };
