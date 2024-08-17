@@ -152,7 +152,7 @@ const TodoPage = () => {
     setTasks((prevTasks) => {
       return prevTasks.map((task) => {
         const createdDate = new Date(task.createdAt).toDateString();
-        if (createdDate != date.toDateString()) {
+        if (createdDate != date.toDateString() && task.listTypeId == "MyDay") {
           return {
             ...task,
             listTypeId: "MyTasks",
