@@ -13,12 +13,17 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
     "POST",
     "/tasks.json"
   );
+  const [, deleteTask, isDeleteSyncing, isDeleteSuccess] = useFetch(
+    "DELETE",
+    "/tasks/"
+  );
   const { customSidebarItems, setTasks, sidebarItems, currentSidebarItemId } =
     useContext(appDataContext);
   const [moveAnchor, setMoveAnchor] = useState(null);
   const isMoveOpen = Boolean(moveAnchor);
   const [copyAnchor, setCopyAnchor] = useState(null);
   const isCopyOpen = Boolean(copyAnchor);
+
   function handleMove(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -83,7 +88,16 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
         } else return task;
       });
     });
-    setMoveAnchor(null);
+    setCopyAnchor(null);
+  }
+
+  function handleDeleteTask(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const curTask = task;
+    setTasks((tasks) => tasks.filter((task) => task.id !== curTask.id));
+    deleteTask(curTask.key + ".json");
+    setContextMenu(null);
   }
 
   return (
@@ -96,7 +110,7 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
       >
         <MenuItem onClick={handleCopy}>Copy</MenuItem>
         <MenuItem onClick={handleMove}>Move</MenuItem>
-        <MenuItem>Delete</MenuItem>
+        <MenuItem onClick={handleDeleteTask}>Delete</MenuItem>
       </Menu>
       <Menu
         open={isMoveOpen}
