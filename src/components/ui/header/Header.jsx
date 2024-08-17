@@ -97,9 +97,9 @@ const Header = ({ setMode, mode }) => {
             alignItems: "center",
           }}
         >
-          <Tooltip title={mode == "light" ? "Light Mode" : "Dark Mode"}>
+          <Tooltip title={mode == "light" ? "Dark Mode" : "Light Mode"}>
             <IconButton onClick={handleDarkMode}>
-              {mode == "light" ? (
+              {mode == "dark" ? (
                 <LightModeIcon
                   sx={{
                     fontSize: "2rem",

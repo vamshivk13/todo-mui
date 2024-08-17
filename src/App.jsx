@@ -15,7 +15,8 @@ import ApplicationStateProvider from "./store/ApplicationStateProvider";
 import AppDataProvider from "./store/AppDataProvider";
 
 function App() {
-  const [mode, setMode] = useLocalStorage("mode", "dark");
+  const isDark = window.matchMedia("(prefers-color-scheme:dark)").matches;
+  const [mode, setMode] = useLocalStorage("mode", isDark ? "dark" : "light");
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -62,7 +63,7 @@ function App() {
     },
   });
   return (
-    <ThemeProvider theme={mode == "dark" ? lightTheme : darkTheme}>
+    <ThemeProvider theme={mode == "dark" ? darkTheme : lightTheme}>
       <CssBaseline>
         <AuthProvider>
           <AlertProvider>
