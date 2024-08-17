@@ -76,6 +76,7 @@ const TodoPage = () => {
     "UPDATE",
     "/tasks/"
   );
+  const [, updateList] = useFetch("UPDATE", "/lists/");
   const [initialSidebarItems, fetchDefaultSidebarItems] = useFetch(
     "GET",
     "/default-lists.json"
@@ -234,7 +235,7 @@ const TodoPage = () => {
           createdAt: Date.now(),
           doneAt: null,
           isStarred: false,
-          listTypeId: currentSidebarItemId,
+          listTypeId: listTypeId,
           id: taskId,
           key: null,
         },
@@ -249,7 +250,7 @@ const TodoPage = () => {
       doneAt: null,
       isStarred: false,
       id: taskId,
-      listTypeId: currentSidebarItemId,
+      listTypeId: listTypeId,
     });
 
     setTasks((prev) => {
@@ -363,6 +364,16 @@ const TodoPage = () => {
           }
         })
       );
+      const curList = customSidebarItems.find(
+        (item) => item.id == currentSidebarItemId
+      );
+      updateList({
+        route: curList.key + ".json",
+        data: {
+          ...curList,
+          name: updatedCurrentSidebarItem,
+        },
+      });
     }
   }
 
