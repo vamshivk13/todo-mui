@@ -25,7 +25,7 @@ const NewTodoTextField = ({
         pb: 3,
         gap: "1rem",
         paddingTop: "10px",
-        height: "85px",
+        minHeight: "85px",
         marginTop: "10px",
       }}
       onSubmit={addTask}
