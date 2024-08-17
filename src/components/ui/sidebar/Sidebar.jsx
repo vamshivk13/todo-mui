@@ -121,9 +121,14 @@ const Sidebar = ({
                 item={item.name}
                 color={item.color}
                 count={
-                  tasks.filter(
-                    (task) => task.listTypeId == item.id && task.isDone == false
-                  ).length
+                  item.id == "Important"
+                    ? tasks.filter(
+                        (task) => task.isStarred && task.isDone == false
+                      ).length
+                    : tasks.filter(
+                        (task) =>
+                          task.listTypeId == item.id && task.isDone == false
+                      ).length
                 }
                 itemIcon={item.id}
                 isActive={

@@ -222,6 +222,8 @@ const TodoPage = () => {
     }
 
     const taskId = uuidv4();
+    const listTypeId =
+      currentSidebarItemId == "Important" ? "MyTasks" : currentSidebarItemId;
     setTasks((tasks) => {
       return [
         ...tasks,
@@ -231,6 +233,7 @@ const TodoPage = () => {
           notes: "",
           createdAt: Date.now(),
           doneAt: null,
+          isStarred: false,
           listTypeId: currentSidebarItemId,
           id: taskId,
           key: null,
@@ -244,6 +247,7 @@ const TodoPage = () => {
       notes: "",
       createdAt: Date.now(),
       doneAt: null,
+      isStarred: false,
       id: taskId,
       listTypeId: currentSidebarItemId,
     });

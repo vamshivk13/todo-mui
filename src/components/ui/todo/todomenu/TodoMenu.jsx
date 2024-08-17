@@ -122,7 +122,10 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
         onClose={() => setMoveAnchor(null)}
       >
         {[...sidebarItems, ...customSidebarItems]
-          .filter((item) => item.id !== currentSidebarItemId)
+          .filter(
+            (item) =>
+              !(item.id == currentSidebarItemId || item.id == "Important")
+          )
           .map((item) => {
             return (
               <MenuItem onClick={() => handleMoveToList(item)} key={item.id}>
@@ -141,7 +144,10 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
         onClose={() => setCopyAnchor(null)}
       >
         {[...sidebarItems, ...customSidebarItems]
-          .filter((item) => item.id !== currentSidebarItemId)
+          .filter(
+            (item) =>
+              !(item.id == currentSidebarItemId || item.id == "Important")
+          )
           .map((item) => {
             return (
               <MenuItem onClick={() => handleCopyToList(item)} key={item.id}>

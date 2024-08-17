@@ -34,9 +34,13 @@ const TodoList = ({
   };
 
   useEffect(() => {
-    const currentTasks = tasks.filter(
-      (task) => task.listTypeId === currentSidebarItemId
-    );
+    let currentTasks = [];
+    if (currentSidebarItemId == "Important") {
+      currentTasks = tasks.filter((task) => task.isStarred == true);
+    } else
+      currentTasks = tasks.filter(
+        (task) => task.listTypeId === currentSidebarItemId
+      );
     setCurrentTasks(currentTasks);
   }, [currentSidebarItemId, tasks]);
   console.log("TASKS", tasks);

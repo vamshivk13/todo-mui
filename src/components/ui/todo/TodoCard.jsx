@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Paper,
   Card,
@@ -8,14 +8,23 @@ import {
   IconButton,
   Menu,
 } from "@mui/material";
+import StarBorderTwoToneIcon from "@mui/icons-material/StarBorderTwoTone";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useTheme } from "@emotion/react";
 import TodoMenu from "./todomenu/TodoMenu";
+import { appDataContext } from "../../../store/AppDataProvider";
+import useFetch from "../../../hooks/useFetch";
+import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
 const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
   const [showHoverEffect, setShowHoverEffect] = useState(false);
   const [contextMenu, setContextMenu] = useState(null);
+  const { setTasks } = useContext(appDataContext);
+  const [, updateTask, isUpdateSyncing, isUpdateSuccess] = useFetch(
+    "UPDATE",
+    "/tasks/"
+  );
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -28,6 +37,31 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
           }
         : null
     );
+  }
+
+  function handleMarkAsImportant(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setTasks((prev) => {
+      return prev.map((curTask) => {
+        if (curTask.id == task.id) {
+          return {
+            ...curTask,
+            isStarred: curTask?.isStarred ? !curTask.isStarred : true,
+          };
+        } else {
+          return curTask;
+        }
+      });
+    });
+    // update the curTask to the firebase
+    updateTask({
+      route: task.key + ".json",
+      data: {
+        ...task,
+        isStarred: task?.isStarred ? !task.isStarred : true,
+      },
+    });
   }
   return (
     <Paper
@@ -102,6 +136,25 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
           >
             {task?.task}
           </Typography>
+
+          <StarOutlinedIcon
+            onClick={handleMarkAsImportant}
+            sx={{
+              ml: "auto",
+              mr: "8px",
+              transform: "scale(1.1)",
+              display: task.isStarred ? "block" : "none",
+            }}
+          />
+          <StarBorderTwoToneIcon
+            onClick={handleMarkAsImportant}
+            sx={{
+              ml: "auto",
+              mr: "8px",
+              transform: "scale(1)",
+              display: task.isStarred ? "none" : "block",
+            }}
+          />
         </CardContent>
       </Card>
       <TodoMenu
