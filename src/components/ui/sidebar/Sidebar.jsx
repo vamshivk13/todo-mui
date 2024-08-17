@@ -50,6 +50,9 @@ const Sidebar = ({
       ...prev,
       { id: id, name: newListItem, count: 0, color: null },
     ]);
+    setNewListItem("");
+    setCurrentSidebarItemId(id);
+    setCurrentColor(null);
     const { name } = await postCustomList({
       id: id,
       name: newListItem,
@@ -69,9 +72,6 @@ const Sidebar = ({
         }
       });
     });
-    setNewListItem("");
-    setCurrentSidebarItemId(id);
-    setCurrentColor(null);
   }
 
   const sidebar = (
