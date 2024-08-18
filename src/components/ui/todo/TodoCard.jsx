@@ -1,22 +1,14 @@
 import React, { useContext, useState } from "react";
-import {
-  Paper,
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-} from "@mui/material";
-import StarBorderTwoToneIcon from "@mui/icons-material/StarBorderTwoTone";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { Paper, Card, CardContent, Typography } from "@mui/material";
+
 import { useTheme } from "@emotion/react";
 import TodoMenu from "./todomenu/TodoMenu";
 import { appDataContext } from "../../../store/AppDataProvider";
 import useFetch from "../../../hooks/useFetch";
-import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
+
+import MarkAsDoneAction from "./todoactions/MarkAsDoneAction";
+import MarkAsImportantAction from "./todoactions/MarkAsImportantAction";
 const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
-  const [showHoverEffect, setShowHoverEffect] = useState(false);
   const [contextMenu, setContextMenu] = useState(null);
   const { setTasks } = useContext(appDataContext);
   const [, updateTask, isUpdateSyncing, isUpdateSuccess] = useFetch(
@@ -89,42 +81,12 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
             alignItems: "center",
           }}
         >
-          {task?.isDone ? (
-            <IconButton
-              sx={{ padding: 0 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleMarkAsDone(task.id);
-              }}
-              disableRipple
-            >
-              <CheckCircleIcon />
-            </IconButton>
-          ) : (
-            <IconButton
-              sx={{ padding: 0 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleMarkAsDone(task.id);
-              }}
-              disableRipple
-              onMouseOver={() => setShowHoverEffect(true)}
-              onMouseLeave={() => setShowHoverEffect(false)}
-            >
-              {showHoverEffect ? (
-                <CheckCircleOutlineIcon />
-              ) : (
-                <RadioButtonUncheckedIcon
-                  sx={{
-                    opacity: "0.5",
-                    "&:hover": {
-                      opacity: 1,
-                    },
-                  }}
-                />
-              )}
-            </IconButton>
-          )}
+          <MarkAsDoneAction
+            isDone={task?.isDone}
+            handleMarkAsDone={() => {
+              handleMarkAsDone(task?.id);
+            }}
+          />
           <Typography
             variant="body1"
             sx={{
@@ -134,24 +96,9 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
           >
             {task?.task}
           </Typography>
-
-          <StarOutlinedIcon
-            onClick={handleMarkAsImportant}
-            sx={{
-              ml: "auto",
-              mr: "8px",
-              transform: "scale(1.1)",
-              display: task.isStarred ? "block" : "none",
-            }}
-          />
-          <StarBorderTwoToneIcon
-            onClick={handleMarkAsImportant}
-            sx={{
-              ml: "auto",
-              mr: "8px",
-              transform: "scale(1)",
-              display: task.isStarred ? "none" : "block",
-            }}
+          <MarkAsImportantAction
+            isStarred={task?.isStarred}
+            handleMarkAsImportant={handleMarkAsImportant}
           />
         </CardContent>
       </Card>

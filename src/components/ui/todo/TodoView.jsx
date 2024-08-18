@@ -17,7 +17,6 @@ import {
 import React, { useContext, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
-import SaveIcon from "@mui/icons-material/Save";
 import UndoIcon from "@mui/icons-material/Undo";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
@@ -89,7 +88,6 @@ const TodoView = ({
           variant="outlined"
           sx={{
             overflowY: "auto",
-            // scrollbarWidth: "thin",
             height: "100%",
             borderRadius: "0 !important",
             bgcolor: useTheme().palette.mode == "light" && "#FAF8F9",
