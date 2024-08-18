@@ -57,6 +57,7 @@ const TodoView = ({
     return () => {
       console.log("Unmounting the Todoview Component");
       if (content?.task != taskValue) {
+        console.log(content?.task, taskValue);
         handleEditTask(taskValue, false, content?.id);
       }
       if (content?.notes != value) {
@@ -177,7 +178,8 @@ const TodoView = ({
                   )
                 }
                 onBlur={(e) => {
-                  handleEditTask(taskValue, false, content?.id);
+                  taskValue != content.task &&
+                    handleEditTask(taskValue, false, content?.id);
                 }}
                 multiline
                 onKeyDown={(e) => {
@@ -207,7 +209,8 @@ const TodoView = ({
                 name="Note"
                 value={value}
                 onBlur={(e) => {
-                  handleEditTask(value, true, content?.id);
+                  value != content.notes &&
+                    handleEditTask(value, true, content?.id);
                 }}
                 autoFocus="autofocus"
                 onFocus={(e) =>
