@@ -39,36 +39,6 @@ const LoginForm = () => {
 
   const auth = getAuth();
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser((prev) => {
-          return {
-            ...prev,
-            isAuthenticated: true,
-            accessToken: user.accessToken,
-            displayName: user.displayName,
-            userId: user?.uid,
-          };
-        });
-      } else {
-        setUser((prev) => {
-          return {
-            ...prev,
-            isAuthenticated: false,
-            accessToken: null,
-            userId: null,
-            displayName: null,
-            // isLoading: false,
-          };
-        });
-      }
-      setUser((prev) => {
-        return { ...prev, isLoading: false };
-      });
-    });
-  }, []);
-
   function handleUsername(e) {
     setFormError((prev) => {
       return {
@@ -99,6 +69,9 @@ const LoginForm = () => {
     setDisplayName("");
   }
   const registerUser = (e) => {
+    setUser((prev) => {
+      return { ...prev, isLoading: true };
+    });
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed up
@@ -127,6 +100,9 @@ const LoginForm = () => {
   };
 
   function loginUser(e) {
+    setUser((prev) => {
+      return { ...prev, isLoading: true };
+    });
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in

@@ -32,7 +32,7 @@ import { alertContext } from "../../../store/AlertProvider";
 const Header = ({ setMode, mode }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const { user } = useContext(authContext);
+  const { user, setUser } = useContext(authContext);
   const {
     alert: { alertType, alertMessage },
     setAlert,
