@@ -35,7 +35,7 @@ const TodoView = ({
   handleEditTask,
   setIsOpen,
 }) => {
-  const [value, setValue] = useState(content?.task);
+  const [value, setValue] = useState(content?.notes);
   const [taskValue, setTaskValue] = useState(content?.task);
   const [customSideBarItems] = useLocalStorage("customSideBarItems");
   const [sidebarItems] = useLocalStorage("sidebarItems");
@@ -48,6 +48,18 @@ const TodoView = ({
   useEffect(() => {
     if (content) setTaskValue(content?.task);
   }, [content?.task]);
+
+  useEffect(() => {
+    return () => {
+      console.log("Unmounting the Todoview Component");
+      if (content?.task != taskValue) {
+        handleEditTask(taskValue, false, content?.id);
+      }
+      if (content?.notes != value) {
+        handleEditTask(value, true, content?.id);
+      }
+    };
+  }, []);
 
   function getListName(id) {
     if (sidebarItems.find((item) => item.id == id)) {
@@ -182,7 +194,6 @@ const TodoView = ({
                 boxShadow: "none",
                 padding: "3px 12px",
                 borderRadius: "5px",
-                boxShadow: "none",
               }}
             >
               <Typography variant="subtitle2">Add Note</Typography>
@@ -250,13 +261,6 @@ const TodoView = ({
           >
             {content?.isDone ? <UndoIcon /> : <DoneIcon />}
           </IconButton>
-          <IconButton
-            type="submit"
-            variant="outlined"
-            onClick={() => handleEditTask(value, content?.id)}
-          >
-            <SaveIcon />
-          </IconButton>
         </Paper>
       </Box>
     </Box>
@@ -269,7 +273,6 @@ const TodoView = ({
         anchor="right"
         sx={{
           width: "25%",
-          // flex: "0.25",
           flexShrink: 0,
           height: "100%",
           display: { xs: "none", md: "block" },
@@ -282,7 +285,6 @@ const TodoView = ({
         <Toolbar sx={{ minHeight: { xs: "60px" } }} />
         {todoView}
       </Drawer>
-
       <Drawer
         variant="temporary"
         anchor="right"
