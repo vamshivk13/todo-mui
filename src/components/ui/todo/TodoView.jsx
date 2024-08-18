@@ -16,14 +16,14 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DoneIcon from "@mui/icons-material/Done";
-import UndoIcon from "@mui/icons-material/Undo";
+import { CgPushChevronRightR } from "react-icons/cg";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import { appStateContext } from "../../../store/ApplicationStateProvider";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import StarBorderTwoToneIcon from "@mui/icons-material/StarBorderTwoTone";
+import MarkAsDoneAction from "./todoactions/MarkAsDoneAction";
+import MarkAsImporantAction from "./todoactions/MarkAsImportantAction";
 
 const TodoView = ({
   isOpen,
@@ -39,6 +39,11 @@ const TodoView = ({
   const [customSideBarItems] = useLocalStorage("customSideBarItems");
   const [sidebarItems] = useLocalStorage("sidebarItems");
   const { screenWidth } = useContext(appStateContext);
+  const date = content?.isDone
+    ? new Date(content.doneAt)
+    : new Date(content.createdAt);
+  const month = date.toLocaleString("en-US", { month: "long" });
+  const day = date.toLocaleString("en-US", { weekday: "long" });
 
   useEffect(() => {
     if (content) setValue(content?.notes);
@@ -144,7 +149,10 @@ const TodoView = ({
                 boxShadow: "none",
               }}
             >
-              <CheckCircleIcon fontSize="small" />
+              <MarkAsDoneAction
+                isDone={content?.isDone}
+                handleMarkAsDone={() => handleMarkAsDone(content?.id)}
+              />
               <InputBase
                 type="text"
                 name="task"
@@ -179,11 +187,9 @@ const TodoView = ({
                   }
                 }}
               ></InputBase>
-              <StarBorderTwoToneIcon
-                sx={{
-                  ml: "auto",
-                  mr: "8px",
-                }}
+              <MarkAsImporantAction
+                isStarred={content?.isStarred}
+                task={content}
               />
             </Paper>
             <Paper
@@ -247,17 +253,18 @@ const TodoView = ({
             bgcolor: useTheme().palette.mode == "dark" ? "#000" : "#FAF8F9",
           }}
         >
+          <IconButton disableRipple onClick={onClose}>
+            <CgPushChevronRightR />
+          </IconButton>
+          <Typography variant="subtite2" fontSize={"12px"}>{`${
+            content?.isDone ? "Completed on " : "Created on "
+          } ${day + " " + month + " " + date.getDate()}`}</Typography>
           <IconButton
             onClick={() => handleDeleteTask(content?.id)}
             variant="outlined"
+            disableRipple
           >
             <DeleteIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => handleMarkAsDone(content?.id)}
-            variant="outlined"
-          >
-            {content?.isDone ? <UndoIcon /> : <DoneIcon />}
           </IconButton>
         </Paper>
       </Box>

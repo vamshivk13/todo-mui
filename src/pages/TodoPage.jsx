@@ -137,6 +137,14 @@ const TodoPage = () => {
     loadCustomLists();
   }, []);
 
+  // Update Selected Task
+  useEffect(() => {
+    if (selectedTask) {
+      const curSelectedTask = tasks.find((task) => task.id == selectedId);
+      setSelectedTask(curSelectedTask);
+    }
+  }, [tasks, selectedTask]);
+
   function updateTasksBasedOnDate() {
     tasks.forEach((task) => {
       const createdDate = new Date(task.createdAt).toDateString();
@@ -313,7 +321,7 @@ const TodoPage = () => {
         } else return task;
       })
     );
-    setIsOpen(false);
+    // setIsOpen(false);
   }
 
   function switchToTextField(e) {

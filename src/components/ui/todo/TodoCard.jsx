@@ -10,11 +10,6 @@ import MarkAsDoneAction from "./todoactions/MarkAsDoneAction";
 import MarkAsImportantAction from "./todoactions/MarkAsImportantAction";
 const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
   const [contextMenu, setContextMenu] = useState(null);
-  const { setTasks } = useContext(appDataContext);
-  const [, updateTask, isUpdateSyncing, isUpdateSuccess] = useFetch(
-    "UPDATE",
-    "/tasks/"
-  );
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -29,30 +24,6 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
     );
   }
 
-  function handleMarkAsImportant(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    setTasks((prev) => {
-      return prev.map((curTask) => {
-        if (curTask.id == task.id) {
-          return {
-            ...curTask,
-            isStarred: curTask?.isStarred ? !curTask.isStarred : true,
-          };
-        } else {
-          return curTask;
-        }
-      });
-    });
-    // update the curTask to the firebase
-    updateTask({
-      route: task.key + ".json",
-      data: {
-        ...task,
-        isStarred: task?.isStarred ? !task.isStarred : true,
-      },
-    });
-  }
   return (
     <Paper
       elevation={0}
@@ -96,10 +67,7 @@ const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
           >
             {task?.task}
           </Typography>
-          <MarkAsImportantAction
-            isStarred={task?.isStarred}
-            handleMarkAsImportant={handleMarkAsImportant}
-          />
+          <MarkAsImportantAction isStarred={task?.isStarred} task={task} />
         </CardContent>
       </Card>
       <TodoMenu
