@@ -492,8 +492,8 @@ const TodoPage = () => {
                         variant="body1"
                         sx={{
                           fontWeight: "800",
+                          fontFamily: "Roboto",
                           fontSize: "1.3rem",
-                          boxSizing: "border-box",
                         }}
                         onClick={switchToTextField}
                       >
@@ -514,9 +514,10 @@ const TodoPage = () => {
                   ) : (
                     <InputBase
                       sx={{
-                        border: "0.2px solid",
+                        border: "none",
                         borderRadius: "6px",
                         paddingX: "4px",
+                        fontSize: "1.3rem",
                       }}
                       onClick={(e) => e.stopPropagation()}
                       value={updatedCurrentSidebarItem}
