@@ -12,6 +12,7 @@ import {
   useTheme,
   Typography,
   Stack,
+  Divider,
 } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -22,6 +23,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import { appStateContext } from "../../../store/ApplicationStateProvider";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import StarBorderTwoToneIcon from "@mui/icons-material/StarBorderTwoTone";
 
 const TodoView = ({
   isOpen,
@@ -33,12 +36,17 @@ const TodoView = ({
   setIsOpen,
 }) => {
   const [value, setValue] = useState(content?.task);
+  const [taskValue, setTaskValue] = useState(content?.task);
   const [customSideBarItems] = useLocalStorage("customSideBarItems");
   const [sidebarItems] = useLocalStorage("sidebarItems");
   const { screenWidth } = useContext(appStateContext);
 
   useEffect(() => {
-    if (content) setValue(content?.task);
+    if (content) setValue(content?.notes);
+  }, [content?.notes]);
+
+  useEffect(() => {
+    if (content) setTaskValue(content?.task);
   }, [content?.task]);
 
   function getListName(id) {
@@ -66,11 +74,15 @@ const TodoView = ({
         }}
       >
         <Paper
+          variant="outlined"
           sx={{
             overflowY: "auto",
             // scrollbarWidth: "thin",
             height: "100%",
             borderRadius: "0 !important",
+            bgcolor: useTheme().palette.mode == "light" && "#FAF8F9",
+            boxShadow: "none",
+            border: "none",
           }}
         >
           {screenWidth < 600 && (
@@ -98,36 +110,109 @@ const TodoView = ({
               </Typography>
             </Stack>
           )}
-          <CardHeader
-            title="Todo Details"
-            sx={{ color: useTheme().typography.body1.color }}
-          ></CardHeader>
-          <CardContent sx={{ py: "1rem", flex: 1 }}>
-            <InputBase
-              type="text"
-              value={value}
-              onKeyDown={(e) => {
-                if (e.key == "Enter") {
-                  handleEditTask(value, content?.id);
-                }
-              }}
-              autoFocus="autofocus"
-              onFocus={(e) =>
-                e.currentTarget.setSelectionRange(
-                  e.currentTarget.value.length,
-                  e.currentTarget.value.length
-                )
-              }
-              onChange={(e) => setValue(e.target.value)}
-              multiline
-              fullWidth
+
+          <CardContent
+            sx={{
+              py: "1rem",
+              flex: 1,
+              gap: "1rem",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Paper
+              variant="elevation"
               sx={{
-                padding: "6px 0rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                bgcolor: useTheme().palette.mode == "light" && "white",
+                fontFamily: "Roboto",
+                padding: "5px 12px",
                 border: "none",
-                outline: "none",
+                borderRadius: "5px",
+                boxShadow: "none",
               }}
-              // variant="outlined"
-            ></InputBase>
+            >
+              <CheckCircleIcon fontSize="small" />
+              <InputBase
+                type="text"
+                name="task"
+                value={taskValue}
+                sx={{
+                  fontSize: "1.05rem",
+                  fontWeight: "600",
+                  padding: "6px 0rem",
+                  border: "none",
+                  outline: "none",
+                  width: "100%",
+                }}
+                onChange={(e) => {
+                  if (e.target.value.length > 120) {
+                    return;
+                  } else setTaskValue(e.target.value);
+                }}
+                onFocus={(e) =>
+                  e.currentTarget.setSelectionRange(
+                    e.currentTarget.value.length,
+                    e.currentTarget.value.length
+                  )
+                }
+                onBlur={(e) => {
+                  handleEditTask(taskValue, false, content?.id);
+                }}
+                multiline
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    e.preventDefault();
+                    handleEditTask(taskValue, false, content?.id);
+                  }
+                }}
+              ></InputBase>
+              <StarBorderTwoToneIcon
+                sx={{
+                  ml: "auto",
+                  mr: "8px",
+                }}
+              />
+            </Paper>
+            <Paper
+              sx={{
+                border: "none",
+                boxShadow: "none",
+                padding: "3px 12px",
+                borderRadius: "5px",
+                boxShadow: "none",
+              }}
+            >
+              <Typography variant="subtitle2">Add Note</Typography>
+              <Divider sx={{ opacity: "0.5", mt: "3px" }} />
+              <InputBase
+                type="text"
+                name="Note"
+                value={value}
+                onBlur={(e) => {
+                  handleEditTask(value, true, content?.id);
+                }}
+                autoFocus="autofocus"
+                onFocus={(e) =>
+                  e.currentTarget.setSelectionRange(
+                    e.currentTarget.value.length,
+                    e.currentTarget.value.length
+                  )
+                }
+                onChange={(e) => setValue(e.target.value)}
+                multiline
+                fullWidth
+                sx={{
+                  padding: "6px 0rem",
+                  border: "none",
+                  outline: "none",
+                  width: "100%",
+                }}
+                // variant="outlined"
+              ></InputBase>
+            </Paper>
           </CardContent>
         </Paper>
       </Card>
@@ -150,6 +235,7 @@ const TodoView = ({
             borderRadius: "0px !important",
             justifyContent: "space-around",
             alignItems: "center",
+            bgcolor: useTheme().palette.mode == "dark" ? "#000" : "#FAF8F9",
           }}
         >
           <IconButton
@@ -179,16 +265,17 @@ const TodoView = ({
     <>
       <Drawer
         variant="permanent"
-        open={true}
+        open={isOpen}
         anchor="right"
         sx={{
-          width: "20%",
+          width: "25%",
           // flex: "0.25",
           flexShrink: 0,
           height: "100%",
           display: { xs: "none", md: "block" },
           [`& .MuiDrawer-paper`]: {
-            width: "20%",
+            width: "25%",
+            minWidth: "25%",
           },
         }}
       >
@@ -206,10 +293,12 @@ const TodoView = ({
         sx={{
           minWidth: "50%",
           flexShrink: 0,
+
           height: "100%",
           display: { md: "none" },
           [`& .MuiDrawer-paper`]: {
             minWidth: "50%",
+
             width: { xs: "100%", sm: "50%" },
             boxSizing: "border-box",
           },

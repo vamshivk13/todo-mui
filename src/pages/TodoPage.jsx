@@ -325,14 +325,15 @@ const TodoPage = () => {
     setSidebarItemInputExpanded((prev) => !prev);
   }
 
-  function handleEditTask(val, id) {
+  function handleEditTask(val, isNote, id) {
     const curTask = tasks.find((task) => task.id == id);
+    const toUpdate = isNote ? { notes: val } : { task: val };
 
     updateTask({
       route: curTask.key + ".json",
       data: {
         ...curTask,
-        task: val,
+        ...toUpdate,
       },
     });
     setTasks((tasks) => {
@@ -340,12 +341,12 @@ const TodoPage = () => {
         if (task.id == id) {
           return {
             ...task,
-            task: val,
+            ...toUpdate,
           };
         } else return task;
       });
     });
-    setIsOpen(false);
+    // setIsOpen(false);
   }
 
   function updateSidebarItemName() {
