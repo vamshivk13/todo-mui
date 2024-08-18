@@ -47,6 +47,7 @@ const NewTodoTextField = ({
           size="medium"
           value={value}
           onChange={(e) => {
+            if (e.target.value.length > 120) return;
             setValue(e.target.value);
             clearTimeout();
             setIsTyping(true);

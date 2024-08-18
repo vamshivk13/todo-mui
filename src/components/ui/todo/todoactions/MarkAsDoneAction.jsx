@@ -5,7 +5,6 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { IconButton } from "@mui/material";
 
 const MarkAsDoneAction = ({ isDone, handleMarkAsDone }) => {
-  const [showHoverEffect, setShowHoverEffect] = useState(false);
   return (
     <>
       {isDone ? (
@@ -27,22 +26,25 @@ const MarkAsDoneAction = ({ isDone, handleMarkAsDone }) => {
             handleMarkAsDone();
           }}
           disableRipple
-          onMouseEnter={() => setShowHoverEffect(true)}
-          onMouseLeave={() => setShowHoverEffect(false)}
-          onBlur={() => showHoverEffect(false)}
         >
-          {!showHoverEffect ? (
-            <RadioButtonUncheckedIcon
-              sx={{
-                opacity: "0.5",
-                "&:hover": {
-                  opacity: 1,
-                },
-              }}
-            />
-          ) : (
-            <CheckCircleOutlineIcon />
-          )}
+          <RadioButtonUncheckedIcon
+            sx={{
+              opacity: 1,
+              "&:hover": {
+                opacity: 0,
+              },
+              transition: "opacity 0.3s ease-in-out",
+            }}
+          />
+          <CheckCircleOutlineIcon
+            sx={{
+              opacity: 0,
+              position: "absolute",
+              "&:hover": {
+                opacity: 1,
+              },
+            }}
+          />
         </IconButton>
       )}
     </>
