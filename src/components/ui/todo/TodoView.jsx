@@ -24,6 +24,7 @@ import useLocalStorage from "../../../hooks/useLocalStorage";
 import { appStateContext } from "../../../store/ApplicationStateProvider";
 import MarkAsDoneAction from "./todoactions/MarkAsDoneAction";
 import MarkAsImporantAction from "./todoactions/MarkAsImportantAction";
+import TodayOutlinedIcon from "@mui/icons-material/TodayOutlined";
 
 const TodoView = ({
   isOpen,
@@ -79,6 +80,7 @@ const TodoView = ({
         height: "100%",
         flex: "1",
         position: "relative",
+        overflow: "hidden",
       }}
     >
       <Card
@@ -106,7 +108,12 @@ const TodoView = ({
               flexDirection={"row"}
               alignItems={"center"}
               gap={"12px"}
-              sx={{ padding: "10px 9px" }}
+              sx={{
+                padding: "10px 9px",
+                zIndex: 150,
+                position: "sticky",
+                top: "10px",
+              }}
             >
               <IconButton
                 onClick={() => {
@@ -134,6 +141,8 @@ const TodoView = ({
               gap: "1rem",
               display: "flex",
               flexDirection: "column",
+              position: "relative",
+              // bgcolor: "red",
             }}
           >
             <Paper
@@ -142,6 +151,10 @@ const TodoView = ({
                 display: "flex",
                 alignItems: "center",
                 gap: "1rem",
+                position: "sticky",
+                width: "100%",
+                top: "1rem",
+                zIndex: 200,
                 bgcolor: useTheme().palette.mode == "light" && "white",
                 fontFamily: "Roboto",
                 padding: "5px 12px",
@@ -165,6 +178,7 @@ const TodoView = ({
                   border: "none",
                   outline: "none",
                   width: "100%",
+                  opacity: ".8",
                 }}
                 onChange={(e) => {
                   if (e.target.value.length > 120) {
@@ -193,6 +207,37 @@ const TodoView = ({
                 isStarred={content?.isStarred}
                 task={content}
               />
+            </Paper>
+
+            <Paper
+              component={"div"}
+              sx={{
+                position: "fixed",
+                height: "66px",
+                top: "1rem",
+                boxShadow: "none",
+                bgcolor:
+                  useTheme().palette.mode == "light" ? "#FAF8F9" : "#000",
+                zIndex: 100,
+                width: "100%",
+              }}
+            ></Paper>
+            <Paper
+              variant="elevation"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                bgcolor: useTheme().palette.mode == "light" && "white",
+                fontFamily: "Roboto",
+                padding: "1rem 12px",
+                border: "none",
+                borderRadius: "5px",
+                boxShadow: "none",
+              }}
+            >
+              <TodayOutlinedIcon />
+              <Typography>Add to My Day</Typography>
             </Paper>
             <Paper
               sx={{
@@ -283,6 +328,7 @@ const TodoView = ({
           width: "25%",
           flexShrink: 0,
           height: "100%",
+
           display: { xs: "none", md: "block" },
           [`& .MuiDrawer-paper`]: {
             width: "25%",
