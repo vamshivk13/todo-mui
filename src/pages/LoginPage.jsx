@@ -1,4 +1,4 @@
-import { Alert, Box, Paper } from "@mui/material";
+import { Alert, Box, keyframes, Paper } from "@mui/material";
 import React, { useState } from "react";
 import LoginForm from "../components/form/LoginForm";
 import ListAltIcon from "@mui/icons-material/ListAlt";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { authContext } from "../store/AuthProvider";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CircularProgress from "@mui/material/CircularProgress";
+import LoadingAnimation from "../components/animation/LoadingAnimation";
 
 const LoginPage = () => {
   const { user, setUser } = useContext(authContext);
@@ -47,6 +48,16 @@ const LoginPage = () => {
       navigate("/home");
     }
   }, [user.isAuthenticated]);
+  const expand = keyframes(() => {
+    return {
+      from: {
+        transformX: "10px",
+      },
+      to: {
+        transformX: "100px",
+      },
+    };
+  });
 
   if (user.isLoading) {
     return (
@@ -55,10 +66,24 @@ const LoginPage = () => {
           position: "absolute",
           left: "50%",
           top: "50%",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
           transform: "translate(-50%, -50%)",
         }}
       >
-        <CircularProgress />
+        {/* <Box
+          sx={{
+            width: "100px",
+            bgcolor: "red",
+            "&:before": {
+              content: '"Loading..."',
+            },
+            
+          }}
+        ></Box> */}
+        <LoadingAnimation isTyping={user.isLoading} />
+        {/* {user.isLoading && <CircularProgress />} */}
       </Box>
     );
   }
