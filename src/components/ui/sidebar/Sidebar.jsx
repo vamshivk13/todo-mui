@@ -79,40 +79,50 @@ const Sidebar = ({
   const sidebar = (
     <Box sx={{ height: "100%", overflow: "hidden" }}>
       <Toolbar sx={{ minHeight: { xs: "60px" } }}></Toolbar>
-
+      {!(screenWidth < 600) && (
+        <Paper
+          sx={{
+            alignItems: "center",
+            display: "flex",
+            py: "1rem",
+            bgcolor: useTheme().palette.background.default,
+            position: "sticky",
+            top: 0,
+            height: "70px",
+            width: "100%",
+            zIndex: 100,
+            boxShadow: "none",
+            scrollbarWidth: 0,
+          }}
+        >
+          <IconButton
+            sx={{ marginLeft: "13px" }}
+            onClick={() => {
+              if (screenWidth < 900) {
+                setIsTempSidebarOpen((prev) => !prev);
+              } else {
+                setIsSidebarOpen((prev) => !prev);
+              }
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Paper>
+      )}
       <Paper
         sx={{
           display: "flex",
-          height: "calc(100% - 110px)",
+          height: `${
+            !(screenWidth < 600) ? "calc(100% - 180px)" : "calc(100% - 110px)"
+          }`,
           flexShrink: 0,
           flexDirection: "column",
+          width: "100%",
           boxShadow:
             "0px 0.3px 0.9px rgba(0, 0, 0, 0.1), 0px 1.6px 3.6px rgba(0, 0, 0, 0.1)",
           overflowY: "auto",
         }}
       >
-        {!(screenWidth < 600) && (
-          <Box
-            sx={{
-              alignItems: "center",
-              display: "flex",
-              py: "1rem",
-            }}
-          >
-            <IconButton
-              sx={{ marginLeft: "13px" }}
-              onClick={() => {
-                if (screenWidth < 900) {
-                  setIsTempSidebarOpen((prev) => !prev);
-                } else {
-                  setIsSidebarOpen((prev) => !prev);
-                }
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Box>
-        )}
         <Box sx={{ mt: `${screenWidth < 600 ? "10px" : "0"}` }}>
           {sidebarItems.map((item) => {
             return (

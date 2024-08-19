@@ -210,7 +210,7 @@ const TodoView = ({
             </Paper>
 
             <Paper
-              elevation={"outlined"}
+              elevation={"elevation"}
               component={"div"}
               sx={{
                 position: "fixed",
@@ -218,7 +218,9 @@ const TodoView = ({
                 top: "1rem",
                 boxShadow: "none",
                 bgcolor:
-                  useTheme().palette.mode == "light" ? "#FAF8F9" : "initial",
+                  useTheme().palette.mode == "light"
+                    ? "#FAF8F9"
+                    : useTheme().palette.background.default,
                 zIndex: 100,
                 width: "100%",
               }}
