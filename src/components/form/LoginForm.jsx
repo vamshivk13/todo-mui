@@ -96,6 +96,13 @@ const LoginForm = () => {
             alertType: "error",
           };
         });
+        setUser((user) => {
+          return {
+            ...user,
+            isAuthenticated: false,
+            isLoading: false,
+          };
+        });
       });
   };
 
@@ -127,6 +134,13 @@ const LoginForm = () => {
             ...prev,
             alertMessage: errorMessage,
             alertType: "error",
+          };
+        });
+        setUser((user) => {
+          return {
+            ...user,
+            isAuthenticated: false,
+            isLoading: false,
           };
         });
       });
