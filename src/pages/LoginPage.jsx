@@ -27,7 +27,7 @@ const LoginPage = () => {
               isLoading: false,
             };
           });
-        }, 1800);
+        }, 1600);
       } else {
         setUser((prev) => {
           return {
@@ -72,19 +72,10 @@ const LoginPage = () => {
           justifyContent: "center",
           flexDirection: "column",
           transform: "translate(-50%, -50%)",
+          opacity: "1",
+          fontWeight: "0",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            gap: "1rem",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <ListAltIcon sx={{ fontSize: "7rem" }} />
-        </Box>
         <LoadingAnimation1 isTyping={user.isLoading} />
         {/* {user.isLoading && <CircularProgress />} */}
       </Box>

@@ -3,12 +3,13 @@ import React from "react";
 import { animated, useSpring } from "@react-spring/web";
 import { TbLetterL } from "react-icons/tb";
 import {
-  TbLetterO,
-  TbLetterA,
-  TbLetterD,
-  TbLetterI,
-  TbLetterN,
-  TbLetterG,
+  TbSquareLetterL,
+  TbSquareLetterO,
+  TbSquareLetterA,
+  TbSquareLetterD,
+  TbSquareLetterI,
+  TbSquareLetterN,
+  TbSquareLetterG,
 } from "react-icons/tb";
 import {
   TbSquareRoundedLetterLFilled,
@@ -138,7 +139,7 @@ const LoadingAnimation = ({ isTyping }) => {
             ...spring1,
           }}
         >
-          <TbSquareRoundedLetterLFilled />
+          <TbSquareLetterL />
         </animated.div>
       )}
       {isTyping && (
@@ -147,7 +148,7 @@ const LoadingAnimation = ({ isTyping }) => {
             ...spring2,
           }}
         >
-          <TbSquareRoundedLetterOFilled />
+          <TbSquareLetterO />
         </animated.div>
       )}
       {isTyping && (
@@ -156,7 +157,7 @@ const LoadingAnimation = ({ isTyping }) => {
             ...spring3,
           }}
         >
-          <TbSquareRoundedLetterAFilled />
+          <TbSquareLetterA />
         </animated.div>
       )}
       {isTyping && (
@@ -165,7 +166,7 @@ const LoadingAnimation = ({ isTyping }) => {
             ...spring4,
           }}
         >
-          <TbSquareRoundedLetterDFilled />
+          <TbSquareLetterD />
         </animated.div>
       )}
       {isTyping && (
@@ -174,7 +175,7 @@ const LoadingAnimation = ({ isTyping }) => {
             ...spring5,
           }}
         >
-          <TbSquareRoundedLetterIFilled />
+          <TbSquareLetterI />
         </animated.div>
       )}
       {isTyping && (
@@ -183,7 +184,7 @@ const LoadingAnimation = ({ isTyping }) => {
             ...spring6,
           }}
         >
-          <TbSquareRoundedLetterNFilled />
+          <TbSquareLetterN />
         </animated.div>
       )}
       {isTyping && (
@@ -192,7 +193,7 @@ const LoadingAnimation = ({ isTyping }) => {
             ...spring7,
           }}
         >
-          <TbSquareRoundedLetterGFilled />
+          <TbSquareLetterG />
         </animated.div>
       )}
     </animated.div>
