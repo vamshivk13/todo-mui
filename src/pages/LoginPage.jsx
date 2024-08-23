@@ -6,8 +6,7 @@ import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import { authContext } from "../store/AuthProvider";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import CircularProgress from "@mui/material/CircularProgress";
-import LoadingAnimation from "../components/animation/LoadingAnimation";
+import LoadingAnimation1 from "../components/animation/LoadingAnimation1";
 
 const LoginPage = () => {
   const { user, setUser } = useContext(authContext);
@@ -72,17 +71,7 @@ const LoginPage = () => {
           transform: "translate(-50%, -50%)",
         }}
       >
-        {/* <Box
-          sx={{
-            width: "100px",
-            bgcolor: "red",
-            "&:before": {
-              content: '"Loading..."',
-            },
-            
-          }}
-        ></Box> */}
-        <LoadingAnimation isTyping={user.isLoading} />
+        <LoadingAnimation1 isTyping={user.isLoading} />
         {/* {user.isLoading && <CircularProgress />} */}
       </Box>
     );
