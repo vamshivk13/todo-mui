@@ -10,218 +10,192 @@ import {
   TbLetterN,
   TbLetterG,
 } from "react-icons/tb";
+import {
+  TbSquareRoundedLetterLFilled,
+  TbSquareRoundedLetterOFilled,
+  TbSquareRoundedLetterAFilled,
+  TbSquareRoundedLetterDFilled,
+  TbSquareRoundedLetterIFilled,
+  TbSquareRoundedLetterNFilled,
+  TbSquareRoundedLetterGFilled,
+} from "react-icons/tb";
 
 const LoadingAnimation = ({ isTyping }) => {
   // const color = useTheme().palette.mode == "dark" ? "white" : "black";
   const spring1 = useSpring({
-    from: { y: 0 },
-    to: [{ y: 7 }],
-    config: { tension: 180, friction: 12 },
-    delay: 0,
+    from: {
+      transform: "translateY(0px)",
+    }, // Start from y: 0px
+    to: async (next) => {
+      await next({ transform: "translateY(15px) scale(0.8)" }); // Move to y: 30px
+      await next({ transform: "translateY(0px) scale(1)" }); // Move back to y: 0px
+    },
+    config: { tension: 180, friction: 12, duration: 150 },
+    delay: 75,
+    loop: {
+      delay: 2025,
+    },
+
     // loop: isTyping,
   });
   const spring2 = useSpring({
-    from: { y: 0 },
-    to: [{ y: 7 }],
-    config: { tension: 180, friction: 12 },
+    from: { transform: "translateY(0px)" }, // Start from y: 0px
+    to: async (next) => {
+      await next({ transform: "translateY(15px) scale(0.8)" }); // Move to y: 30px
+      await next({ transform: "translateY(0px) scale(1)" }); // Move back to y: 0px
+    },
+    config: { tension: 180, friction: 12, duration: 150 },
     // loop: isTyping,
-    delay: 20,
+    delay: 375,
+    loop: {
+      delay: 2025,
+    },
   });
 
   const spring3 = useSpring({
-    from: { y: 0 },
-    to: [{ y: 7 }],
-    config: { tension: 180, friction: 12 },
+    from: { transform: "translateY(0px)" }, // Start from y: 0px
+    to: async (next) => {
+      await next({ transform: "translateY(15px) scale(0.8)" }); // Move to y: 30px
+      await next({ transform: "translateY(0px) scale(1)" }); // Move back to y: 0px
+    },
+    config: { tension: 180, friction: 12, duration: 150 },
     // loop: isTyping,
-    delay: 40,
+    delay: 675,
+    loop: {
+      delay: 2025,
+    },
   });
 
   const spring4 = useSpring({
-    from: { y: 0 },
-    to: [{ y: 7 }],
-    config: { tension: 180, friction: 12 },
+    from: { transform: "translateY(0px)" }, // Start from y: 0px
+    to: async (next) => {
+      await next({ transform: "translateY(15px) scale(0.8)" }); // Move to y: 30px
+      await next({ transform: "translateY(0px) scale(1)" }); // Move back to y: 0px
+    },
+    config: { tension: 180, friction: 12, duration: 150 },
     // loop: isTyping,
-    delay: 60,
+    delay: 975,
+    loop: {
+      delay: 2025,
+    },
   });
   const spring5 = useSpring({
-    from: { y: 0 },
-    to: [{ y: 7 }],
-    config: { tension: 180, friction: 12 },
+    from: { transform: "translateY(0px)" }, // Start from y: 0px
+    to: async (next) => {
+      await next({ transform: "translateY(15px) scale(0.8)" }); // Move to y: 30px
+      await next({ transform: "translateY(0px) scale(1)" }); // Move back to y: 0px
+    },
+    config: { tension: 180, friction: 12, duration: 150 },
     // loop: isTyping,
-    delay: 80,
+    delay: 1275,
+    loop: {
+      delay: 2025,
+    },
   });
   const spring6 = useSpring({
-    from: { y: 0 },
-    to: [{ y: 7 }],
-    config: { tension: 180, friction: 12 },
+    from: { transform: "translateY(0px)" }, // Start from y: 0px
+    to: async (next) => {
+      await next({ transform: "translateY(15px) scale(0.8)" }); // Move to y: 30px
+      await next({ transform: "translateY(0px) scale(1)" }); // Move back to y: 0px
+    },
+    config: { tension: 180, friction: 12, duration: 150 },
     // loop: isTyping,
-    delay: 100,
+    delay: 1575,
+    loop: {
+      delay: 2025,
+    },
   });
 
   const spring7 = useSpring({
-    from: { y: 0 },
-    to: [{ y: 7 }],
-    config: { tension: 180, friction: 12 },
+    from: { transform: "translateY(0px)" }, // Start from y: 0px
+    to: async (next) => {
+      await next({ transform: "translateY(15px) scale(0.8)" }); // Move to y: 30px
+      await next({ transform: "translateY(0px) scale(1)" }); // Move back to y: 0px
+    },
+    config: { tension: 180, friction: 12, duration: 150 },
     // loop: isTyping,
-    delay: 120,
+    delay: 1875,
+    loop: {
+      delay: 2025,
+    },
   });
 
   return (
-    <Box
-      sx={{
+    <animated.div
+      style={{
         display: "flex",
-        // gap: "1px",
+        gap: "1px",
         height: "100%",
         alignItems: "center",
         justifyContent: "center",
         // bgcolor: "green",s
+        fontSize: "2rem",
       }}
     >
       {isTyping && (
         <animated.div
           style={{
             ...spring1,
-            marginBottom: "2px",
-            // height: "30px",
-            padding: "0.5rem ",
-            // backgroundColor: color,
-            borderRadius: "4px",
-            fontWeight: "600",
-            opacity: "0.8",
-            fontSize: "1.2rem",
-            textAlign: "center",
           }}
         >
-          <TbLetterL />
+          <TbSquareRoundedLetterLFilled />
         </animated.div>
       )}
       {isTyping && (
         <animated.div
           style={{
             ...spring2,
-            marginBottom: "2px",
-            // height: "30px",
-            padding: "0.5rem ",
-            // backgroundColor: color,
-            borderRadius: "4px",
-            fontWeight: "600",
-            opacity: "0.8",
-            fontSize: "1.2rem",
-            textAlign: "center",
           }}
         >
-          <TbLetterO />
+          <TbSquareRoundedLetterOFilled />
         </animated.div>
       )}
       {isTyping && (
         <animated.div
           style={{
             ...spring3,
-            marginBottom: "2px",
-            // height: "30px",
-            padding: "0.5rem ",
-            // backgroundColor: color,
-            borderRadius: "4px",
-            fontWeight: "600",
-            opacity: "0.8",
-            fontSize: "1.2rem",
-            textAlign: "center",
           }}
         >
-          <TbLetterA />
+          <TbSquareRoundedLetterAFilled />
         </animated.div>
       )}
       {isTyping && (
         <animated.div
           style={{
             ...spring4,
-            marginBottom: "2px",
-            // height: "30px",
-            padding: "0.5rem ",
-            // backgroundColor: color,
-            borderRadius: "4px",
-            fontWeight: "600",
-            opacity: "0.8",
-            fontSize: "1.2rem",
-            textAlign: "center",
           }}
         >
-          <TbLetterD />
-        </animated.div>
-      )}
-      {isTyping && (
-        <animated.div
-          style={{
-            ...spring1,
-            marginBottom: "2px",
-            // height: "30px",
-            padding: "0.5rem ",
-            // backgroundColor: color,
-            borderRadius: "4px",
-            fontWeight: "600",
-            opacity: "0.8",
-            fontSize: "1.2rem",
-            textAlign: "center",
-          }}
-        >
-          <TbLetterI />
+          <TbSquareRoundedLetterDFilled />
         </animated.div>
       )}
       {isTyping && (
         <animated.div
           style={{
             ...spring5,
-            marginBottom: "2px",
-            // height: "30px",
-            padding: "0.5rem ",
-            // backgroundColor: color,
-            borderRadius: "4px",
-            fontWeight: "600",
-            opacity: "0.8",
-            fontSize: "1.2rem",
-            textAlign: "center",
           }}
         >
-          <TbLetterN />
+          <TbSquareRoundedLetterIFilled />
         </animated.div>
       )}
       {isTyping && (
         <animated.div
           style={{
             ...spring6,
-            marginBottom: "2px",
-            // height: "30px",
-            padding: "0.5rem ",
-            // backgroundColor: color,
-            borderRadius: "4px",
-            fontWeight: "600",
-            opacity: "0.8",
-            fontSize: "1.2rem",
-            textAlign: "center",
           }}
         >
-          <TbLetterG />
+          <TbSquareRoundedLetterNFilled />
         </animated.div>
       )}
       {isTyping && (
         <animated.div
           style={{
             ...spring7,
-            marginBottom: "2px",
-            // height: "30px",
-            padding: "0.5rem ",
-            // backgroundColor: color,
-            borderRadius: "4px",
-            fontWeight: "600",
-            opacity: "0.8",
-            fontSize: "1.2rem",
-            textAlign: "center",
           }}
         >
-          .
+          <TbSquareRoundedLetterGFilled />
         </animated.div>
       )}
-    </Box>
+    </animated.div>
   );
 };
 

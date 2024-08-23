@@ -1,4 +1,4 @@
-import { Alert, Box, keyframes, Paper } from "@mui/material";
+import { Alert, Box, keyframes, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import LoginForm from "../components/form/LoginForm";
 import ListAltIcon from "@mui/icons-material/ListAlt";
@@ -16,16 +16,18 @@ const LoginPage = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser((prev) => {
-          return {
-            ...prev,
-            isAuthenticated: true,
-            accessToken: user.accessToken,
-            displayName: user.displayName,
-            userId: user?.uid,
-            isLoading: false,
-          };
-        });
+        setTimeout(() => {
+          setUser((prev) => {
+            return {
+              ...prev,
+              isAuthenticated: true,
+              accessToken: user.accessToken,
+              displayName: user.displayName,
+              userId: user?.uid,
+              isLoading: false,
+            };
+          });
+        }, 1800);
       } else {
         setUser((prev) => {
           return {
@@ -66,11 +68,23 @@ const LoginPage = () => {
           left: "50%",
           top: "50%",
           display: "flex",
+          gap: "2rem",
           justifyContent: "center",
           flexDirection: "column",
           transform: "translate(-50%, -50%)",
         }}
       >
+        <Box
+          sx={{
+            display: "flex",
+            gap: "1rem",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ListAltIcon sx={{ fontSize: "7rem" }} />
+        </Box>
         <LoadingAnimation1 isTyping={user.isLoading} />
         {/* {user.isLoading && <CircularProgress />} */}
       </Box>
