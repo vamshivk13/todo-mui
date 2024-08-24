@@ -4,6 +4,7 @@ import { appDataContext } from "../../../../store/AppDataProvider";
 import useFetch from "../../../../hooks/useFetch";
 import { v4 as uuidv4 } from "uuid";
 import TodoDeleteDialog from "./TodoDeleteDialog";
+import { appStateContext } from "../../../../store/ApplicationStateProvider";
 
 const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
   const [, updateTask, isUpdateSyncing, isUpdateSuccess] = useFetch(
@@ -25,6 +26,10 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
   const [copyAnchor, setCopyAnchor] = useState(null);
   const isCopyOpen = Boolean(copyAnchor);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const {
+    settingsState: { isDeleteAlertEnabled },
+  } = useContext(appStateContext);
 
   function handleMove(e) {
     e.preventDefault();
@@ -95,11 +100,13 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
   function handleDeleteTaskDialog(e) {
     e.preventDefault();
     e.stopPropagation();
-
     setIsDeleteDialogOpen(true);
+    setContextMenu(null);
   }
 
   function handleDeleteTask(e) {
+    e.preventDefault();
+    e.stopPropagation();
     const curTask = task;
     setTasks((tasks) => tasks.filter((task) => task.id !== curTask.id));
     deleteTask(curTask.key + ".json");
@@ -116,7 +123,17 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
       >
         <MenuItem onClick={handleCopy}>Copy</MenuItem>
         <MenuItem onClick={handleMove}>Move</MenuItem>
-        <MenuItem onClick={handleDeleteTaskDialog}>Delete</MenuItem>
+        <MenuItem
+          onClick={(e) => {
+            if (isDeleteAlertEnabled) {
+              handleDeleteTaskDialog(e);
+            } else {
+              handleDeleteTask(e);
+            }
+          }}
+        >
+          Delete
+        </MenuItem>
       </Menu>
       <Menu
         open={isMoveOpen}

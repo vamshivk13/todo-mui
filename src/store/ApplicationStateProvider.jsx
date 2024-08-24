@@ -9,6 +9,7 @@ const ApplicationStateProvider = ({ children }) => {
   const [isSettingsOpened, setIsSettingsOpened] = useState(false);
   const [settingsState, setSettingsState] = useState({
     isSoundEnabled: true,
+    isDeleteAlertEnabled: true,
   });
   const [settings, fetchSettingsState] = useFetch("GET", "/settings.json");
 
@@ -57,7 +58,11 @@ const ApplicationStateProvider = ({ children }) => {
   useEffect(() => {
     const keys = Object.keys(settings || {});
     if (keys[0]) {
-      setSettingsState({ ...settings[keys[0]], key: keys[0] });
+      setSettingsState({
+        ...settingsState,
+        ...settings[keys[0]],
+        key: keys[0],
+      });
     }
   }, [settings]);
 

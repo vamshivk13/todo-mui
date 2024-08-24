@@ -41,7 +41,10 @@ const TodoView = ({
   const [taskValue, setTaskValue] = useState(content?.task);
   const [customSideBarItems] = useLocalStorage("customSideBarItems");
   const [sidebarItems] = useLocalStorage("sidebarItems");
-  const { screenWidth } = useContext(appStateContext);
+  const {
+    screenWidth,
+    settingsState: { isDeleteAlertEnabled },
+  } = useContext(appStateContext);
   const date = content?.isDone
     ? new Date(content.doneAt)
     : new Date(content.createdAt);
@@ -320,8 +323,8 @@ const TodoView = ({
           } ${day + " " + month + " " + date.getDate()}`}</Typography>
           <IconButton
             onClick={() => {
-              setIsDeleteDialogOpen(true);
-              // handleDeleteTask(content?.id);
+              if (isDeleteAlertEnabled) setIsDeleteDialogOpen(true);
+              else handleDeleteTask(content?.id);
             }}
             variant="outlined"
             disableRipple

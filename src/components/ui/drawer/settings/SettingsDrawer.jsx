@@ -60,6 +60,42 @@ const SettingsDrawer = () => {
     }
   }
 
+  async function handleDeleteAlertSetting(e) {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setSettingsState((prev) => {
+        return {
+          ...prev,
+          isDeleteAlertEnabled: isChecked,
+        };
+      });
+    } else {
+      setSettingsState((prev) => {
+        return {
+          ...prev,
+          isDeleteAlertEnabled: isChecked,
+        };
+      });
+    }
+    if (!settingsState.key) {
+      const { name } = await postSettingsState({
+        ...settingsState,
+        isDeleteAlertEnabled: isChecked,
+      });
+      setSettingsState((prev) => {
+        return { ...prev, key: name };
+      });
+    } else {
+      const settings = settingsState;
+      const key = settings.key;
+      delete settings.key;
+      updateSettingsState({
+        route: key + ".json",
+        data: { ...settingsState, isDeleteAlertEnabled: isChecked },
+      });
+    }
+  }
+
   return (
     <Drawer
       anchor="right"
@@ -113,7 +149,8 @@ const SettingsDrawer = () => {
         />
         <SettingsItem
           title={"Alert Before Task Deletion"}
-          onChange={() => {}}
+          isChecked={settingsState.isDeleteAlertEnabled}
+          onChange={handleDeleteAlertSetting}
         />
       </Box>
     </Drawer>
