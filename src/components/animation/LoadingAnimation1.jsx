@@ -11,15 +11,6 @@ import {
   TbSquareLetterN,
   TbSquareLetterG,
 } from "react-icons/tb";
-import {
-  TbSquareRoundedLetterLFilled,
-  TbSquareRoundedLetterOFilled,
-  TbSquareRoundedLetterAFilled,
-  TbSquareRoundedLetterDFilled,
-  TbSquareRoundedLetterIFilled,
-  TbSquareRoundedLetterNFilled,
-  TbSquareRoundedLetterGFilled,
-} from "react-icons/tb";
 
 const LoadingAnimation = ({ isTyping }) => {
   // const color = useTheme().palette.mode == "dark" ? "white" : "black";

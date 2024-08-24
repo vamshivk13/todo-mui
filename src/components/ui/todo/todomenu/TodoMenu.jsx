@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { appDataContext } from "../../../../store/AppDataProvider";
 import useFetch from "../../../../hooks/useFetch";
 import { v4 as uuidv4 } from "uuid";
+import TodoDeleteDialog from "./TodoDeleteDialog";
 
 const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
   const [, updateTask, isUpdateSyncing, isUpdateSuccess] = useFetch(
@@ -23,6 +24,7 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
   const isMoveOpen = Boolean(moveAnchor);
   const [copyAnchor, setCopyAnchor] = useState(null);
   const isCopyOpen = Boolean(copyAnchor);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   function handleMove(e) {
     e.preventDefault();
@@ -36,10 +38,7 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
   }
 
   function handleMoveToList(item) {
-    //move to the list with id = item.id
-    // 1. get the task object
     const curTask = task;
-    // 2. get the list type id
     const toMoveListId = item.id;
     const curDate = Date.now();
 
@@ -47,7 +46,6 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
       toMoveListId == "MyDay"
         ? { listTypeId: toMoveListId, createdAt: curDate }
         : { listTypeId: toMoveListId };
-    // 4. update the same on tasks state
     setTasks((prev) => {
       return prev.map((item) => {
         if (item.id == curTask.id) {
@@ -60,7 +58,6 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
         }
       });
     });
-    // 3. update the task based on the key with new list type id to firebase
     updateTask({
       route: curTask.key + ".json",
       data: {
@@ -71,13 +68,8 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
     setMoveAnchor(null);
   }
   async function handleCopyToList(item) {
-    //move to the list with id = item.id
-    // 1. get the task object
     const curTask = task;
-    // 2. get the list type id
     const toCopyListId = item.id;
-
-    // 3. add a new task with updated id and updated listTypeId
     const id = uuidv4();
     const curDate = Date.now();
     const updatedTask = {
@@ -89,9 +81,7 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
     setTasks((prev) => {
       return [...prev, updatedTask];
     });
-    // 4. Post a new task with the updated id and updated ListTypeId
     const { name: key } = await postTask(updatedTask);
-    // 5. update the key at local state when new task is added
     setTasks((prevTasks) => {
       return prevTasks.map((task) => {
         if (task.id == id) {
@@ -102,9 +92,14 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
     setCopyAnchor(null);
   }
 
-  function handleDeleteTask(e) {
+  function handleDeleteTaskDialog(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    setIsDeleteDialogOpen(true);
+  }
+
+  function handleDeleteTask(e) {
     const curTask = task;
     setTasks((tasks) => tasks.filter((task) => task.id !== curTask.id));
     deleteTask(curTask.key + ".json");
@@ -121,7 +116,7 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
       >
         <MenuItem onClick={handleCopy}>Copy</MenuItem>
         <MenuItem onClick={handleMove}>Move</MenuItem>
-        <MenuItem onClick={handleDeleteTask}>Delete</MenuItem>
+        <MenuItem onClick={handleDeleteTaskDialog}>Delete</MenuItem>
       </Menu>
       <Menu
         open={isMoveOpen}
@@ -167,6 +162,11 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
             );
           })}
       </Menu>
+      <TodoDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        handleDeleteTask={handleDeleteTask}
+      />
     </Box>
   );
 };
