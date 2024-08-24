@@ -3,14 +3,11 @@ import { Paper, Card, CardContent, Typography } from "@mui/material";
 
 import { useTheme } from "@emotion/react";
 import TodoMenu from "./todomenu/TodoMenu";
-import { appDataContext } from "../../../store/AppDataProvider";
-import useFetch from "../../../hooks/useFetch";
 
 import MarkAsDoneAction from "./todoactions/MarkAsDoneAction";
 import MarkAsImportantAction from "./todoactions/MarkAsImportantAction";
 const TodoCard = ({ task, handleSelectedTask, handleMarkAsDone }) => {
   const [contextMenu, setContextMenu] = useState(null);
-
   function handleContextMenu(e) {
     e.preventDefault();
     e.stopPropagation();

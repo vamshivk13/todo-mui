@@ -3,18 +3,15 @@ import { Paper, InputBase, IconButton, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import TypeAnimation from "../../animation/TypeAnimation";
 
-const NewTodoTextField = ({
-  value,
-  setValue,
-  addTask,
-  currentSidebarItemId,
-}) => {
+const NewTodoTextField = ({ addTask, currentSidebarItemId }) => {
+  const [value, setValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
 
   useEffect(() => {
     setValue("");
   }, [currentSidebarItemId]);
+  console.log("Rendering---curSidebar");
   return (
     <Box
       component={"form"}

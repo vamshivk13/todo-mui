@@ -25,11 +25,13 @@ import { appStateContext } from "../../../store/ApplicationStateProvider";
 import MarkAsDoneAction from "./todoactions/MarkAsDoneAction";
 import MarkAsImporantAction from "./todoactions/MarkAsImportantAction";
 import TodayOutlinedIcon from "@mui/icons-material/TodayOutlined";
+import TodoDeleteDialog from "./todomenu/TodoDeleteDialog";
 
 const TodoView = ({
   isOpen,
   content,
   onClose,
+  handleDeleteTaskDialog,
   handleDeleteTask,
   handleMarkAsDone,
   handleEditTask,
@@ -45,6 +47,7 @@ const TodoView = ({
     : new Date(content.createdAt);
   const month = date.toLocaleString("en-US", { month: "long" });
   const day = date.toLocaleString("en-US", { weekday: "long" });
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     if (content) setValue(content?.notes);
@@ -74,6 +77,11 @@ const TodoView = ({
       return customSideBarItems.find((item) => item.id == id).name;
     }
   }
+
+  function handleDeleteTaskDialog(id) {
+    setIsDeleteDialogOpen(true);
+  }
+
   const todoView = (
     <Box
       sx={{
@@ -311,7 +319,10 @@ const TodoView = ({
             content?.isDone ? "Completed on " : "Created on "
           } ${day + " " + month + " " + date.getDate()}`}</Typography>
           <IconButton
-            onClick={() => handleDeleteTask(content?.id)}
+            onClick={() => {
+              setIsDeleteDialogOpen(true);
+              // handleDeleteTask(content?.id);
+            }}
             variant="outlined"
             disableRipple
           >
@@ -366,6 +377,11 @@ const TodoView = ({
         <Toolbar sx={{ minHeight: { xs: "60px" } }} />
         {todoView}
       </Drawer>
+      <TodoDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        handleDeleteTask={() => handleDeleteTask(content?.id)}
+      />
     </>
   );
 };

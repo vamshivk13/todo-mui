@@ -24,6 +24,7 @@ import { appStateContext } from "../store/ApplicationStateProvider";
 import SidebarIcon from "../components/ui/header/todo/SidebarIcon";
 import TodoList from "../components/ui/todo/todolist/TodoList";
 import { appDataContext } from "../store/AppDataProvider";
+import TodoDeleteDialog from "../components/ui/todo/todomenu/TodoDeleteDialog";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
@@ -288,7 +289,6 @@ const TodoPage = () => {
     const curTask = tasks.find((task) => task.id == id);
     deleteTask(curTask.key + ".json");
     setTasks((tasks) => tasks.filter((task) => task.id !== selectedId));
-
     setIsOpen(false);
   }
 
@@ -547,8 +547,6 @@ const TodoPage = () => {
                 </Box>
               </Box>
               <NewTodoTextField
-                value={value}
-                setValue={setValue}
                 addTask={addTask}
                 currentSidebarItemId={currentSidebarItemId}
               />
