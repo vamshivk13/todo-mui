@@ -11,7 +11,7 @@ const NewTodoTextField = ({ addTask, currentSidebarItemId }) => {
   useEffect(() => {
     setValue("");
   }, [currentSidebarItemId]);
-  console.log("Rendering---curSidebar");
+
   return (
     <Box
       component={"form"}
@@ -26,7 +26,12 @@ const NewTodoTextField = ({ addTask, currentSidebarItemId }) => {
         height: "85px",
         marginTop: "10px",
       }}
-      onSubmit={addTask}
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addTask(value);
+        setValue("");
+      }}
     >
       <Paper
         sx={{

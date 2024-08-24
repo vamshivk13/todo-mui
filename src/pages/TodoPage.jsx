@@ -224,9 +224,7 @@ const TodoPage = () => {
     }
   }, [isPostSuccess, isUpdateSuccess, isDeleteSuccess]);
 
-  async function addTask(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  async function addTask(value) {
     if (value == "" || value == null || value == undefined) {
       return;
     }
