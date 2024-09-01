@@ -3,28 +3,61 @@ import React, { useContext } from "react";
 import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
 import StarBorderTwoToneIcon from "@mui/icons-material/StarBorderTwoTone";
 import { appDataContext } from "../../../../store/AppDataProvider";
-import useFetch from "../../../../hooks/useFetch";
+import { useDispatch } from "react-redux";
+import { todoReducerActions } from "../../../../store/store";
+import fetchAPI from "../../../../hooks/fetchAPI";
 
 const MarkAsImportantAction = ({ isStarred, task }) => {
   const { setTasks } = useContext(appDataContext);
-  const [, updateTask] = useFetch("UPDATE", "/tasks/");
+  const dispatch = useDispatch();
   function handleMarkAsImportant(e) {
     e.preventDefault();
     e.stopPropagation();
-    setTasks((prev) => {
-      return prev.map((curTask) => {
-        if (curTask.id == task.id) {
-          return {
-            ...curTask,
-            isStarred: curTask?.isStarred ? !curTask.isStarred : true,
-          };
-        } else {
-          return curTask;
-        }
-      });
-    });
+    // setTasks((prev) => {
+    //   return prev.map((curTask) => {
+    //     if (curTask.id == task.id) {
+    //       return {
+    //         ...curTask,
+    //         isStarred: curTask?.isStarred ? !curTask.isStarred : true,
+    //       };
+    //     } else {
+    //       return curTask;
+    //     }
+    //   });
+    // });
+    let taskIsStarred = false;
+    if (task.isStarred) {
+      taskIsStarred = task.isStarred;
+    }
+    console.log(taskIsStarred);
+    dispatch(
+      todoReducerActions.updateTask({
+        id: task.id,
+        updatedTaskPayload: {
+          isStarred: !taskIsStarred,
+        },
+      })
+    );
+    if (task.isDone) {
+      dispatch(
+        todoReducerActions.updateCompleted({
+          id: task.id,
+          updatedTaskPayload: {
+            isStarred: !taskIsStarred,
+          },
+        })
+      );
+    } else
+      dispatch(
+        todoReducerActions.updateTodos({
+          id: task.id,
+          updatedTaskPayload: {
+            isStarred: !taskIsStarred,
+          },
+        })
+      );
     // update the curTask to the firebase
-    updateTask({
+    fetchAPI("UPDATE", "/tasks/", {
       route: task.key + ".json",
       data: {
         ...task,

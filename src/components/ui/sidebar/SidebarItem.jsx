@@ -13,6 +13,9 @@ import {
 import ListIcon from "../../../util/ListIcon";
 import { themeContext } from "../../../store/ColorThemeProvider";
 import { appStateContext } from "../../../store/ApplicationStateProvider";
+import { todoReducerActions } from "../../../store/store";
+import { useDispatch } from "react-redux";
+import { appDataContext } from "../../../store/AppDataProvider";
 
 const SidebarItem = ({
   type,
@@ -22,13 +25,15 @@ const SidebarItem = ({
   isActive,
   id,
   handleDeleteSidebarItem,
-  setCurrentSidebarItemId,
+  // setCurrentSidebarItemId,
   color,
   currentSidebarItemId,
 }) => {
   const [contextMenu, setContextMenu] = React.useState(null);
   const [, setCurrentColor] = useContext(themeContext);
   const { setIsTempSidebarOpen } = useContext(appStateContext);
+  const { setCurrentSidebarItemId } = useContext(appDataContext);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (id == currentSidebarItemId) {
@@ -72,6 +77,9 @@ const SidebarItem = ({
         setCurrentSidebarItemId(id);
         setIsTempSidebarOpen(false);
         setCurrentColor(color);
+        dispatch(todoReducerActions.resetTodos());
+        // dispatch(todoReducerActions.setTodos(id));
+        // dispatch(todoReducerActions.setCompleted(id));
       }}
     >
       <Card

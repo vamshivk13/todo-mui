@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import useFetch from "../hooks/useFetch";
 import { authContext } from "./AuthProvider";
+import fetchAPI from "../hooks/fetchAPI";
 
 export const appStateContext = createContext();
 const ApplicationStateProvider = ({ children }) => {
@@ -11,7 +11,7 @@ const ApplicationStateProvider = ({ children }) => {
     isSoundEnabled: true,
     isDeleteAlertEnabled: true,
   });
-  const [settings, fetchSettingsState] = useFetch("GET", "/settings.json");
+  const [settings, setSettings] = useState({});
 
   // screenWidth
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -51,7 +51,13 @@ const ApplicationStateProvider = ({ children }) => {
   } = useContext(authContext);
   //load settingState from firebase
   useEffect(() => {
-    if (userId) fetchSettingsState(null);
+    if (userId) {
+      async function fetchSettings() {
+        const res = await fetchAPI("GET", "/settings.json", null);
+        setSettings(res);
+      }
+      fetchSettings();
+    }
   }, [userId]);
 
   //updating local setting state from firebase

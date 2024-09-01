@@ -1,24 +1,14 @@
 import { Box, Menu, MenuItem } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { appDataContext } from "../../../../store/AppDataProvider";
-import useFetch from "../../../../hooks/useFetch";
 import { v4 as uuidv4 } from "uuid";
 import TodoDeleteDialog from "./TodoDeleteDialog";
 import { appStateContext } from "../../../../store/ApplicationStateProvider";
+import { useDispatch } from "react-redux";
+import { todoReducerActions } from "../../../../store/store";
+import fetchAPI from "../../../../hooks/fetchAPI";
 
 const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
-  const [, updateTask, isUpdateSyncing, isUpdateSuccess] = useFetch(
-    "UPDATE",
-    "/tasks/"
-  );
-  const [, postTask, isPostSyncing, isPostSuccess] = useFetch(
-    "POST",
-    "/tasks.json"
-  );
-  const [, deleteTask, isDeleteSyncing, isDeleteSuccess] = useFetch(
-    "DELETE",
-    "/tasks/"
-  );
   const { customSidebarItems, setTasks, sidebarItems, currentSidebarItemId } =
     useContext(appDataContext);
   const [moveAnchor, setMoveAnchor] = useState(null);
@@ -26,6 +16,7 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
   const [copyAnchor, setCopyAnchor] = useState(null);
   const isCopyOpen = Boolean(copyAnchor);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const {
     settingsState: { isDeleteAlertEnabled },
@@ -51,19 +42,16 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
       toMoveListId == "MyDay"
         ? { listTypeId: toMoveListId, createdAt: curDate }
         : { listTypeId: toMoveListId };
-    setTasks((prev) => {
-      return prev.map((item) => {
-        if (item.id == curTask.id) {
-          return {
-            ...item,
-            ...toUpdate,
-          };
-        } else {
-          return item;
-        }
-      });
-    });
-    updateTask({
+    dispatch(
+      todoReducerActions.updateTask({
+        id: curTask.id,
+        updatedTaskPayload: toUpdate,
+      })
+    );
+    dispatch(
+      todoReducerActions.moveTodo({ id: curTask.id, isDone: curTask.isDone })
+    );
+    fetchAPI("UPDATE", "/tasks/", {
       route: curTask.key + ".json",
       data: {
         ...task,
@@ -83,10 +71,8 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
       listTypeId: toCopyListId,
       createdAt: curDate,
     };
-    setTasks((prev) => {
-      return [...prev, updatedTask];
-    });
-    const { name: key } = await postTask(updatedTask);
+    dispatch(todoReducerActions.addTask(updatedTask));
+    const { name: key } = await fetchAPI("POST", "/tasks.json", updatedTask);
     setTasks((prevTasks) => {
       return prevTasks.map((task) => {
         if (task.id == id) {
@@ -108,8 +94,9 @@ const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
     e.preventDefault();
     e.stopPropagation();
     const curTask = task;
-    setTasks((tasks) => tasks.filter((task) => task.id !== curTask.id));
-    deleteTask(curTask.key + ".json");
+    dispatch(todoReducerActions.deleteTask({ id: curTask.id }));
+
+    fetchAPI("DELETE", "/tasks/", curTask.key + ".json");
     setContextMenu(null);
   }
 

@@ -12,10 +12,10 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { themeContext } from "../../../store/ColorThemeProvider";
-import useFetch from "../../../hooks/useFetch";
 import { colors } from "../../../util/getThemeColors";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import fetchAPI from "../../../hooks/fetchAPI";
 
 const MoreMenu = ({
   currentSidebarItemId,
@@ -28,9 +28,7 @@ const MoreMenu = ({
   const [anchor, setAnchor] = useState(null);
   const [themeAnchor, setThemeAnchor] = useState(null);
   const [, setCurrentColor] = useContext(themeContext);
-  const [, updateCustomSidebar] = useFetch("UPDATE", "/lists/");
-  const [, updateSidebarItem] = useFetch("UPDATE", "/default-lists/");
-  const [, postSidebarItem] = useFetch("POST", "/default-lists.json");
+
   const open = Boolean(anchor);
   const open1 = Boolean(themeAnchor);
   const theme = useTheme();
@@ -75,7 +73,7 @@ const MoreMenu = ({
       delete curSidebarItem?.key;
 
       if (sidebarItemKey) {
-        updateSidebarItem({
+        fetchAPI("UPDATE", "/default-lists/", {
           route: sidebarItemKey + ".json",
           data: {
             ...curSidebarItem,
@@ -83,7 +81,7 @@ const MoreMenu = ({
           },
         });
       } else {
-        postSidebarItem({
+        fetchAPI("POST", "/default-lists.json", {
           ...curSidebarItem,
           color: color,
         });
@@ -106,7 +104,7 @@ const MoreMenu = ({
       delete curSidebarItem?.key;
 
       if (sidebarItemKey)
-        updateCustomSidebar({
+        fetchAPI("UPDATE", "/lists/", {
           route: sidebarItemKey + ".json",
           data: {
             ...curSidebarItem,

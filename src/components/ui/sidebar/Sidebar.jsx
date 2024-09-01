@@ -14,11 +14,11 @@ import AddIcon from "@mui/icons-material/Add";
 import SidebarItem from "./SidebarItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import { v4 as uuidv4 } from "uuid";
-import useFetch from "../../../hooks/useFetch";
 
 import { themeContext } from "../../../store/ColorThemeProvider";
 import { appStateContext } from "../../../store/ApplicationStateProvider";
 import { TransitionGroup } from "react-transition-group";
+import fetchAPI from "../../../hooks/fetchAPI";
 
 const Sidebar = ({
   currentSidebarItemId,
@@ -38,7 +38,7 @@ const Sidebar = ({
     isTempSidebarOpen,
     screenWidth,
   } = useContext(appStateContext);
-  const [{ name }, postCustomList] = useFetch("POST", "/lists.json");
+
   const [currentColor, setCurrentColor] = useContext(themeContext);
 
   async function handleNewListItem(e) {
@@ -55,7 +55,7 @@ const Sidebar = ({
     setNewListItem("");
     setCurrentSidebarItemId(id);
     setCurrentColor(null);
-    const { name } = await postCustomList({
+    const { name } = await fetchAPI("POST", "/lists.json", {
       id: id,
       name: newListItem,
       count: 0,

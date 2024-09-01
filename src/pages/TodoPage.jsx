@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from "uuid";
 import { InputBase, LinearProgress, Paper } from "@mui/material";
 import { authContext } from "../store/AuthProvider";
 import { useNavigate } from "react-router";
-import useFetch from "../hooks/useFetch";
 import { ThemeProvider, createTheme } from "@mui/material";
 import MoreMenu from "../components/ui/todo/MoreMenu";
 import { themeContext } from "../store/ColorThemeProvider";
@@ -25,6 +24,9 @@ import SidebarIcon from "../components/ui/header/todo/SidebarIcon";
 import TodoList from "../components/ui/todo/todolist/TodoList";
 import { appDataContext } from "../store/AppDataProvider";
 import TodoDeleteDialog from "../components/ui/todo/todomenu/TodoDeleteDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { todoReducerActions } from "../store/store";
+import fetchAPI, { setBaseUrl } from "../hooks/fetchAPI";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
@@ -40,21 +42,22 @@ const TodoPage = () => {
   const {
     customSidebarItems,
     setCustomSidebarItems,
-    tasks,
-    setTasks,
     sidebarItems,
     setSidebarItems,
     currentSidebarItemId,
     setCurrentSidebarItemId,
   } = useContext(appDataContext);
 
+  const tasks = useSelector((state) => state.todo.tasks);
+
   const [selectedTask, setSelectedTask] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   const date = new Date();
   const month = date.toLocaleString("en-US", { month: "long" });
   const day = date.toLocaleString("en-US", { weekday: "long" });
 
-  const { user, setUser } = useContext(authContext);
+  const { user } = useContext(authContext);
   const navigate = useNavigate();
 
   const currentSideBarItem = ["MyDay", "Important", "MyTasks"].includes(
@@ -63,43 +66,27 @@ const TodoPage = () => {
     ? sidebarItems.find((item) => item.id == currentSidebarItemId)
     : customSidebarItems.find((item) => item.id == currentSidebarItemId);
 
-  const [{ name }, setTasksAPI, isPostSyncing, isPostSuccess] = useFetch(
-    "POST",
-    "/tasks.json"
-  );
-  const [status, setStatus] = useState(null);
-  const [tasksAPI, fetchTasks] = useFetch("GET", "/tasks.json");
-  const [, deleteTask, isDeleteSyncing, isDeleteSuccess] = useFetch(
-    "DELETE",
-    "/tasks/"
-  );
-  const [, updateTask, isUpdateSyncing, isUpdateSuccess] = useFetch(
-    "UPDATE",
-    "/tasks/"
-  );
-  const [, updateList] = useFetch("UPDATE", "/lists/");
-  const [initialSidebarItems, fetchDefaultSidebarItems] = useFetch(
-    "GET",
-    "/default-lists.json"
-  );
-  const [customSidebarLists, fetchCustomSidebarLists] = useFetch(
-    "GET",
-    "/lists.json"
-  );
+  // const [status, setStatus] = useState(null);
+  const [tasksAPI, setTasksAPI] = useState(null);
+  const [initialSidebarItems, setInitialSidebarItems] = useState(null);
+  const [customSidebarLists, setCustomSidebarLists] = useState(null);
 
-  const [, deleteCustomList] = useFetch("DELETE", "/lists/");
   const [isTasksLoading, setIsTasksLoading] = useState(null);
 
   // task completion sound
   const doneToneRef = useRef(new Audio(doneTone));
   const { settingsState } = useContext(appStateContext);
+  const state = useSelector((state) => state.todo);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    function getDefaultSidebarItems() {
-      fetchDefaultSidebarItems(null);
+    async function getDefaultSidebarItems() {
+      const res = await fetchAPI("GET", "/default-lists.json", null);
+      setInitialSidebarItems(res);
     }
-    getDefaultSidebarItems();
-  }, []);
+    if (loaded) getDefaultSidebarItems();
+  }, [loaded]);
+
   useEffect(() => {
     const keys = Object.keys(initialSidebarItems || {});
     const initialItems = keys.map((key) => {
@@ -124,19 +111,21 @@ const TodoPage = () => {
 
   useEffect(() => {
     async function loadTasks() {
-      await fetchTasks(null);
+      const initialTasks = await fetchAPI("GET", "/tasks.json", null);
+      setTasksAPI(initialTasks);
       setIsTasksLoading(false);
     }
     setIsTasksLoading(true);
-    loadTasks();
-  }, []);
+    if (loaded) loadTasks();
+  }, [loaded]);
 
   useEffect(() => {
-    function loadCustomLists() {
-      fetchCustomSidebarLists(null);
+    async function loadCustomLists() {
+      const res = await fetchAPI("GET", "/lists.json", null);
+      setCustomSidebarLists(res);
     }
-    loadCustomLists();
-  }, []);
+    if (loaded) loadCustomLists();
+  }, [loaded]);
 
   // Update Selected Task
   useEffect(() => {
@@ -150,7 +139,7 @@ const TodoPage = () => {
     tasks.forEach((task) => {
       const createdDate = new Date(task.createdAt).toDateString();
       if (createdDate != date.toDateString() && task.listTypeId == "MyDay") {
-        updateTask({
+        fetchAPI("UPDATE", "/tasks/", {
           route: task.key + ".json",
           data: {
             ...task,
@@ -159,28 +148,23 @@ const TodoPage = () => {
         });
       }
     });
-    setTasks((prevTasks) => {
-      return prevTasks.map((task) => {
-        const createdDate = new Date(task.createdAt).toDateString();
-        if (createdDate != date.toDateString() && task.listTypeId == "MyDay") {
-          return {
-            ...task,
-            listTypeId: "MyTasks",
-          };
-        } else return task;
-      });
-    });
+
+    dispatch(todoReducerActions.updateTaskByDate());
   }
   useEffect(() => {
     const keys = Object.keys(tasksAPI || {});
     const initialTasks = keys.map((key) => {
       return { ...tasksAPI[key], key };
     });
-    setTasks(() => initialTasks);
+
+    dispatch(todoReducerActions.setTasks(initialTasks));
+    dispatch(todoReducerActions.setTodos("MyDay"));
+    dispatch(todoReducerActions.setCompleted("MyDay"));
   }, [tasksAPI]);
 
+  console.log("state: ", state);
   useEffect(() => {
-    if (isTasksLoading == false) {
+    if (isTasksLoading == false && tasksAPI.length > 0) {
       updateTasksBasedOnDate();
     }
   }, [tasksAPI, isTasksLoading]);
@@ -205,24 +189,11 @@ const TodoPage = () => {
   useEffect(() => {
     if (!user.isAuthenticated) {
       navigate("/");
+    } else {
+      setBaseUrl(user.userId);
+      setLoaded(true);
     }
   }, [user.isAuthenticated]);
-
-  useEffect(() => {
-    if (isDeleteSyncing || isPostSyncing || isUpdateSyncing) {
-      setStatus("syncing");
-    } else {
-      setStatus(null);
-    }
-  }, [isDeleteSyncing, isPostSyncing, isUpdateSyncing]);
-
-  useEffect(() => {
-    if (isPostSuccess || isUpdateSuccess || isDeleteSuccess)
-      setStatus("success");
-    else {
-      setStatus(null);
-    }
-  }, [isPostSuccess, isUpdateSuccess, isDeleteSuccess]);
 
   async function addTask(value) {
     if (value == "" || value == null || value == undefined) {
@@ -232,44 +203,53 @@ const TodoPage = () => {
     const taskId = uuidv4();
     const listTypeId =
       currentSidebarItemId == "Important" ? "MyTasks" : currentSidebarItemId;
-    setTasks((tasks) => {
-      return [
-        ...tasks,
-        {
-          task: value,
-          isDone: false,
-          notes: "",
-          createdAt: Date.now(),
-          doneAt: null,
-          isStarred: false,
-          listTypeId: listTypeId,
-          id: taskId,
-          key: null,
-        },
-      ];
-    });
+    const isStarred = currentSidebarItemId == "Important" ? true : false;
+
+    dispatch(
+      todoReducerActions.addTask({
+        task: value,
+        isDone: false,
+        notes: "",
+        createdAt: Date.now(),
+        doneAt: null,
+        isStarred: isStarred,
+        listTypeId: listTypeId,
+        id: taskId,
+        key: null,
+      })
+    );
+    dispatch(
+      todoReducerActions.addTodo({
+        task: value,
+        isDone: false,
+        notes: "",
+        createdAt: Date.now(),
+        doneAt: null,
+        isStarred: isStarred,
+        listTypeId: listTypeId,
+        id: taskId,
+        key: null,
+      })
+    );
+
     setValue("");
-    const data = await setTasksAPI({
+    const data = await fetchAPI("POST", "/tasks.json", {
       task: value,
       isDone: false,
       notes: "",
       createdAt: Date.now(),
       doneAt: null,
-      isStarred: false,
+      isStarred: isStarred,
       id: taskId,
       listTypeId: listTypeId,
     });
 
-    setTasks((prev) => {
-      return prev.map((curTask) => {
-        if (curTask.id == taskId) {
-          return {
-            ...curTask,
-            key: data.name,
-          };
-        } else return curTask;
-      });
-    });
+    dispatch(
+      todoReducerActions.updateTask({
+        id: taskId,
+        updatedTaskPayload: { key: data.name },
+      })
+    );
   }
 
   function onClose() {
@@ -284,21 +264,21 @@ const TodoPage = () => {
   }
 
   function handleDeleteTask(id) {
-    const curTask = tasks.find((task) => task.id == id);
-    deleteTask(curTask.key + ".json");
-    setTasks((tasks) => tasks.filter((task) => task.id !== selectedId));
+    const curTask = tasks.find((task) => task.id == selectedId);
+    fetchAPI("DELETE", "/tasks/", curTask.key + ".json");
+    dispatch(todoReducerActions.deleteTask({ id: selectedId }));
     setIsOpen(false);
   }
 
   function handleMarkAsDone(id) {
     const curTask = tasks.find((task) => task.id == id);
-
-    updateTask({
+    const date = Date.now();
+    fetchAPI("UPDATE", "/tasks/", {
       route: curTask.key + ".json",
       data: {
         ...curTask,
         isDone: !curTask.isDone,
-        doneAt: Date.now(),
+        doneAt: date,
       },
     });
 
@@ -307,18 +287,17 @@ const TodoPage = () => {
       doneToneRef.current.currentTime = 0;
       doneToneRef.current.play();
     }
-
-    setTasks((tasks) =>
-      tasks.map((task) => {
-        if (task.id == id) {
-          return {
-            ...task,
-            isDone: !task.isDone,
-            doneAt: Date.now(),
-          };
-        } else return task;
+    dispatch(
+      todoReducerActions.updateTask({
+        id: id,
+        updatedTaskPayload: { isDone: !curTask.isDone, doneAt: date },
       })
     );
+
+    dispatch(
+      todoReducerActions.deleteTodo({ id: id, isDone: curTask.isDone, date })
+    );
+
     // setIsOpen(false);
   }
 
@@ -335,23 +314,34 @@ const TodoPage = () => {
     const curTask = tasks.find((task) => task.id == id);
     const toUpdate = isNote ? { notes: val } : { task: val };
 
-    updateTask({
+    fetchAPI("UPDATE", "/tasks/", {
       route: curTask.key + ".json",
       data: {
         ...curTask,
         ...toUpdate,
       },
     });
-    setTasks((tasks) => {
-      return tasks.map((task) => {
-        if (task.id == id) {
-          return {
-            ...task,
-            ...toUpdate,
-          };
-        } else return task;
-      });
-    });
+
+    dispatch(
+      todoReducerActions.updateTask({
+        id: id,
+        updatedTaskPayload: toUpdate,
+      })
+    );
+    if (curTask.isDone) {
+      dispatch(
+        todoReducerActions.updateCompleted({
+          id: id,
+          updatedTaskPayload: toUpdate,
+        })
+      );
+    } else
+      dispatch(
+        todoReducerActions.updateTodos({
+          id: id,
+          updatedTaskPayload: toUpdate,
+        })
+      );
     // setIsOpen(false);
   }
 
@@ -374,7 +364,7 @@ const TodoPage = () => {
       const curList = customSidebarItems.find(
         (item) => item.id == currentSidebarItemId
       );
-      updateList({
+      fetchAPI("UPDATE", "/lists/", {
         route: curList.key + ".json",
         data: {
           ...curList,
@@ -397,7 +387,7 @@ const TodoPage = () => {
       (item) => item.id == id
     );
     let prevId = "MyDay";
-    deleteCustomList(curCustomSideBarItem.key + ".json");
+    fetchAPI("DELETE", "/lists/", curCustomSideBarItem.key + ".json");
     customSidebarItems.forEach((item) => {
       if (item.id == id) {
         return;
@@ -407,11 +397,13 @@ const TodoPage = () => {
     setCurrentSidebarItemId(prevId);
     setCustomSidebarItems((prev) => prev.filter((item) => item.id != id));
     tasks.forEach((curTask) => {
-      if (curTask.listTypeId == id) deleteTask(curTask.key + ".json");
+      if (curTask.listTypeId == id)
+        fetchAPI("DELETE", "/tasks/", curTask.key + ".json");
     });
-    setTasks((prevTasks) =>
-      prevTasks.filter((task) => {
-        return task.listTypeId != id;
+
+    dispatch(
+      todoReducerActions.deleteTaskByList({
+        id: id,
       })
     );
   }
@@ -539,9 +531,9 @@ const TodoPage = () => {
                     handleDeleteSidebarItem={handleDeleteSidebarItem}
                   />
 
-                  <Box sx={{ ml: "auto", marginRight: "1rem" }}>
+                  {/* <Box sx={{ ml: "auto", marginRight: "1rem" }}>
                     <SyncAnimation status={status} setStatus={setStatus} />
-                  </Box>
+                  </Box> */}
                 </Box>
               </Box>
               <NewTodoTextField
@@ -550,9 +542,9 @@ const TodoPage = () => {
               />
               <TodoList
                 currentSidebarItemId={currentSidebarItemId}
+                key={currentSidebarItemId}
                 handleMarkAsDone={handleMarkAsDone}
                 handleSelectedTask={handleSelectedTask}
-                tasks={tasks}
               />
             </Box>
           </Box>

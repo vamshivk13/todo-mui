@@ -11,7 +11,7 @@ import React, { useContext } from "react";
 import { appStateContext } from "../../../../store/ApplicationStateProvider";
 import SettingsItem from "./SettingsItem";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
-import useFetch from "../../../../hooks/useFetch";
+import fetchAPI from "../../../../hooks/fetchAPI";
 
 const SettingsDrawer = () => {
   const {
@@ -20,9 +20,6 @@ const SettingsDrawer = () => {
     setSettingsState,
     settingsState,
   } = useContext(appStateContext);
-
-  const [, updateSettingsState] = useFetch("UPDATE", "/settings/");
-  const [, postSettingsState] = useFetch("POST", "/settings.json");
 
   async function handleSoundSetting(e) {
     const isChecked = e.target.checked;
@@ -42,7 +39,7 @@ const SettingsDrawer = () => {
       });
     }
     if (!settingsState.key) {
-      const { name } = await postSettingsState({
+      const { name } = await fetchAPI("POST", "/settings.json", {
         ...settingsState,
         isSoundEnabled: isChecked,
       });
@@ -53,7 +50,7 @@ const SettingsDrawer = () => {
       const settings = settingsState;
       const key = settings.key;
       delete settings.key;
-      updateSettingsState({
+      fetchAPI("UPDATE", "/settings/", {
         route: key + ".json",
         data: { ...settingsState, isSoundEnabled: isChecked },
       });
@@ -78,7 +75,7 @@ const SettingsDrawer = () => {
       });
     }
     if (!settingsState.key) {
-      const { name } = await postSettingsState({
+      const { name } = await postSettingsState("POST", "/settings.json", {
         ...settingsState,
         isDeleteAlertEnabled: isChecked,
       });
@@ -89,7 +86,7 @@ const SettingsDrawer = () => {
       const settings = settingsState;
       const key = settings.key;
       delete settings.key;
-      updateSettingsState({
+      fetchAPI("UPDATE", "/settings/", {
         route: key + ".json",
         data: { ...settingsState, isDeleteAlertEnabled: isChecked },
       });

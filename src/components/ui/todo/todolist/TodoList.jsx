@@ -4,31 +4,45 @@ import { Box, Collapse, List, ListItem } from "@mui/material";
 import useLocalStorage from "../../../../hooks/useLocalStorage";
 import CompletedHeader from "./CompletedHeader";
 import { getCompletedTasks, getTodoTasks } from "../../../../util/getTasks";
-import { TransitionGroup } from "react-transition-group";
+import "./test.css";
+import {
+  CSSTransition,
+  Transition,
+  TransitionGroup,
+} from "react-transition-group";
+import { useDispatch, useSelector } from "react-redux";
+import { todoReducerActions } from "../../../../store/store";
 const TodoList = ({
   currentSidebarItemId,
   handleMarkAsDone,
   handleSelectedTask,
-  tasks,
   customSidebarItems,
 }) => {
-  const [currentTasks, setCurrentTasks] = useState([]);
-  const isDonePresent =
-    currentTasks.filter((task) => task?.isDone == true).length > 0;
-  const completedTasks = getCompletedTasks(currentTasks);
-  const toDoTasks = getTodoTasks(currentTasks);
+  // const [currentTasks, setCurrentTasks] = useState([]);
+
+  // const completedTasks = getCompletedTasks(currentTasks);
+  // const toDoTasks = getTodoTasks(currentTasks);
+  const toDoTasks = useSelector((state) => state.todo.todos);
+  const completedTasks = useSelector((state) => state.todo.completed);
+
+  const isDonePresent = completedTasks.length > 0;
+  const [loading, setLoading] = useState(false);
+
+  // const tasks = useSelector((state) => state.todo.tasks);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setLoading(true);
+    dispatch(todoReducerActions.setTodos(currentSidebarItemId));
+    dispatch(todoReducerActions.setCompleted(currentSidebarItemId));
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    let currentTasks = [];
-    if (currentSidebarItemId == "Important") {
-      currentTasks = tasks.filter((task) => task.isStarred == true);
-    } else
-      currentTasks = tasks.filter(
-        (task) => task.listTypeId === currentSidebarItemId
-      );
-    setCurrentTasks(currentTasks);
-  }, [currentSidebarItemId, tasks]);
-
+    return () => {
+      dispatch(todoReducerActions.resetTodos());
+    };
+  }, []);
+  console.log("ReNDERED");
   return (
     <Box sx={{ overflowY: "auto" }}>
       <Box
@@ -40,17 +54,22 @@ const TodoList = ({
           marginBottom: "10px",
         }}
       >
-        <TransitionGroup component={null}>
+        <TransitionGroup key={currentSidebarItemId} component={null}>
           {toDoTasks.map((task) => {
             return (
-              <Collapse key={task.id}>
+              <CSSTransition
+                key={task.id}
+                timeout={300}
+                unmountOnExit
+                classNames="todo"
+              >
                 <Card
                   task={task}
                   handleSelectedTask={handleSelectedTask}
                   handleMarkAsDone={handleMarkAsDone}
                   customSidebarItems={customSidebarItems}
                 />
-              </Collapse>
+              </CSSTransition>
             );
           })}
         </TransitionGroup>
@@ -65,17 +84,22 @@ const TodoList = ({
         }}
       >
         {isDonePresent && <CompletedHeader count={completedTasks.length} />}
-        <TransitionGroup component={null}>
+        <TransitionGroup key={currentSidebarItemId} component={null}>
           {completedTasks.map((task) => {
             return (
-              <Collapse key={task.id}>
+              <CSSTransition
+                key={task.id}
+                unmountOnExit
+                timeout={300}
+                classNames="todo"
+              >
                 <Card
                   task={task}
                   handleMarkAsDone={handleMarkAsDone}
                   handleSelectedTask={handleSelectedTask}
                   customSidebarItems={customSidebarItems}
                 />
-              </Collapse>
+              </CSSTransition>
             );
           })}
         </TransitionGroup>
