@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "../TodoCard";
-import { Box } from "@mui/material";
+import { Box, Collapse } from "@mui/material";
 import CompletedHeader from "./CompletedHeader";
 import "./test.css";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -40,22 +40,17 @@ const TodoList = ({
           marginBottom: "10px",
         }}
       >
-        <TransitionGroup key={currentSidebarItemId} component={null}>
+        <TransitionGroup component={null}>
           {toDoTasks.map((task) => {
             return (
-              <CSSTransition
-                key={task.id}
-                timeout={300}
-                unmountOnExit
-                classNames="todo"
-              >
+              <Collapse key={task.id} timeout={200} classNames="todo">
                 <Card
                   task={task}
                   handleSelectedTask={handleSelectedTask}
                   handleMarkAsDone={handleMarkAsDone}
                   customSidebarItems={customSidebarItems}
                 />
-              </CSSTransition>
+              </Collapse>
             );
           })}
         </TransitionGroup>
@@ -70,22 +65,17 @@ const TodoList = ({
         }}
       >
         {isDonePresent && <CompletedHeader count={completedTasks.length} />}
-        <TransitionGroup key={currentSidebarItemId} component={null}>
+        <TransitionGroup component={null}>
           {completedTasks.map((task) => {
             return (
-              <CSSTransition
-                key={task.id}
-                unmountOnExit
-                timeout={300}
-                classNames="todo"
-              >
+              <Collapse key={task.id} timeout={200} classNames="todo">
                 <Card
                   task={task}
                   handleMarkAsDone={handleMarkAsDone}
                   handleSelectedTask={handleSelectedTask}
                   customSidebarItems={customSidebarItems}
                 />
-              </CSSTransition>
+              </Collapse>
             );
           })}
         </TransitionGroup>
