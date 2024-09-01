@@ -342,7 +342,6 @@ const TodoPage = () => {
           updatedTaskPayload: toUpdate,
         })
       );
-    // setIsOpen(false);
   }
 
   function updateSidebarItemName() {
