@@ -110,13 +110,15 @@ const TodoPage = () => {
   }, [initialSidebarItems]);
 
   useEffect(() => {
+    setIsTasksLoading(true);
     async function loadTasks() {
       const initialTasks = await fetchAPI("GET", "/tasks.json", null);
       setTasksAPI(initialTasks);
       setIsTasksLoading(false);
     }
-    setIsTasksLoading(true);
-    if (loaded) loadTasks();
+    if (loaded) {
+      loadTasks();
+    }
   }, [loaded]);
 
   useEffect(() => {
@@ -164,7 +166,8 @@ const TodoPage = () => {
 
   console.log("state: ", state);
   useEffect(() => {
-    if (isTasksLoading == false && tasksAPI.length > 0) {
+    if (!isTasksLoading && tasksAPI) {
+      console.log("REMOVING");
       updateTasksBasedOnDate();
     }
   }, [tasksAPI, isTasksLoading]);
