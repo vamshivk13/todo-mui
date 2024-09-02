@@ -114,7 +114,6 @@ const TodoPage = () => {
     async function loadTasks() {
       const initialTasks = await fetchAPI("GET", "/tasks.json", null);
       setTasksAPI(initialTasks);
-      setIsTasksLoading(false);
     }
     if (loaded) {
       loadTasks();
@@ -138,7 +137,7 @@ const TodoPage = () => {
   }, [tasks, selectedTask]);
 
   function updateTasksBasedOnDate() {
-    tasks.forEach((task) => {
+    tasks?.forEach((task) => {
       const createdDate = new Date(task.createdAt).toDateString();
       if (createdDate != date.toDateString() && task.listTypeId == "MyDay") {
         fetchAPI("UPDATE", "/tasks/", {
@@ -162,6 +161,7 @@ const TodoPage = () => {
     dispatch(todoReducerActions.setTasks(initialTasks));
     dispatch(todoReducerActions.setTodos("MyDay"));
     dispatch(todoReducerActions.setCompleted("MyDay"));
+    setIsTasksLoading(false);
   }, [tasksAPI]);
 
   console.log("state: ", state);
@@ -170,7 +170,7 @@ const TodoPage = () => {
       console.log("REMOVING");
       updateTasksBasedOnDate();
     }
-  }, [tasksAPI, isTasksLoading]);
+  }, [isTasksLoading, tasksAPI]);
 
   useEffect(() => {
     const keys = Object.keys(customSidebarLists || {});
