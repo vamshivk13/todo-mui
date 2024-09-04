@@ -28,8 +28,6 @@ import TodayOutlinedIcon from "@mui/icons-material/TodayOutlined";
 import TodoDeleteDialog from "./todomenu/TodoDeleteDialog";
 
 const TodoView = ({
-  width,
-  setWidth,
   isOpen,
   content,
   onClose,
@@ -46,6 +44,8 @@ const TodoView = ({
   const {
     screenWidth,
     settingsState: { isDeleteAlertEnabled },
+    width,
+    setWidth,
   } = useContext(appStateContext);
   const date = content?.isDone
     ? new Date(content.doneAt)
@@ -432,6 +432,7 @@ const TodoView = ({
         open={isOpen}
         onClose={() => {
           setIsOpen(false);
+          setWidth(0);
         }}
         sx={{
           minWidth: "50%",

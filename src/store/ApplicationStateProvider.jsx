@@ -20,6 +20,8 @@ const ApplicationStateProvider = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isTempSidebarOpen, setIsTempSidebarOpen] = useState(false);
 
+  const [width, setWidth] = useState(0);
+
   useEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
@@ -34,9 +36,13 @@ const ApplicationStateProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (screenWidth > 900) setIsTempSidebarOpen(false);
+    if (screenWidth > 900) {
+      setIsTempSidebarOpen(false);
+      // setWidth(300);
+    }
     if (screenWidth > 600 && screenWidth < 900) {
       setIsSidebarOpen(false);
+      setWidth(0);
     }
     if (screenWidth < 600) {
       setIsSidebarOpen(false);
@@ -84,6 +90,8 @@ const ApplicationStateProvider = ({ children }) => {
         setIsTempSidebarOpen,
         isSidebarOpen,
         setIsSidebarOpen,
+        setWidth,
+        width,
       }}
     >
       {children}

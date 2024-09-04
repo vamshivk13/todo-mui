@@ -70,12 +70,13 @@ const TodoPage = () => {
   const [tasksAPI, setTasksAPI] = useState(null);
   const [initialSidebarItems, setInitialSidebarItems] = useState(null);
   const [customSidebarLists, setCustomSidebarLists] = useState(null);
-  const [width, setWidth] = useState(0);
+
   const [isTasksLoading, setIsTasksLoading] = useState(null);
 
   // task completion sound
   const doneToneRef = useRef(new Audio(doneTone));
-  const { settingsState } = useContext(appStateContext);
+  const { settingsState, width, setWidth, isSidebarOpen } =
+    useContext(appStateContext);
   const state = useSelector((state) => state.todo);
   const dispatch = useDispatch();
 
@@ -450,7 +451,7 @@ const TodoPage = () => {
             display={{
               // flex: 1,
               // flexBasis: "80%",
-              width: `calc(80% - ${width}px)`,
+              width: `calc(80% - ${width}px + ${!isSidebarOpen ? 20 : 0}%)`,
               flexShrink: 1,
               display: "flex",
               position: "relative",
@@ -556,8 +557,6 @@ const TodoPage = () => {
           </Box>
           {isOpen && (
             <TodoView
-              width={width}
-              setWidth={setWidth}
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               onClose={onClose}
