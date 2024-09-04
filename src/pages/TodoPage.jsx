@@ -70,7 +70,7 @@ const TodoPage = () => {
   const [tasksAPI, setTasksAPI] = useState(null);
   const [initialSidebarItems, setInitialSidebarItems] = useState(null);
   const [customSidebarLists, setCustomSidebarLists] = useState(null);
-
+  const [width, setWidth] = useState(0);
   const [isTasksLoading, setIsTasksLoading] = useState(null);
 
   // task completion sound
@@ -256,11 +256,13 @@ const TodoPage = () => {
   }
 
   function onClose() {
+    setWidth(0);
     setIsOpen(false);
     setSelectedId(null);
   }
   function handleSelectedTask(id) {
     setIsOpen(true);
+    setWidth(300);
     setSelectedId(id);
     const selectedTask = tasks.find((task) => task.id == id);
     setSelectedTask(selectedTask);
@@ -446,10 +448,12 @@ const TodoPage = () => {
           <Box
             component={"div"}
             display={{
-              flex: 1,
-              width: "80%",
-              flexShrink: 0,
+              // flex: 1,
+              // flexBasis: "80%",
+              width: `calc(80% - ${width}px)`,
+              flexShrink: 1,
               display: "flex",
+              position: "relative",
             }}
           >
             <Box
@@ -460,7 +464,7 @@ const TodoPage = () => {
                 flexDirection: "column",
               }}
               onClick={() => {
-                setIsOpen(false);
+                // setIsOpen(false);
                 setSidebarItemInputExpanded(false);
                 updateSidebarItemName();
               }}
@@ -552,6 +556,8 @@ const TodoPage = () => {
           </Box>
           {isOpen && (
             <TodoView
+              width={width}
+              setWidth={setWidth}
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               onClose={onClose}

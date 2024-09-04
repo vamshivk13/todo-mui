@@ -14,7 +14,7 @@ import {
   Stack,
   Divider,
 } from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CgPushChevronRightR } from "react-icons/cg";
 
@@ -28,6 +28,8 @@ import TodayOutlinedIcon from "@mui/icons-material/TodayOutlined";
 import TodoDeleteDialog from "./todomenu/TodoDeleteDialog";
 
 const TodoView = ({
+  width,
+  setWidth,
   isOpen,
   content,
   onClose,
@@ -129,6 +131,7 @@ const TodoView = ({
               <IconButton
                 onClick={() => {
                   setIsOpen(false);
+                  setWidth(0);
                 }}
               >
                 <ArrowBackIcon
@@ -221,8 +224,7 @@ const TodoView = ({
             </Paper>
 
             <Paper
-              elevation={"elevation"}
-              component={"div"}
+              elevation={0}
               sx={{
                 position: "fixed",
                 height: "66px",
@@ -335,26 +337,94 @@ const TodoView = ({
       </Box>
     </Box>
   );
+
+  // Initial width
+  const isResizing = useRef(false);
+  const startX = useRef(0); // Store the initial mouse position
+  const startWidth = useRef(0); // Store the initial width of the div
+
+  const handleMouseDown = (e) => {
+    isResizing.current = true;
+    startX.current = e.clientX;
+    startWidth.current = width;
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleMouseMove = (e) => {
+    if (
+      isResizing.current &&
+      startWidth.current + (startX.current - e.clientX) < 800 &&
+      startWidth.current + (startX.current - e.clientX) > 300
+    ) {
+      const newWidth = startWidth.current + (startX.current - e.clientX);
+      setWidth(newWidth > 0 ? newWidth : 0); // Prevent negative width
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isResizing.current) {
+      isResizing.current = false;
+      // Remove global event listeners when dragging ends
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      // Clean up event listeners on component unmount
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
   return (
     <>
       <Drawer
+        // onMouseDown={handleMouseDown}
         variant="permanent"
         open={isOpen}
+        onClose={() => setWidth(0)}
         anchor="right"
         sx={{
           width: "25%",
           flexShrink: 0,
           height: "100%",
-
           display: { xs: "none", md: "block" },
           [`& .MuiDrawer-paper`]: {
-            width: "25%",
+            maxWidth: "800px",
             minWidth: "25%",
           },
         }}
       >
         <Toolbar sx={{ minHeight: { xs: "60px" } }} />
-        {todoView}
+
+        <div
+          style={{
+            width: `${width}px`,
+            minWidth: "100%",
+            height: "100%",
+            backgroundColor: "lightblue",
+            position: "relative",
+            userSelect: "none",
+          }}
+          onMouseDown={handleMouseDown}
+        >
+          <Paper
+            style={{
+              width: "3px",
+              height: "100%",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              cursor: "ew-resize",
+              zIndex: 10,
+            }}
+            // onMouseDown={handleMouseDown}
+          />
+          {todoView}
+        </div>
       </Drawer>
       <Drawer
         variant="temporary"
