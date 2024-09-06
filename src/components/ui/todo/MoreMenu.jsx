@@ -16,19 +16,16 @@ import { colors } from "../../../util/getThemeColors";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import fetchAPI from "../../../hooks/fetchAPI";
+import { useSelector } from "react-redux";
 
-const MoreMenu = ({
-  currentSidebarItemId,
-  setCustomSidebarItems,
-  customSidebarItems,
-  sidebarItems,
-  setSidebarItems,
-  handleDeleteSidebarItem,
-}) => {
+const MoreMenu = ({ currentSidebarItemId, handleDeleteSidebarItem }) => {
   const [anchor, setAnchor] = useState(null);
   const [themeAnchor, setThemeAnchor] = useState(null);
   const [, setCurrentColor] = useContext(themeContext);
-
+  const sidebarItems = useSelector((state) => state.sidebar.sidebarItems);
+  const customSidebarItems = useSelector(
+    (state) => state.sidebar.customSidebarItems
+  );
   const open = Boolean(anchor);
   const open1 = Boolean(themeAnchor);
   const theme = useTheme();

@@ -4,13 +4,17 @@ import { appDataContext } from "../../../../store/AppDataProvider";
 import { v4 as uuidv4 } from "uuid";
 import TodoDeleteDialog from "./TodoDeleteDialog";
 import { appStateContext } from "../../../../store/ApplicationStateProvider";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { todoReducerActions } from "../../../../store/store";
 import fetchAPI from "../../../../hooks/fetchAPI";
 
 const TodoMenu = ({ anchorPosition, setContextMenu, isOpen, task }) => {
-  const { customSidebarItems, setTasks, sidebarItems, currentSidebarItemId } =
-    useContext(appDataContext);
+  const { setTasks, currentSidebarItemId } = useContext(appDataContext);
+  const sidebarItems = useSelector((state) => state.sidebar.sidebarItems);
+  const customSidebarItems = useSelector(
+    (state) => state.sidebar.customSidebarItems
+  );
+
   const [moveAnchor, setMoveAnchor] = useState(null);
   const isMoveOpen = Boolean(moveAnchor);
   const [copyAnchor, setCopyAnchor] = useState(null);

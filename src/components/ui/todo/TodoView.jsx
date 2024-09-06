@@ -26,6 +26,7 @@ import MarkAsDoneAction from "./todoactions/MarkAsDoneAction";
 import MarkAsImporantAction from "./todoactions/MarkAsImportantAction";
 import TodayOutlinedIcon from "@mui/icons-material/TodayOutlined";
 import TodoDeleteDialog from "./todomenu/TodoDeleteDialog";
+import { useSelector } from "react-redux";
 
 const TodoView = ({
   isOpen,
@@ -39,8 +40,11 @@ const TodoView = ({
 }) => {
   const [value, setValue] = useState(content?.notes);
   const [taskValue, setTaskValue] = useState(content?.task);
-  const [customSideBarItems] = useLocalStorage("customSideBarItems");
-  const [sidebarItems] = useLocalStorage("sidebarItems");
+  const sidebarItems = useSelector((state) => state.sidebar.sidebarItems);
+  const customSidebarItems = useSelector(
+    (state) => state.sidebar.customSidebarItems
+  );
+
   const {
     screenWidth,
     settingsState: { isDeleteAlertEnabled },
@@ -64,7 +68,6 @@ const TodoView = ({
 
   useEffect(() => {
     return () => {
-      console.log("Unmounting the Todoview Component");
       if (content?.task != taskValue) {
         console.log(content?.task, taskValue);
         handleEditTask(taskValue, false, content?.id);
@@ -72,6 +75,8 @@ const TodoView = ({
       if (content?.notes != value) {
         handleEditTask(value, true, content?.id);
       }
+
+      setWidth(0);
     };
   }, []);
 
@@ -79,7 +84,7 @@ const TodoView = ({
     if (sidebarItems.find((item) => item.id == id)) {
       return sidebarItems.find((item) => item.id == id).name;
     } else {
-      return customSideBarItems.find((item) => item.id == id).name;
+      return customSidebarItems.find((item) => item.id == id).name;
     }
   }
 

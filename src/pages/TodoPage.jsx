@@ -27,6 +27,7 @@ import TodoDeleteDialog from "../components/ui/todo/todomenu/TodoDeleteDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { todoReducerActions } from "../store/store";
 import fetchAPI, { setBaseUrl } from "../hooks/fetchAPI";
+import { sidebarReducerActions } from "../store/sidebarReducer";
 
 const TodoPage = () => {
   const [value, setValue] = useState("");
@@ -39,15 +40,13 @@ const TodoPage = () => {
   const [updatedCurrentSidebarItem, setUpdatedCurrentSidebarItem] =
     useState("");
 
-  const {
-    customSidebarItems,
-    setCustomSidebarItems,
-    sidebarItems,
-    setSidebarItems,
-    currentSidebarItemId,
-    setCurrentSidebarItemId,
-  } = useContext(appDataContext);
+  const { currentSidebarItemId, setCurrentSidebarItemId } =
+    useContext(appDataContext);
 
+  const sidebarItems = useSelector((state) => state.sidebar.sidebarItems);
+  const customSidebarItems = useSelector(
+    (state) => state.sidebar.customSidebarItems
+  );
   const tasks = useSelector((state) => state.todo.tasks);
 
   const [selectedTask, setSelectedTask] = useState(null);
@@ -107,7 +106,8 @@ const TodoPage = () => {
         return item;
       }
     });
-    setSidebarItems(() => updatedSidebarItemsOnLoad);
+    // setSidebarItems(() => updatedSidebarItemsOnLoad);
+    dispatch(sidebarReducerActions.setSidebarItems(updatedSidebarItemsOnLoad));
   }, [initialSidebarItems]);
 
   useEffect(() => {
@@ -178,7 +178,7 @@ const TodoPage = () => {
     const initialLists = keys.map((key) => {
       return { ...customSidebarLists[key], key };
     });
-    setCustomSidebarItems(initialLists);
+    dispatch(sidebarReducerActions.setCustomSidebarItems(initialLists));
   }, [customSidebarLists]);
 
   useEffect(() => {
@@ -354,16 +354,10 @@ const TodoPage = () => {
     if (["MyDay", "Important", "MyTasks"].includes(currentSidebarItemId)) {
       return;
     } else {
-      setCustomSidebarItems((customSidebarItems) =>
-        customSidebarItems.map((item) => {
-          if (item.id == currentSidebarItemId) {
-            return {
-              ...item,
-              name: updatedCurrentSidebarItem,
-            };
-          } else {
-            return item;
-          }
+      dispatch(
+        sidebarReducerActions.updatCustomSidebarItem({
+          id: currentSidebarItemId,
+          toUpdate: { name: updatedCurrentSidebarItem },
         })
       );
       const curList = customSidebarItems.find(
@@ -400,7 +394,7 @@ const TodoPage = () => {
       prevId = item.id;
     });
     setCurrentSidebarItemId(prevId);
-    setCustomSidebarItems((prev) => prev.filter((item) => item.id != id));
+    dispatch(sidebarReducerActions.deleteCustomSidebarItems(id));
     tasks.forEach((curTask) => {
       if (curTask.listTypeId == id)
         fetchAPI("DELETE", "/tasks/", curTask.key + ".json");
@@ -437,9 +431,6 @@ const TodoPage = () => {
         <Sidebar
           setCurrentSidebarItemId={setCurrentSidebarItemId}
           currentSidebarItemId={currentSidebarItemId}
-          sidebarItems={sidebarItems}
-          setCustomSidebarItems={setCustomSidebarItems}
-          customSidebarItems={customSidebarItems}
           tasks={tasks}
           handleDeleteSidebarItem={handleDeleteSidebarItem}
         />
@@ -530,11 +521,9 @@ const TodoPage = () => {
                     ></InputBase>
                   )}
                   <MoreMenu
-                    setCustomSidebarItems={setCustomSidebarItems}
                     currentSidebarItemId={currentSidebarItemId}
                     customSidebarItems={customSidebarItems}
                     sidebarItems={sidebarItems}
-                    setSidebarItems={setSidebarItems}
                     handleDeleteSidebarItem={handleDeleteSidebarItem}
                   />
 
@@ -557,6 +546,7 @@ const TodoPage = () => {
           </Box>
           {isOpen && (
             <TodoView
+              key={currentSidebarItemId}
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               onClose={onClose}

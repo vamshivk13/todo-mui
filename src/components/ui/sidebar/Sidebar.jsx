@@ -19,17 +19,20 @@ import { themeContext } from "../../../store/ColorThemeProvider";
 import { appStateContext } from "../../../store/ApplicationStateProvider";
 import { TransitionGroup } from "react-transition-group";
 import fetchAPI from "../../../hooks/fetchAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { sidebarReducerActions } from "../../../store/sidebarReducer";
 
 const Sidebar = ({
   currentSidebarItemId,
   setCurrentSidebarItemId,
-  sidebarItems,
-  setCustomSidebarItems,
-  customSidebarItems,
   tasks,
   handleDeleteSidebarItem,
 }) => {
   const [newListItem, setNewListItem] = useState("");
+  const sidebarItems = useSelector((state) => state.sidebar.sidebarItems);
+  const customSidebarItems = useSelector(
+    (state) => state.sidebar.customSidebarItems
+  );
 
   const {
     isSidebarOpen,
@@ -41,6 +44,7 @@ const Sidebar = ({
 
   const [currentColor, setCurrentColor] = useContext(themeContext);
 
+  const dispatch = useDispatch();
   async function handleNewListItem(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -48,10 +52,18 @@ const Sidebar = ({
       return;
     }
     const id = uuidv4();
-    setCustomSidebarItems((prev) => [
-      ...prev,
-      { id: id, name: newListItem, count: 0, color: null },
-    ]);
+    // setCustomSidebarItems((prev) => [
+    //   ...prev,
+    //   { id: id, name: newListItem, count: 0, color: null },
+    // ]);
+    dispatch(
+      sidebarReducerActions.addCustomSidebarItem({
+        id: id,
+        name: newListItem,
+        count: 0,
+        color: null,
+      })
+    );
     setNewListItem("");
     setCurrentSidebarItemId(id);
     setCurrentColor(null);
@@ -62,18 +74,12 @@ const Sidebar = ({
       color: null,
     });
 
-    setCustomSidebarItems((prev) => {
-      return prev.map((item) => {
-        if (item.id == id) {
-          return {
-            ...item,
-            key: name,
-          };
-        } else {
-          return item;
-        }
-      });
-    });
+    dispatch(
+      sidebarReducerActions.updatCustomSidebarItem({
+        id: id,
+        toUpdate: { key: name },
+      })
+    );
   }
 
   const sidebar = (

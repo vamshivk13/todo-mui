@@ -1,5 +1,6 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 import { getTodoTasks } from "../util/getTasks";
+import sidebarReducer from "./sidebarReducer";
 
 const todoReducer = createSlice({
   name: "todo",
@@ -151,6 +152,7 @@ const todoReducer = createSlice({
 const store = configureStore({
   reducer: {
     todo: todoReducer.reducer,
+    sidebar: sidebarReducer,
   },
 });
 
