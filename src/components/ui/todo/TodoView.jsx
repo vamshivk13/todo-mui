@@ -98,12 +98,13 @@ const TodoView = ({
         height: "100%",
         flex: "1",
         position: "relative",
-        overflow: "hidden",
+        overflowY: "hidden",
       }}
     >
       <Card
         sx={{
           height: "calc(100% - 50px)",
+
           flex: 1,
           display: "flex",
           flexDirection: "column",
@@ -409,7 +410,7 @@ const TodoView = ({
           style={{
             width: `${width}px`,
             minWidth: "100%",
-            height: "100%",
+            height: "calc(100% - 60px)",
             backgroundColor: "lightblue",
             position: "relative",
             userSelect: "none",
