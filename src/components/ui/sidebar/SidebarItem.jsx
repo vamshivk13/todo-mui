@@ -77,7 +77,7 @@ const SidebarItem = ({
         setCurrentSidebarItemId(id);
         setIsTempSidebarOpen(false);
         setCurrentColor(color);
-        dispatch(todoReducerActions.resetTodos());
+        // dispatch(todoReducerActions.resetTodos());
         // dispatch(todoReducerActions.setTodos(id));
         // dispatch(todoReducerActions.setCompleted(id));
       }}
